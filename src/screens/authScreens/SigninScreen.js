@@ -35,6 +35,7 @@ const SigninScreen = ({ navigation }) => {
           label='Enter email'
           value={email}
           onChangeText={setEmail} />
+          
           <InputComponents 
           hasMarginTop={true} 
           label='Enter password' 
@@ -48,6 +49,7 @@ const SigninScreen = ({ navigation }) => {
           <SigninSignupToggler
             question="Do not have an account?"
             button=" Sign Up"
+            onPress={()=>{navigation.navigate('SignUp')}}
           />
           <OrComponent />
           <Icons />

@@ -1,6 +1,7 @@
 import { View, Text, StyleSheet, Image, TouchableOpacity } from 'react-native'
 import React from 'react'
 import CustomScrollView from '../../components/authComponents/CustomScrollView'
+import ImageUrl from '../../constants/ImageUrl'
 
 
 const DashboardScreen = ({navigation}) => {
@@ -13,7 +14,7 @@ const DashboardScreen = ({navigation}) => {
         <TouchableOpacity onPress={()=>navigation.navigate('ProfileOptions')}>
 
         <Image
-          source={require('/home/w3villa/react_native/Summer/assets/images/profile_icon.jpg')}
+          source={ImageUrl.profileIcon}
           style={styles.profileImage}
         />
         </TouchableOpacity>

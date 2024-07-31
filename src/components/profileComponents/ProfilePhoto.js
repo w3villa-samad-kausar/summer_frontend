@@ -1,10 +1,11 @@
 import { Image, StyleSheet, Text, View } from 'react-native'
 import React from 'react'
+import ImageUrl from '../../constants/ImageUrl'
 
 const ProfilePhoto = () => {
   return (
     <Image
-      source={require('/home/w3villa/react_native/Summer/assets/images/profile.jpg')}
+      source={ImageUrl.profilePhoto}
       style={styles.imageStyling}
     />
   )
