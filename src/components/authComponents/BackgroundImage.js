@@ -16,11 +16,12 @@
 // export default BackgroundImage
 import React from 'react'
 import { ImageBackground, StyleSheet, View } from 'react-native'
+import ImageUrl from '../../constants/ImageUrl'
 
 const BackgroundImage = ({height}) => {
   return (
     <ImageBackground
-      source={require('/home/w3villa/react_native/Summer/assets/images/heading1.jpg')}
+      source={ImageUrl.loginBg}
       style={[styles.backgroundImage,{height:height}]}
       imageStyle={styles.imageStyle}
     >

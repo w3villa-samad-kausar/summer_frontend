@@ -1,15 +1,16 @@
 import React from 'react'
 import { Image, StyleSheet, View } from 'react-native'
+import ImageUrl from '../../constants/ImageUrl'
 
 const Icons = () => {
   return (
     <View style={styles.iconContainer}>
       <Image
-        source={require('/home/w3villa/react_native/Summer/assets/images/facebook.png')}
+        source={ImageUrl.facebookIcon}
         style={[styles.icon, { width: 30 }, { height: 30 }]}
       />
       <Image
-        source={require('/home/w3villa/react_native/Summer/assets/images/Google_Icons-09-512.webp')}
+        source={ImageUrl.googleIcon}
         style={[styles.icon, { marginTop: -2 }]}
       />
     </View>

@@ -1,13 +1,14 @@
 import { Image, StyleSheet, Text, TouchableOpacity, View } from 'react-native'
 import React from 'react'
 import CustomView from '../CustomView'
+import ImageUrl from '../../constants/ImageUrl'
 
 const PageHeading = ({ pageName,onPressHandler }) => {
   return (
     <View style={styles.container}>
     <TouchableOpacity onPress={onPressHandler}>
       <Image
-        source={require('/home/w3villa/react_native/Summer/assets/images/back_icon.jpg')}
+        source={ImageUrl.leftArrowIcon}
         style={styles.backIcon}
       /></TouchableOpacity>
       <Text style={styles.text}>{pageName}</Text>
