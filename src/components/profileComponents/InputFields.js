@@ -17,17 +17,17 @@ const styles = StyleSheet.create({
     width:'90%',
     height:100,
     marginLeft:20,
-    marginTop:20,
+    marginTop:10,
 
   },
   text:{
-    fontSize:20,
+    fontSize:16,
     fontWeight:'bold',
     color:'black',
   },
   
   textInput:{
-    fontSize:18,
+    fontSize:14,
     backgroundColor:'white',
     borderRadius:10,
     marginVertical:10,
