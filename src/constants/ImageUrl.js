@@ -5,5 +5,10 @@ export default {
   forwardIcon: require('../assets/images/front_icon.png'),
   leftArrowIcon: require('../assets/images/back_icon.jpg'),
   profilePhoto: require('../assets/images/profile.jpg'),
-  profileIcon: require('../assets/images/profile_icon.jpg')
+  profileIcon: require('../assets/images/profile_icon.jpg'),
+
+  carouselImage1: require('../assets/images/image1.jpg'),
+  carouselImage2: require('../assets/images/image2.jpg'),
+  carouselImage3: require('../assets/images/image3.jpg'),
+
 }

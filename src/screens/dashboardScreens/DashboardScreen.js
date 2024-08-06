@@ -2,6 +2,7 @@ import { View, Text, StyleSheet, Image, TouchableOpacity } from 'react-native'
 import React from 'react'
 import CustomScrollView from '../../components/authComponents/CustomScrollView'
 import ImageUrl from '../../constants/ImageUrl'
+import MyCarousel  from '../../components/profileComponents/Carousel'
 
 
 const DashboardScreen = ({navigation}) => {
@@ -19,9 +20,8 @@ const DashboardScreen = ({navigation}) => {
         />
         </TouchableOpacity>
       </View>
-      <View style={styles.centerMesssage}>
-        <Text style={styles.centerMesssageText}>Welcome to Dashboard</Text>
-      </View>
+      
+      <MyCarousel />
     </CustomScrollView>
 
   )

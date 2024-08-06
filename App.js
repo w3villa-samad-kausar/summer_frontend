@@ -9,28 +9,29 @@ import { createNativeStackNavigator } from '@react-navigation/native-stack'
 import DashboardScreen from './src/screens/dashboardScreens/DashboardScreen'
 import ProfileOptions from './src/screens/dashboardScreens/ProfileOptions'
 import EditProfile from './src/screens/dashboardScreens/EditProfile'
+import TestScreen from './src/screens/TestScreen'
 
-const Stack=createNativeStackNavigator()
+const Stack = createNativeStackNavigator()
 
 const App = () => {
   return (
     // <NavigationContainer>
-    //   <Stack.Navigator initialRouteName='SignIn'>
-    //   <Stack.Screen 
-    //   name="SignIn" 
-    //   component={SigninScreen}
-    //   options={{headerShown:false}} />
-    //   <Stack.Screen 
-    //   name="SignUp"
-    //   component={SignupScreen}
-    //   options={{headerShown:false}} />
-    //   <Stack.Screen 
-    //   name="OtpVerification"
-    //   component={OtpVerification}
-    //   options={{headerShown:false}} />
+    //   <Stack.Navigator initialRouteName='SigninScreen'>
+    //     <Stack.Screen
+    //       name="SignIn"
+    //       component={SigninScreen}
+    //       options={{ headerShown: false }} />
+    //     <Stack.Screen
+    //       name="SignUp"
+    //       component={SignupScreen}
+    //       options={{ headerShown: false }} />
+    //     <Stack.Screen
+    //       name="OtpVerification"
+    //       component={OtpVerification}
+    //       options={{ headerShown: false }} />
     //   </Stack.Navigator>
     // </NavigationContainer>
-    
+
 
     <NavigationContainer>
       <Stack.Navigator initialRouteName='Dashboard'>
@@ -48,7 +49,7 @@ const App = () => {
         options={{headerShown:false}} />
       </Stack.Navigator>
     </NavigationContainer>
-     
+
   )
 }
 

@@ -9,6 +9,7 @@ import MainElementIsland from '../../components/authComponents/MainElementIsland
 import OrComponent from '../../components/authComponents/OrComponent'
 import CustomStatusBar from '../../components/CustomStatusBar'
 import SigninSignupToggler from '../../components/authComponents/SigninSignupToggler'
+import { Icon } from '@rneui/themed'
 
 const SigninScreen = ({ navigation }) => {
 
@@ -53,6 +54,12 @@ const SigninScreen = ({ navigation }) => {
           />
           <OrComponent />
           <Icons />
+          <Icon 
+            type='antdesign'
+            name='stepforward'
+            size={24}
+            color={'#000'}
+          />
         </MainElementIsland>
       </CustomScrollView>
     </>
