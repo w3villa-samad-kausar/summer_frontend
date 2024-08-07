@@ -15,40 +15,40 @@ const Stack = createNativeStackNavigator()
 
 const App = () => {
   return (
-    // <NavigationContainer>
-    //   <Stack.Navigator initialRouteName='SigninScreen'>
-    //     <Stack.Screen
-    //       name="SignIn"
-    //       component={SigninScreen}
-    //       options={{ headerShown: false }} />
-    //     <Stack.Screen
-    //       name="SignUp"
-    //       component={SignupScreen}
-    //       options={{ headerShown: false }} />
-    //     <Stack.Screen
-    //       name="OtpVerification"
-    //       component={OtpVerification}
-    //       options={{ headerShown: false }} />
-    //   </Stack.Navigator>
-    // </NavigationContainer>
-
-
     <NavigationContainer>
-      <Stack.Navigator initialRouteName='Dashboard'>
+      <Stack.Navigator initialRouteName='SigninScreen'>
         <Stack.Screen
-        name="Dashboard"
-        component={DashboardScreen}
-        options={{headerShown:false}} />
+          name="SignIn"
+          component={SigninScreen}
+          options={{ headerShown: false }} />
         <Stack.Screen
-        name="ProfileOptions"
-        component={ProfileOptions}
-        options={{headerShown:false}} />
+          name="SignUp"
+          component={SignupScreen}
+          options={{ headerShown: false }} />
         <Stack.Screen
-        name="EditProfile"
-        component={EditProfile}
-        options={{headerShown:false}} />
+          name="OtpVerification"
+          component={OtpVerification}
+          options={{ headerShown: false }} />
       </Stack.Navigator>
     </NavigationContainer>
+
+
+    //   <NavigationContainer>
+    //   <Stack.Navigator initialRouteName='Dashboard'>
+    //     <Stack.Screen
+    //     name="Dashboard"
+    //     component={DashboardScreen}
+    //     options={{headerShown:false}} />
+    //     <Stack.Screen
+    //     name="ProfileOptions"
+    //     component={ProfileOptions}
+    //     options={{headerShown:false}} />
+    //     <Stack.Screen
+    //     name="EditProfile"
+    //     component={EditProfile}
+    //     options={{headerShown:false}} />
+    //   </Stack.Navigator>
+    // </NavigationContainer>  
 
   )
 }

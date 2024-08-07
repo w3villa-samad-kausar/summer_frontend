@@ -11,6 +11,7 @@ import CustomStatusBar from '../../components/CustomStatusBar'
 import SigninSignupToggler from '../../components/authComponents/SigninSignupToggler'
 import { Icon } from '@rneui/themed'
 
+
 const SigninScreen = ({ navigation }) => {
 
   const [email, setEmail] = useState('');
@@ -32,17 +33,17 @@ const SigninScreen = ({ navigation }) => {
           />
 
           <InputComponents
-          hasMarginTop={false} 
-          label='Enter email'
-          value={email}
-          onChangeText={setEmail} />
-          
-          <InputComponents 
-          hasMarginTop={true} 
-          label='Enter password' 
-          isSecureText={true}
-          value={password}
-          onChangeText={setPassword} />
+            hasMarginTop={false}
+            label='Enter email'
+            value={email}
+            onChangeText={setEmail} />
+
+          <InputComponents
+            hasMarginTop={true}
+            label='Enter password'
+            isSecureText={true}
+            value={password}
+            onChangeText={setPassword} />
 
           <SubmitButton
             label="Sign In"
@@ -50,16 +51,11 @@ const SigninScreen = ({ navigation }) => {
           <SigninSignupToggler
             question="Do not have an account?"
             button=" Sign Up"
-            onPress={()=>{navigation.navigate('SignUp')}}
+            onPress={() => { navigation.navigate('SignUp') }}
           />
           <OrComponent />
           <Icons />
-          <Icon 
-            type='antdesign'
-            name='stepforward'
-            size={24}
-            color={'#000'}
-          />
+          
         </MainElementIsland>
       </CustomScrollView>
     </>
