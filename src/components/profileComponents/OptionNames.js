@@ -1,6 +1,7 @@
 import { Image, StyleSheet, Text, TouchableOpacity, View } from 'react-native'
 import React from 'react'
 import ImageUrl from '../../constants/ImageUrl'
+import { Icon } from '@rneui/themed'
 
 const OptionNames = ({ optionName,hasMarginTop,onPresshandler }) => {
   return (
@@ -8,11 +9,12 @@ const OptionNames = ({ optionName,hasMarginTop,onPresshandler }) => {
     <View style={[styles.container,hasMarginTop &&styles.marginTop]}>
     
       <Text style={styles.text}>{optionName}</Text>
-      <Image
-        source={ImageUrl.forwardIcon}
-        style={styles.image}
+      <Icon
+      type='antdesign'
+      name='right'
+      size={20}
+      color='black'
       />
-      
     </View>
     </TouchableOpacity>
   )

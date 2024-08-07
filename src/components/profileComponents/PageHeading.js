@@ -2,15 +2,19 @@ import { Image, StyleSheet, Text, TouchableOpacity, View } from 'react-native'
 import React from 'react'
 import CustomView from '../CustomView'
 import ImageUrl from '../../constants/ImageUrl'
+import { Icon } from '@rneui/themed'
 
 const PageHeading = ({ pageName,onPressHandler }) => {
   return (
     <View style={styles.container}>
     <TouchableOpacity onPress={onPressHandler}>
-      <Image
-        source={ImageUrl.leftArrowIcon}
-        style={styles.backIcon}
-      /></TouchableOpacity>
+      <Icon
+      type='antdesign'
+      name='arrowleft'
+      size={20}
+      color='black' />
+
+      </TouchableOpacity>
       <Text style={styles.text}>{pageName}</Text>
     </View>
   )
@@ -30,10 +34,5 @@ const styles = StyleSheet.create({
     fontSize: 18,
     fontWeight: 'bold',
     color: 'black',
-  },
-  backIcon: {
-    width: 30,
-    height: 30,
-
   }
 })
