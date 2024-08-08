@@ -9,7 +9,8 @@ import CustomScrollView from '../../components/authComponents/CustomScrollView'
 import OrComponent from '../../components/authComponents/OrComponent'
 import CustomStatusBar from '../../components/CustomStatusBar'
 import SigninSignupToggler from '../../components/authComponents/SigninSignupToggler'
-
+import axios from 'axios'
+import {successToastMessage,errorToastMessage} from '../../utility/ToastMessage'
 const SignupScreen = ({ navigation }) => {
 
   const [name, setName] = useState('');
@@ -19,9 +20,24 @@ const SignupScreen = ({ navigation }) => {
   const [confirmPassword, setConfirmPassword] = useState('');
 
 
-  const handleSignUp = () => {
-    console.log(name, email, number, password, confirmPassword);
-    navigation.navigate('OtpVerification')
+  const handleSignUp = async () => {
+    const data = {
+      name: name,
+      email: email,
+      mobileNumber: number,
+      password: password,
+      confirmPassword: confirmPassword
+    }
+    console.log(data);
+    try {
+      const response = await axios.post('http://10.0.2.2:4000/api/register', data)
+      console.log("res", JSON.parse(JSON.stringify(response?.data)))
+      if(response){
+        successToastMessage(response?.data?.msg)
+      }
+    } catch (error) {
+      errorToastMessage(error?.response?.data?.msg)
+    }
   }
 
   return (
@@ -69,10 +85,10 @@ const SignupScreen = ({ navigation }) => {
             onChangeText={setConfirmPassword}
           />
 
-          <SubmitButton 
-          label="Sign Up" 
-          onPress={handleSignUp} />
-          
+          <SubmitButton
+            label="Sign Up"
+            onPress={handleSignUp} />
+
           <SigninSignupToggler
             question="Already have an account?"
             button=" Sign In"
