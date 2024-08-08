@@ -10,7 +10,7 @@ import DashboardScreen from './src/screens/dashboardScreens/DashboardScreen'
 import ProfileOptions from './src/screens/dashboardScreens/ProfileOptions'
 import EditProfile from './src/screens/dashboardScreens/EditProfile'
 import TestScreen from './src/screens/TestScreen'
-
+import Toast from 'react-native-toast-message';
 const Stack = createNativeStackNavigator()
 
 const App = () => {
@@ -30,6 +30,7 @@ const App = () => {
           component={OtpVerification}
           options={{ headerShown: false }} />
       </Stack.Navigator>
+      <Toast />
     </NavigationContainer>
 
 
