@@ -16,7 +16,7 @@ const Stack = createNativeStackNavigator()
 const App = () => {
   return (
     <NavigationContainer>
-      <Stack.Navigator initialRouteName='SigninScreen'>
+      <Stack.Navigator initialRouteName='SignUp'>
         <Stack.Screen
           name="SignIn"
           component={SigninScreen}
@@ -32,7 +32,7 @@ const App = () => {
       </Stack.Navigator>
       <Toast />
     </NavigationContainer>
-
+//<FormTestScreen />
 
     //   <NavigationContainer>
     //   <Stack.Navigator initialRouteName='Dashboard'>

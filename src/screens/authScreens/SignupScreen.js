@@ -10,7 +10,8 @@ import OrComponent from '../../components/authComponents/OrComponent'
 import CustomStatusBar from '../../components/CustomStatusBar'
 import SigninSignupToggler from '../../components/authComponents/SigninSignupToggler'
 import axios from 'axios'
-import {successToastMessage,errorToastMessage} from '../../utility/ToastMessage'
+import { successToastMessage, errorToastMessage } from '../../utility/ToastMessage'
+import * as yup from 'yup'
 const SignupScreen = ({ navigation }) => {
 
   const [name, setName] = useState('');
@@ -18,6 +19,15 @@ const SignupScreen = ({ navigation }) => {
   const [number, setNumber] = useState('');
   const [password, setPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
+
+  const schema = yup.object().shape({
+    name: yup.string().required('Please enter name'),
+    email: yup.string().email().required('Invalid email'),
+    number: yup.number().positive().required('Invalid mobile number').min(10),
+    password: yup.string().required('Enter a strong password').min(6),
+    confirmPassword: yup.string().oneOf([yup.ref('password'), null], 'Passwords must match'),
+  });
+
 
 
   const handleSignUp = async () => {
@@ -28,16 +38,18 @@ const SignupScreen = ({ navigation }) => {
       password: password,
       confirmPassword: confirmPassword
     }
-    console.log(data);
     try {
       const response = await axios.post('http://10.0.2.2:4000/api/register', data)
       console.log("res", JSON.parse(JSON.stringify(response?.data)))
-      if(response){
+      if (response) {
         successToastMessage(response?.data?.msg)
       }
     } catch (error) {
       errorToastMessage(error?.response?.data?.msg)
     }
+
+
+
   }
 
   return (
