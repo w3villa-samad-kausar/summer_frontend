@@ -3,7 +3,7 @@ import { StyleSheet, TextInput, Text, View } from 'react-native';
 import colors from '../../assets/colors';
 
 const FormInputField = ({
-  fieldName,
+  
   placeholderText,
   hasMarginTop,
   keyboardType,
@@ -17,7 +17,7 @@ const FormInputField = ({
   <View>
     <TextInput
       style={[
-        styles.textInput, hasMarginTop && styles.marginTop
+        styles.textInput, hasMarginTop && styles.marginTop || error && styles.errorMarginTop
       ]}
       placeholder={placeholderText}
       secureTextEntry={isSecureText}
@@ -44,11 +44,17 @@ const styles = StyleSheet.create({
     fontSize: 20
   },
   marginTop: {
-    marginTop: 25
+    marginTop: 20
   },
   error: {
+    marginTop:5,
+    left:30,
     color: colors.errorMessageColor,
-    fontSize: 12
+    fontSize: 12,
+    fontWeight:"600"
+  },
+  errorMarginTop:{
+    marginTop:10
   }
 });
 

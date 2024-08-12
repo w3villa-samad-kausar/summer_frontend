@@ -47,7 +47,7 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     justifyContent: 'center',
     // backgroundColor: 'red',
-    height: 40,
+    height: 50,
     marginTop: 50
   },
   signinSignupButton: {

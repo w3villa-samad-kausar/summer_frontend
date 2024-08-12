@@ -11,32 +11,42 @@ import CustomStatusBar from '../../components/CustomStatusBar'
 import SigninSignupToggler from '../../components/authComponents/SigninSignupToggler'
 import axios from 'axios'
 import { successToastMessage, errorToastMessage } from '../../utility/ToastMessage'
-import * as yup from 'yup'
+import * as Yup from 'yup'
+import { Formik } from 'formik'
+import FormInputField from '../../components/authComponents/FormInputField'
+
 const SignupScreen = ({ navigation }) => {
 
-  const [name, setName] = useState('');
-  const [email, setEmail] = useState('');
-  const [number, setNumber] = useState('');
-  const [password, setPassword] = useState('');
-  const [confirmPassword, setConfirmPassword] = useState('');
+  const validationSchema = Yup.object().shape({
+    name: Yup.string()
+      .min(2, "Name must be atleast 2 characters")
+      .required('Name is required'),
 
-  const schema = yup.object().shape({
-    name: yup.string().required('Please enter name'),
-    email: yup.string().email().required('Invalid email'),
-    number: yup.number().positive().required('Invalid mobile number').min(10),
-    password: yup.string().required('Enter a strong password').min(6),
-    confirmPassword: yup.string().oneOf([yup.ref('password'), null], 'Passwords must match'),
-  });
+    email: Yup.string()
+      .email('Invalid Email')
+      .required("Email is required"),
 
+    mobileNumber: Yup.number()
+      .min(10, 'Number must be at least 10 digits')
+      .max(10, 'Number cannot exceed 10 digits')
+      .required('Number is required'),
 
+    password: Yup.string()
+      .min(6, 'Password must be at least 6 characters')
+      .required('Password is required'),
 
-  const handleSignUp = async () => {
+    confirmPassword: Yup.string()
+      .oneOf([Yup.ref('password'), null], 'Passwords must match')
+      .required('Confirm Password is required'),
+  })
+
+  const handleSignUp = async (values) => {
     const data = {
-      name: name,
-      email: email,
-      mobileNumber: number,
-      password: password,
-      confirmPassword: confirmPassword
+      name: values.name,
+      email: values.email,
+      mobileNumber: values.mobileNumber,
+      password: values.password,
+      confirmPassword: values.confirmPassword
     }
     try {
       const response = await axios.post('http://10.0.2.2:4000/api/register', data)
@@ -48,70 +58,97 @@ const SignupScreen = ({ navigation }) => {
       errorToastMessage(error?.response?.data?.msg)
     }
 
-
-
   }
 
   return (
-    <>
-      <BackgroundImage height='50%' />
-      <CustomStatusBar />
-      <CustomScrollView >
-        <MainElementIsland screenType="signup" marginTop={80} height={700} >
-          <SigninSignupButtons
-            activeButton='signup' />
-          <InputComponents
-            hasMarginTop={false}
-            label='Enter name'
-            value={name}
-            onChangeText={setName} />
+    <Formik
+      initialValues={{ name: '', email: '', mobileNumber: '', password: '', confirmPassword: '' }}
+      validationSchema={validationSchema}
+      onSubmit={handleSignUp}>
+      {({ handleChange, handleBlur, handleSubmit, values, errors, touched }) => {
+        return (
 
-          <InputComponents
-            hasMarginTop={true}
-            label='Enter email'
-            value={email}
-            onChangeText={setEmail}
-          />
+          <>
+            <BackgroundImage height='50%' />
+            <CustomStatusBar />
+            <CustomScrollView >
+              <MainElementIsland screenType="signup" marginTop={50} height={720} >
+                <SigninSignupButtons
+                  activeButton='signup' />
+                <FormInputField
+                  placeholderText="Enter name"
+                  hasMarginTop={true}
+                  keyboardType="default"
+                  value={values.name}
+                  onChangeText={handleChange('name')}
+                  onBlur={handleBlur('name')}
+                  error={errors.name}
+                  touched={touched.name}
+                />
+                <FormInputField
+                  placeholderText="Enter email"
+                  hasMarginTop={true}
+                  keyboardType="email-address"
+                  value={values.email}
+                  onChangeText={handleChange('email')}
+                  onBlur={handleBlur('email')}
+                  error={errors.email}
+                  touched={touched.email}
+                />
 
-          <InputComponents
-            hasMarginTop={true}
-            label='Enter phone number'
-            keyboardType='numeric'
-            value={number}
-            onChangeText={setNumber}
-          />
+                <FormInputField
+                  placeholderText="Enter mobile number"
+                  hasMarginTop={true}
+                  keyboardType="number"
+                  value={values.mobileNumber}
+                  onChangeText={handleChange('mobileNumber')}
+                  onBlur={handleBlur('mobileNumber')}
+                  error={errors.mobileNumber}
+                  touched={touched.mobileNumber}
+                />
 
-          <InputComponents
-            hasMarginTop={true}
-            label='Enter password'
-            isSecureText={true}
-            value={password}
-            onChangeText={setPassword}
-          />
+                <FormInputField
+                  placeholderText="Enter password"
+                  hasMarginTop={true}
+                  isSecureText={true}
+                  value={values.password}
+                  onChangeText={handleChange('password')}
+                  onBlur={handleBlur('password')}
+                  error={errors.password}
+                  touched={touched.password}
+                />
 
-          <InputComponents
-            hasMarginTop={true}
-            label='Confirm password'
-            isSecureText={true}
-            value={confirmPassword}
-            onChangeText={setConfirmPassword}
-          />
 
-          <SubmitButton
-            label="Sign Up"
-            onPress={handleSignUp} />
+                <FormInputField
+                  placeholderText="Re-enter password"
+                  hasMarginTop={true}
+                  isSecureText={true}
+                  value={values.confirmPassword}
+                  onChangeText={handleChange('confirmPassword')}
+                  onBlur={handleBlur('confirmPassword')}
+                  error={errors.confirmPassword}
+                  touched={touched.confirmPassword}
+                />
 
-          <SigninSignupToggler
-            question="Already have an account?"
-            button=" Sign In"
-            onPress={() => { navigation.navigate('SignIn') }}
-          />
-          <OrComponent />
-          <Icons />
 
-        </MainElementIsland>
-      </CustomScrollView>
-    </>
+                <SubmitButton
+                  label="Sign Up"
+                  onPress={handleSubmit} />
+
+                <SigninSignupToggler
+                  question="Already have an account?"
+                  button=" Sign In"
+                  onPress={() => { navigation.navigate('SignIn') }}
+                />
+                <OrComponent />
+                <Icons />
+
+              </MainElementIsland>
+            </CustomScrollView>
+          </>
+        )
+      }}
+    </Formik>
   )
 }
 
