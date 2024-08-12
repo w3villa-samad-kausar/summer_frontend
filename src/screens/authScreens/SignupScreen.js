@@ -26,7 +26,7 @@ const SignupScreen = ({ navigation }) => {
       .email('Invalid Email')
       .required("Email is required"),
 
-    mobileNumber: Yup.number()
+    mobileNumber: Yup.string()
       .min(10, 'Number must be at least 10 digits')
       .max(10, 'Number cannot exceed 10 digits')
       .required('Number is required'),
@@ -49,14 +49,20 @@ const SignupScreen = ({ navigation }) => {
       confirmPassword: values.confirmPassword
     }
     try {
-      const response = await axios.post('http://10.0.2.2:4000/api/register', data)
-      console.log("res", JSON.parse(JSON.stringify(response?.data)))
+      console.log("Starting request");
+      const response = await axios.post('http://10.0.2.2:4000/api/register', data);
+      console.log("Response received:", response);
+    
       if (response) {
-        successToastMessage(response?.data?.msg)
+        console.log('Navigating to OTP Verification');
+        successToastMessage(response?.data?.msg);
+        navigation.navigate('OtpVerification', { mobileNumber:data.mobileNumber });
       }
     } catch (error) {
-      errorToastMessage(error?.response?.data?.msg)
+      console.error("Error caught:", error);
+      errorToastMessage(error?.response?.data?.msg);
     }
+    
 
   }
 
@@ -72,7 +78,7 @@ const SignupScreen = ({ navigation }) => {
             <BackgroundImage height='50%' />
             <CustomStatusBar />
             <CustomScrollView >
-              <MainElementIsland screenType="signup" marginTop={50} height={720} >
+              <MainElementIsland screenType="signup" marginTop={50} height={750} >
                 <SigninSignupButtons
                   activeButton='signup' />
                 <FormInputField

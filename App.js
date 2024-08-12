@@ -11,45 +11,50 @@ import ProfileOptions from './src/screens/dashboardScreens/ProfileOptions'
 import EditProfile from './src/screens/dashboardScreens/EditProfile'
 import TestScreen from './src/screens/TestScreen'
 import Toast from 'react-native-toast-message';
+import AskingMobileNumber from './src/screens/authScreens/AskingMobileNumber'
 const Stack = createNativeStackNavigator()
 
 const App = () => {
   return (
-    <NavigationContainer>
-      <Stack.Navigator initialRouteName='SignUp'>
-        <Stack.Screen
-          name="SignIn"
-          component={SigninScreen}
-          options={{ headerShown: false }} />
-        <Stack.Screen
-          name="SignUp"
-          component={SignupScreen}
-          options={{ headerShown: false }} />
-        <Stack.Screen
-          name="OtpVerification"
-          component={OtpVerification}
-          options={{ headerShown: false }} />
-      </Stack.Navigator>
-      <Toast />
-    </NavigationContainer>
-//<FormTestScreen />
-
-    //   <NavigationContainer>
-    //   <Stack.Navigator initialRouteName='Dashboard'>
+    // <NavigationContainer>
+    //   <Stack.Navigator initialRouteName='SignUp'>
     //     <Stack.Screen
-    //     name="Dashboard"
-    //     component={DashboardScreen}
-    //     options={{headerShown:false}} />
+    //       name="SignIn"
+    //       component={SigninScreen}
+    //       options={{ headerShown: false }} />
     //     <Stack.Screen
-    //     name="ProfileOptions"
-    //     component={ProfileOptions}
-    //     options={{headerShown:false}} />
+    //       name="SignUp"
+    //       component={SignupScreen}
+    //       options={{ headerShown: false }} />
     //     <Stack.Screen
-    //     name="EditProfile"
-    //     component={EditProfile}
-    //     options={{headerShown:false}} />
+    //       name="OtpVerification"
+    //       component={OtpVerification}
+    //       options={{ headerShown: false }} />
+    //     <Stack.Screen
+    //       name="MobileNumber"
+    //       component={AskingMobileNumber}
+    //       options={{ headerShown: false }} />
     //   </Stack.Navigator>
-    // </NavigationContainer>  
+    //   <Toast />
+    // </NavigationContainer>
+// <AskingMobileNumber /> 
+
+      <NavigationContainer>
+      <Stack.Navigator initialRouteName='Dashboard'>
+        <Stack.Screen
+        name="Dashboard"
+        component={DashboardScreen}
+        options={{headerShown:false}} />
+        <Stack.Screen
+        name="ProfileOptions"
+        component={ProfileOptions}
+        options={{headerShown:false}} />
+        <Stack.Screen
+        name="EditProfile"
+        component={EditProfile}
+        options={{headerShown:false}} />
+      </Stack.Navigator>
+    </NavigationContainer>  
 
   )
 }

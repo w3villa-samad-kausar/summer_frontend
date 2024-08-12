@@ -1,8 +1,17 @@
 import React, { useState, useRef } from 'react'
-import { StyleSheet, Text, TextInput, View, TouchableOpacity } from 'react-native'
+import { StyleSheet, Text, TextInput, View, TouchableOpacity, TouchableHighlight, TouchableNativeFeedback, Touchable } from 'react-native'
 import CustomStatusBar from '../../components/CustomStatusBar'
+import axios from 'axios'
+import { useRoute } from '@react-navigation/native';
+import { errorToastMessage, successToastMessage } from '../../utility/ToastMessage';
+import colors from '../../assets/colors';
 
-const OtpVerification = () => {
+const OtpVerification = ({ navigation }) => {
+  const route = useRoute()
+  const mobileNumber = route.params
+  const finalMobile = mobileNumber.mobileNumber
+
+
   const [otp, setOtp] = useState(['', '', '', ''])
 
   const inputRefs = useRef([])
@@ -24,9 +33,35 @@ const OtpVerification = () => {
     }
   }
 
-  const handleSubmit = () => {
+  const handleSubmit = async () => {
     const finalOtp = otp.join('')
-    console.log(finalOtp) // Here you can check if the OTP is correct
+    const data = {
+      otp: finalOtp,
+      mobileNumber: finalMobile
+    }
+    try {
+      const response = await axios.post('http://10.0.2.2:4000/api/verify-otp', data)
+      successToastMessage(response?.data?.msg)
+
+    } catch (error) {
+      errorToastMessage(error?.response?.data?.msg)
+
+
+    }
+  }
+
+  const resendOtp=async()=>{
+    const data={
+      mobileNumber:finalMobile
+    }
+    try {
+      const response=await axios.post('http://10.0.2.2:4000/api/resend-otp',data)
+      successToastMessage(response?.data?.msg)
+      
+    } catch (error) {
+      errorToastMessage(error?.response?.data?.msg)
+
+    }
   }
 
   const isSubmitDisabled = otp.includes('')
@@ -53,15 +88,21 @@ const OtpVerification = () => {
           ))}
         </View>
         <TouchableOpacity
-          style={[styles.button, { backgroundColor: isSubmitDisabled ? 'gray' : '#000' }]}
+          style={[styles.button, { backgroundColor: isSubmitDisabled ? colors.primaryBackground : colors.buttonColor }]}
           onPress={handleSubmit}
           disabled={isSubmitDisabled}
         >
           <Text style={styles.buttonText}>Submit OTP</Text>
         </TouchableOpacity>
-        <Text style={styles.text}>
-          Didn't receive the code?<Text style={styles.resendText}> Resend</Text>
-        </Text>
+        <View>
+
+          <Text style={styles.text}>
+            Didn't receive the code?
+          </Text>
+            <TouchableOpacity onPress={resendOtp}>
+              <Text style={styles.resendText}>Resend</Text>
+            </TouchableOpacity>
+        </View>
       </View>
     </>
   )
@@ -118,8 +159,11 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
   },
   resendText: {
+    textAlign:"center",
     fontWeight: 'bold',
     textDecorationLine: 'underline',
+    color:"black",
+    fontSize: 20,
   },
 })
 

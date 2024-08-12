@@ -10,7 +10,7 @@ import {
 
 
 
-const Icons = () => {
+const Icons = (navigation) => {
   return (
     <View style={styles.iconContainer}>
       <TouchableOpacity onPress={() => {
@@ -22,6 +22,7 @@ const Icons = () => {
               if (hasPlayService) {
                 GoogleSignin.signIn().then((userInfo) => {
                   console.log(JSON.stringify(userInfo))
+                  navigation.navigate("MobileNumber")
                 }).catch((e) => {
                   console.log("ERROR IS: " + JSON.stringify(e));
                 })
