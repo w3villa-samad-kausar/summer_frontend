@@ -19,6 +19,7 @@ export default NameAndPhoto
 
 const styles = StyleSheet.create({
   container: {
+    flex:1,
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'space-around',
@@ -26,20 +27,22 @@ const styles = StyleSheet.create({
     // gap:40
   },
   nameContainer: {
+    flex:0.8,
     flexDirection: 'column',
     borderLeftWidth: 1,
     borderLeftColor: 'gray',
-    paddingLeft:20
+    paddingLeft:20,
+    marginTop:20
   },
   name: {
-    fontSize: 30,
+    fontSize: 18,
     fontWeight: 'bold',
     color: 'black',
     // paddingLeft:10
     // marginLeft:20,
   },
   tier: {
-    fontSize: 20,
+    fontSize: 12,
     fontWeight: '400',
     color: 'black',
     // marginTop:40

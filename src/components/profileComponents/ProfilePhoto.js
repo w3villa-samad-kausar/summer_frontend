@@ -1,9 +1,10 @@
-import { Image, Modal, StyleSheet, Text, TouchableOpacity, View } from 'react-native'
+import { Image, Modal, StyleSheet, TouchableOpacity, TouchableWithoutFeedback, View } from 'react-native'
 import React, { useState } from 'react'
 import ImageUrl from '../../constants/ImageUrl'
 
 const ProfilePhoto = () => {
   const [modalVisible, setModalVisible] = useState(false);
+
   return (
     <>
       <Modal
@@ -13,15 +14,15 @@ const ProfilePhoto = () => {
         onRequestClose={() => {
           setModalVisible(!modalVisible);
         }}>
-        <View style={styles.centeredView}>
-          <View style={styles.modalView}>
-            <View style={styles.centeredView}>
-              <TouchableOpacity onPress={() => setModalVisible(!modalVisible)}>
+        <TouchableWithoutFeedback onPress={() => setModalVisible(false)}>
+          <View style={styles.centeredView}>
+            <TouchableWithoutFeedback>
+              <View style={styles.modalView}>
                 <Image source={ImageUrl.profilePhoto} style={styles.modalImage} />
-              </TouchableOpacity>
-            </View>
+              </View>
+            </TouchableWithoutFeedback>
           </View>
-        </View>
+        </TouchableWithoutFeedback>
       </Modal>
 
       <TouchableOpacity onPress={() => setModalVisible(true)}>
@@ -35,8 +36,8 @@ export default ProfilePhoto
 
 const styles = StyleSheet.create({
   imageStyling: {
-    width: 100,
-    height: 100,
+    width: 80,
+    height: 80,
     borderRadius: 50,
     borderWidth: 1,
     borderColor: 'black',
@@ -46,16 +47,13 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
-    // marginTop: 22,
+    backgroundColor: 'rgba(0, 0, 0, 0.5)', // Add a semi-transparent background to the modal
   },
   modalView: {
-    margin: 20,
-    height: "100%",
-    backgroundColor: 'rgba(255, 255, 255, 0.6)',
+    //backgroundColor: 'rgba(255, 255, 255, 0.9)',
     borderRadius: 20,
-    padding: 35,
+    padding: 10,
     alignItems: 'center',
-    // shadowColor: '#000',
   },
   modalImage: {
     width: 350,

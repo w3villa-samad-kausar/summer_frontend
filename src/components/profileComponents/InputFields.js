@@ -1,9 +1,9 @@
 import { StyleSheet, Text, TextInput, View } from 'react-native'
 import React from 'react'
 
-const InputFields = ({label,value}) => {
+const InputFields = ({label,value,firstElement}) => {
   return (
-    <View style={styles.container} >
+    <View style={[styles.container, firstElement && styles.firstElement]} >
       <Text style={styles.text}>{label}</Text>
       <TextInput style={styles.textInput} value={value}></TextInput>
     </View>
@@ -15,13 +15,13 @@ export default InputFields
 const styles = StyleSheet.create({
   container:{
     width:'90%',
-    height:100,
+    height:80,
     marginLeft:20,
-    marginTop:10,
+    marginTop:5,
 
   },
   text:{
-    fontSize:16,
+    fontSize:14,
     fontWeight:'bold',
     color:'black',
   },
@@ -30,8 +30,8 @@ const styles = StyleSheet.create({
     fontSize:14,
     backgroundColor:'white',
     borderRadius:10,
-    marginVertical:10,
-    padding:10,
+    marginVertical:5,
+    padding:5,
     // justifyContent:'space-between',
     alignItems:'center',
     // flexDirection:'row',
@@ -45,5 +45,8 @@ const styles = StyleSheet.create({
     shadowRadius: 3.84,
     elevation: 5
 
+  },
+  firstElement:{
+    marginTop:20
   }
 })

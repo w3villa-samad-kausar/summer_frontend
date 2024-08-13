@@ -26,7 +26,7 @@ const styles = StyleSheet.create({
   container: {
     flexDirection: 'row',
     width: '90%',
-    height: 70,
+    height: 50,
     // backgroundColor: '#fff',
     justifyContent: 'space-between',
     alignItems: 'center',
@@ -42,14 +42,11 @@ const styles = StyleSheet.create({
     borderTopWidth:0
   },
   text: {
-    fontSize: 20,
-    fontWeight: 'bold',
+    fontSize: 16,
+    fontWeight: "600",
     textAlign: 'left',
     paddingLeft: 10,
     color: 'black'
   },
-  image: {
-    width: 30,
-    height: 30,
-  }
+  
 })
