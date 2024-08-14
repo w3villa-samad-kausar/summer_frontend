@@ -1,61 +1,16 @@
 import React from 'react'
-import SignupScreen from './src/screens/authScreens/SignupScreen'
-import OtpVerification from './src/screens/authScreens/OtpVerification'
-import SigninScreen from './src/screens/authScreens/SigninScreen'
-
-
-import { NavigationContainer } from '@react-navigation/native'
-import { createNativeStackNavigator } from '@react-navigation/native-stack'
-import DashboardScreen from './src/screens/dashboardScreens/DashboardScreen'
-import ProfileOptions from './src/screens/dashboardScreens/ProfileOptions'
-import EditProfile from './src/screens/dashboardScreens/EditProfile'
-import TestScreen from './src/screens/TestScreen'
-import Toast from 'react-native-toast-message';
-import AskingMobileNumber from './src/screens/authScreens/AskingMobileNumber'
-const Stack = createNativeStackNavigator()
+import AuthStack from './src/navigations/AuthStack'
+import ProfileStack from './src/navigations/ProfileStack'
+import { GestureHandlerRootView } from 'react-native-gesture-handler'
+import ProfileCard from './src/components/profileComponents/ProfileCard'
 
 const App = () => {
   return (
-    // <NavigationContainer>
-    //   <Stack.Navigator initialRouteName='SignUp'>
-    //     <Stack.Screen
-    //       name="SignIn"
-    //       component={SigninScreen}
-    //       options={{ headerShown: false }} />
-    //     <Stack.Screen
-    //       name="SignUp"
-    //       component={SignupScreen}
-    //       options={{ headerShown: false }} />
-    //     <Stack.Screen
-    //       name="OtpVerification"
-    //       component={OtpVerification}
-    //       options={{ headerShown: false }} />
-    //     <Stack.Screen
-    //       name="MobileNumber"
-    //       component={AskingMobileNumber}
-    //       options={{ headerShown: false }} />
-    //   </Stack.Navigator>
-    //   <Toast />
-    // </NavigationContainer>
-// <AskingMobileNumber /> 
+    
 
-      <NavigationContainer>
-      <Stack.Navigator initialRouteName='Dashboard'>
-        <Stack.Screen
-        name="Dashboard"
-        component={DashboardScreen}
-        options={{headerShown:false}} />
-        <Stack.Screen
-        name="ProfileOptions"
-        component={ProfileOptions}
-        options={{headerShown:false}} />
-        <Stack.Screen
-        name="EditProfile"
-        component={EditProfile}
-        options={{headerShown:false}} />
-      </Stack.Navigator>
-    </NavigationContainer>  
-
+      //<AuthStack /> 
+      <ProfileStack /> 
+      
   )
 }
 

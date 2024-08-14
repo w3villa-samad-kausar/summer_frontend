@@ -1,13 +1,17 @@
 import { StyleSheet, Text, View } from 'react-native'
 import React from 'react'
 import ProfilePhoto from './ProfilePhoto'
+import { TouchableOpacity } from 'react-native'
 
-const NameAndPhoto = ({ name, tierName }) => {
+const NameAndPhoto = ({ name, tierName,navigation}) => {
+  const handlenavigation=()=>{navigation.navigate('ProfileScreen')}
   return (
     <View style={styles.container}>
       <ProfilePhoto></ProfilePhoto>
       <View style={styles.nameContainer}>
+      <TouchableOpacity onPress={handlenavigation}>
         <Text style={styles.name}>{name}</Text>
+      </TouchableOpacity>
         <Text style={styles.tier}>{tierName}</Text>
         <Text>  </Text>
       </View>

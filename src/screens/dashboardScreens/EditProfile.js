@@ -1,17 +1,14 @@
-import { View, Text, ScrollView } from 'react-native'
+import { ScrollView } from 'react-native'
 import React from 'react'
-import CustomView from '../../components/CustomView'
 import PageHeading from '../../components/profileComponents/PageHeading'
 import NameAndPhoto from '../../components/profileComponents/NameAndPhoto'
-import InputComponents from '../../components/authComponents/InputComponents'
-import CustomScrollView from '../../components/authComponents/CustomScrollView'
 import InputFields from '../../components/profileComponents/InputFields'
 
 const EditProfile = ({navigation}) => {
   return (
     <ScrollView>
       <PageHeading pageName='Edit Profile' onPressHandler={()=>{navigation.navigate("ProfileOptions")}}></PageHeading>
-      <NameAndPhoto name='Samad Kausar' tierName='Basic User'></NameAndPhoto>
+      <NameAndPhoto name='Samad Kausar' tierName='Basic User' navigation={navigation}></NameAndPhoto>
       <InputFields label='First name' value='samad' firstElement={true}/>
       <InputFields label='Last name' value='kausar'/>
       <InputFields label='Email' value='samad@gmail.com'/>

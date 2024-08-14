@@ -1,26 +1,25 @@
-import { Image, StyleSheet, Text, TouchableOpacity, View } from 'react-native'
+import {  StyleSheet, Text, TouchableOpacity, View } from 'react-native'
 import React from 'react'
-import ImageUrl from '../../constants/ImageUrl'
 import { Icon } from '@rneui/themed'
 import colors from '../../assets/colors'
 
 const OptionNames = ({ optionName, hasMarginTop, onPresshandler, hasColour, hasIcon }) => {
-  {
-    const icon =
-      <Icon
-        type='antdesign'
-        name='right'
-        size={20}
-        color='black'
-      />
-  }
   return (
+
     <TouchableOpacity onPress={onPresshandler}>
       <View style={[styles.container, hasMarginTop && styles.marginTop]}>
         <Text style={[styles.text, hasColour && styles.redColour]}>{optionName}</Text>
-        {!hasIcon && icon}
+        {
+          !hasIcon && 
+          <Icon
+          type='antdesign'
+          name='right'
+          size={20}
+          color='black'
+        />}
       </View>
     </TouchableOpacity>
+
   )
 }
 

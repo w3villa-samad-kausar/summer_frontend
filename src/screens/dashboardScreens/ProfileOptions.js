@@ -1,6 +1,5 @@
 
 import React from 'react'
-import CustomView from '../../components/CustomView'
 import PageHeading from '../../components/profileComponents/PageHeading'
 
 import NameAndPhoto from '../../components/profileComponents/NameAndPhoto'
@@ -13,7 +12,7 @@ const ProfileOptions = ({navigation}) => {
       <ScrollView>
 
         <PageHeading pageName='Profile' onPressHandler={()=>{navigation.navigate('Dashboard')}}></PageHeading>
-        <NameAndPhoto name="Samad Kausar" tierName='Basic User'></NameAndPhoto>
+        <NameAndPhoto name="Samad Kausar" tierName='Basic User' navigation={navigation}></NameAndPhoto>
         <OptionNames optionName="Edit Profile" onPresshandler={()=>{navigation.navigate('EditProfile')}}></OptionNames>
         <OptionNames optionName="Settings" hasMarginTop={true}></OptionNames>
         <OptionNames optionName="Logout" hasMarginTop={true} hasColour={true} hasIcon={true}></OptionNames>
