@@ -16,8 +16,7 @@ const ProfileOptions = ({navigation}) => {
         <NameAndPhoto name="Samad Kausar" tierName='Basic User'></NameAndPhoto>
         <OptionNames optionName="Edit Profile" onPresshandler={()=>{navigation.navigate('EditProfile')}}></OptionNames>
         <OptionNames optionName="Settings" hasMarginTop={true}></OptionNames>
-        <OptionNames optionName="Privacy Policy" hasMarginTop={true}></OptionNames>
-        <OptionNames optionName="Logout" hasMarginTop={true} ></OptionNames>
+        <OptionNames optionName="Logout" hasMarginTop={true} hasColour={true} hasIcon={true}></OptionNames>
       
       </ScrollView>
     </>

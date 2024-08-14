@@ -3,6 +3,7 @@ import React from 'react'
 import CustomScrollView from '../../components/authComponents/CustomScrollView'
 import ImageUrl from '../../constants/ImageUrl'
 import MyCarousel  from '../../components/profileComponents/Carousel'
+import { Icon } from '@rneui/themed'
 
 
 const DashboardScreen = ({navigation}) => {
@@ -13,10 +14,10 @@ const DashboardScreen = ({navigation}) => {
       <View style={styles.header}>
         <Text style={styles.centerMesssageText} >Hello Samad</Text>
         <TouchableOpacity onPress={()=>navigation.navigate('ProfileOptions')}>
-
-        <Image
-          source={ImageUrl.profileIcon}
-          style={styles.profileImage}
+        <Icon 
+          type='antdesign'
+          name='user'
+          size={30}
         />
         </TouchableOpacity>
       </View>

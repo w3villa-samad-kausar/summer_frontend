@@ -2,20 +2,24 @@ import { Image, StyleSheet, Text, TouchableOpacity, View } from 'react-native'
 import React from 'react'
 import ImageUrl from '../../constants/ImageUrl'
 import { Icon } from '@rneui/themed'
+import colors from '../../assets/colors'
 
-const OptionNames = ({ optionName,hasMarginTop,onPresshandler }) => {
+const OptionNames = ({ optionName, hasMarginTop, onPresshandler, hasColour, hasIcon }) => {
+  {
+    const icon =
+      <Icon
+        type='antdesign'
+        name='right'
+        size={20}
+        color='black'
+      />
+  }
   return (
     <TouchableOpacity onPress={onPresshandler}>
-    <View style={[styles.container,hasMarginTop &&styles.marginTop]}>
-    
-      <Text style={styles.text}>{optionName}</Text>
-      <Icon
-      type='antdesign'
-      name='right'
-      size={20}
-      color='black'
-      />
-    </View>
+      <View style={[styles.container, hasMarginTop && styles.marginTop]}>
+        <Text style={[styles.text, hasColour && styles.redColour]}>{optionName}</Text>
+        {!hasIcon && icon}
+      </View>
     </TouchableOpacity>
   )
 }
@@ -37,9 +41,9 @@ const styles = StyleSheet.create({
     marginTop: 20,
     marginLeft: 20
   },
-  marginTop:{
+  marginTop: {
     marginTop: 0,
-    borderTopWidth:0
+    borderTopWidth: 0
   },
   text: {
     fontSize: 16,
@@ -48,5 +52,8 @@ const styles = StyleSheet.create({
     paddingLeft: 10,
     color: 'black'
   },
-  
+  redColour: {
+    color: colors.errorMessageColor
+  }
+
 })
