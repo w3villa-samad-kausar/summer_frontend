@@ -34,10 +34,11 @@ const FormInputField = ({
 
 const styles = StyleSheet.create({
   textInput: {
+    alignSelf:'center',
     height: 50,
     width: 300,
     marginTop: 40,
-    left: 20,
+    
     borderRadius: 10,
     backgroundColor: colors.secondaryBackground,
     paddingLeft: 20,
@@ -48,7 +49,7 @@ const styles = StyleSheet.create({
   },
   error: {
     marginTop:5,
-    left:30,
+    alignSelf:'center',
     color: colors.errorMessageColor,
     fontSize: 12,
     fontWeight:"600"

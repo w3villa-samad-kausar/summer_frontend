@@ -1,6 +1,6 @@
 
 import React from 'react'
-import { ImageBackground, StyleSheet, View } from 'react-native'
+import { Image, ImageBackground, StyleSheet, View } from 'react-native'
 import ImageUrl from '../../constants/ImageUrl'
 
 const BackgroundImage = ({height}) => {
@@ -17,7 +17,7 @@ const BackgroundImage = ({height}) => {
 
 const styles = StyleSheet.create({
   backgroundImage: {
-    flex: 1,
+    flex: 0.5,
     width: '100%',
     height: '50%',
     position: 'absolute',
