@@ -1,7 +1,8 @@
 import React from 'react';
-import { StyleSheet, TextInput, Text, View } from 'react-native';
+import { StyleSheet, TextInput, Text, View, Dimensions } from 'react-native';
 import colors from '../../assets/colors';
 
+const width=Dimensions.get('screen').width
 const FormInputField = ({
   
   placeholderText,
@@ -14,7 +15,7 @@ const FormInputField = ({
   error,
   touched
 }) => (
-  <View>
+  <View style={styles.container}>
     <TextInput
       style={[
         styles.textInput, hasMarginTop && styles.marginTop || error && styles.errorMarginTop
@@ -33,6 +34,11 @@ const FormInputField = ({
 );
 
 const styles = StyleSheet.create({
+  container: {
+    width: '100%',
+    alignItems:'center',
+    justifyContent:'flex-end',
+  },
   textInput: {
     alignSelf:'center',
     height: 50,
@@ -49,7 +55,8 @@ const styles = StyleSheet.create({
   },
   error: {
     marginTop:5,
-    alignSelf:'center',
+    alignSelf:'flex-end',
+    right:width-350,
     color: colors.errorMessageColor,
     fontSize: 12,
     fontWeight:"600"

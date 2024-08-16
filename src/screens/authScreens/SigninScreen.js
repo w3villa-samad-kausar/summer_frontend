@@ -98,9 +98,10 @@ const SigninScreen = ({ navigation }) => {
 
 const styles = StyleSheet.create({
   container: {
+    height:height/4,
     flexGrow:1,
     top: height /3,
-    marginBottom: 80,
+    marginBottom: 100,
 
   }
 })

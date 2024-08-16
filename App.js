@@ -10,10 +10,10 @@ const App = () => {
   return (
     
 <GestureHandlerRootView>
-{/* <AuthStack /> */}
+<AuthStack />
       {/* <ProfileStack />  */}
 
-      <AskingMobileNumber />
+      {/* <AskingMobileNumber /> */}
 
       
 </GestureHandlerRootView>

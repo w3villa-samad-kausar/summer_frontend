@@ -155,6 +155,7 @@ const SignupScreen = ({ navigation }) => {
 
 const styles = StyleSheet.create({
   container: {
+    height:height/0.5,
     flexGrow:1,
     top:height/5,
     marginBottom: 200,
