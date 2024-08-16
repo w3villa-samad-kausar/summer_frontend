@@ -3,6 +3,8 @@ import React, { useState } from 'react'
 import colors from '../../assets/colors'
 import BackgroundImage from '../../components/authComponents/BackgroundImage'
 import { TouchableOpacity } from 'react-native-gesture-handler'
+import CustomScrollView from '../../components/authComponents/CustomScrollView'
+import CustomStatusBar from '../../components/CustomStatusBar'
 width=Dimensions.get('screen').width
 height=Dimensions.get('screen').height
 const AskingMobileNumber = () => {
@@ -18,6 +20,7 @@ const AskingMobileNumber = () => {
 
   return (
   <>
+  <CustomStatusBar />
 <BackgroundImage height='40%' />
     <View style={styles.background}>
 
