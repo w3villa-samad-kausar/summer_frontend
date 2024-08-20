@@ -10,6 +10,8 @@ import Icons from '../../components/authComponents/Icons';
 import CustomStatusBar from '../../components/CustomStatusBar';
 import * as Yup from 'yup';
 import { Dimensions, ScrollView, StyleSheet, View } from 'react-native';
+import { setStoredToken } from '../../utility/AuthToken';
+import API from '../../helpers/api/ApiHelper';
 
 const height = Dimensions.get('screen').height
 
@@ -32,11 +34,13 @@ const SigninScreen = ({ navigation }) => {
       password: values.password
     }
     try {
-      const response = await axios.post('http://10.0.2.2:4000/api/login', data);
-
-      console.log(response.data);
+      const response = await API.post('/api/login', data);
+      console.log(">>>>>RESSFGHHHJ",response);
+      if(response?.token){
+        await setStoredToken(response?.token)
+      }
       // Handle successful response, like navigating to another screen
-      navigation.navigate('OtpVerification');
+      // navigation.navigate('OtpVerification');
     } catch (error) {
       console.error('Login failed:', error);
       // Handle error, like showing an error message

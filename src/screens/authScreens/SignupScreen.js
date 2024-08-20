@@ -11,6 +11,7 @@ import * as Yup from 'yup'
 import { Formik } from 'formik'
 import FormInputField from '../../components/authComponents/FormInputField'
 import { Dimensions, ScrollView, StyleSheet, View } from 'react-native'
+import API from '../../helpers/api/ApiHelper'
 
 const height = Dimensions.get('screen').height
 const SignupScreen = ({ navigation }) => {
@@ -48,7 +49,7 @@ const SignupScreen = ({ navigation }) => {
     }
     try {
       console.log("Starting request");
-      const response = await axios.post('http://10.0.2.2:4000/api/register', data);
+      const response = await API.post('/api/register', data);
       console.log("Response received:", response);
 
       if (response) {

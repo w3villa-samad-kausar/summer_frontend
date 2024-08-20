@@ -14,23 +14,39 @@ const Icons = (navigation) => {
   return (
     <View style={styles.iconContainer}>
       <TouchableOpacity onPress={() => {
-            GoogleSignin.configure({
-              androidClientId: '875917285754-1bl3bptndiqr25kkq1et2nnukhtevqi5.apps.googleusercontent.com',
-              
-            });
-            GoogleSignin.hasPlayServices().then((hasPlayService) => {
-              if (hasPlayService) {
-                GoogleSignin.signIn().then((userInfo) => {
-                  console.log(JSON.stringify(userInfo))
-                  navigation.navigate("MobileNumber")
-                }).catch((e) => {
-                  console.log("ERROR IS: " + JSON.stringify(e));
-                })
+        GoogleSignin.configure({
+          androidClientId: '875917285754-1bl3bptndiqr25kkq1et2nnukhtevqi5.apps.googleusercontent.com',
+
+        });
+        GoogleSignin.hasPlayServices().then((hasPlayService) => {
+          if (hasPlayService) {
+            GoogleSignin.signIn().then(async (userInfo) => {
+              console.log(JSON.stringify(userInfo))
+              if (userInfo) {
+                const data = {
+                  email: userInfo.user.email,
+                  name: userInfo.user.name,
+                }
+                try {
+                  const response = await axios.post('http://10.0.2.2:4000/api/login', data);
+
+                  console.log(response.data);
+                  // Handle successful response, like navigating to another screen
+                  navigation.navigate('OtpVerification');
+                } catch (error) {
+                  console.error('Login failed:', error);
+                  // Handle error, like showing an error message
+                }
               }
+              navigation.navigate("MobileNumber")
             }).catch((e) => {
               console.log("ERROR IS: " + JSON.stringify(e));
             })
-          }}>
+          }
+        }).catch((e) => {
+          console.log("ERROR IS: " + JSON.stringify(e));
+        })
+      }}>
 
         <Icon
           type='antdesign'

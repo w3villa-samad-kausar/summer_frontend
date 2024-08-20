@@ -5,11 +5,12 @@ import axios from 'axios'
 import { useRoute } from '@react-navigation/native';
 import { errorToastMessage, successToastMessage } from '../../utility/ToastMessage';
 import colors from '../../assets/colors';
+import { setStoredToken } from '../../utility/AuthToken';
 
 const OtpVerification = ({ navigation }) => {
   const route = useRoute()
   const mobileNumber = route.params
-  const finalMobile = mobileNumber.mobileNumber
+  const finalMobile = mobileNumber?.mobileNumber
 
 
   const [otp, setOtp] = useState(['', '', '', ''])
@@ -41,12 +42,13 @@ const OtpVerification = ({ navigation }) => {
     }
     try {
       const response = await axios.post('http://10.0.2.2:4000/api/verify-otp', data)
+      console.log("RES>>>>", response?.data)
+      await setStoredToken(response.data.token)
       successToastMessage(response?.data?.msg)
 
     } catch (error) {
+      console.log('ERRRR>>>>',error?.response?.data?.msg)
       errorToastMessage(error?.response?.data?.msg)
-
-
     }
   }
 

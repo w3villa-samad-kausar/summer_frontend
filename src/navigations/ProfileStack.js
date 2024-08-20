@@ -7,29 +7,29 @@ import { createNativeStackNavigator } from '@react-navigation/native-stack'
 import { NavigationContainer } from '@react-navigation/native'
 
 const ProfileStack = () => {
-    const Stack = createNativeStackNavigator()
+  const Stack = createNativeStackNavigator()
   return (
 
     <NavigationContainer>
-    <Stack.Navigator initialRouteName='Dashboard'>
-      <Stack.Screen
-      name="Dashboard"
-      component={DashboardScreen}
-      options={{headerShown:false}} />
-      <Stack.Screen
-      name="ProfileOptions"
-      component={ProfileOptions}
-      options={{headerShown:false}} />
-      <Stack.Screen
-      name="EditProfile"
-      component={EditProfile}
-      options={{headerShown:false}} />
-      <Stack.Screen
-      name='ProfileScreen'
-      component={UserProfileScreen}
-      options={{headerShown:false}} />
-    </Stack.Navigator>
-  </NavigationContainer>  
+      <Stack.Navigator initialRouteName='Dashboard'>
+        <Stack.Screen
+          name="Dashboard"
+          component={DashboardScreen}
+          options={{ headerShown: false }} />
+        <Stack.Screen
+          name="ProfileOptions"
+          component={ProfileOptions}
+          options={{ headerShown: false }} />
+        <Stack.Screen
+          name="EditProfile"
+          component={EditProfile}
+          options={{ headerShown: false }} />
+        <Stack.Screen
+          name='ProfileScreen'
+          component={UserProfileScreen}
+          options={{ headerShown: false }} />
+      </Stack.Navigator>
+    </NavigationContainer>
 
   )
 }
