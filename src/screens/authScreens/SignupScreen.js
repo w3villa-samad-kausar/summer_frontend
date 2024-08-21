@@ -48,17 +48,13 @@ const SignupScreen = ({ navigation }) => {
       confirmPassword: values.confirmPassword
     }
     try {
-      console.log("Starting request");
       const response = await API.post('/api/register', data);
-      console.log("Response received:", response);
 
       if (response) {
-        console.log('Navigating to OTP Verification');
         successToastMessage(response?.data?.msg);
         navigation.navigate('OtpVerification', { mobileNumber: data.mobileNumber });
       }
     } catch (error) {
-      console.error("Error caught:", error);
       errorToastMessage(error?.response?.data?.msg);
     }
 

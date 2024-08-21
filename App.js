@@ -9,11 +9,9 @@ import { getAuthToken } from './src/utility/AuthToken'
 
 const App = () => {
   const [token, setToken] = useState(null);
-
   useEffect(() => {
     const fetchToken = async () => {
       const token = await getAuthToken()
-      console.log("TTT", token)
       if(token){
         setToken(token)
       }
@@ -23,13 +21,13 @@ const App = () => {
 
   return (
     <GestureHandlerRootView>
-      {
-        token ? (
-          <ProfileStack />
-        ) : (
+      
+        
+          {/* <ProfileStack /> */}
+        
           <AuthStack />
-        )
-      }
+        
+      
 
       {/* <AskingMobileNumber /> */}
 

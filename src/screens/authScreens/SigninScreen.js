@@ -12,6 +12,7 @@ import * as Yup from 'yup';
 import { Dimensions, ScrollView, StyleSheet, View } from 'react-native';
 import { setStoredToken } from '../../utility/AuthToken';
 import API from '../../helpers/api/ApiHelper';
+import { errorToastMessage, successToastMessage } from '../../utility/ToastMessage';
 
 const height = Dimensions.get('screen').height
 
@@ -35,15 +36,15 @@ const SigninScreen = ({ navigation }) => {
     }
     try {
       const response = await API.post('/api/login', data);
-      console.log(">>>>>RESSFGHHHJ",response);
       if(response?.token){
         await setStoredToken(response?.token)
       }
+      successToastMessage(response?.msg)
       // Handle successful response, like navigating to another screen
       // navigation.navigate('OtpVerification');
     } catch (error) {
-      console.error('Login failed:', error);
       // Handle error, like showing an error message
+      errorToastMessage(error?.response?.data?.msg)
     }
   };
 

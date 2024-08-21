@@ -4,18 +4,37 @@ import colors from '../../assets/colors'
 import BackgroundImage from '../../components/authComponents/BackgroundImage'
 import { TouchableOpacity } from 'react-native-gesture-handler'
 import CustomStatusBar from '../../components/CustomStatusBar'
+import { useRoute } from '@react-navigation/native'
+import API from '../../helpers/api/ApiHelper'
+import { errorToastMessage, successToastMessage } from '../../utility/ToastMessage'
 width = Dimensions.get('screen').width
 height = Dimensions.get('screen').height
-const AskingMobileNumber = () => {
-  const handleSubmit = () => {
+const AskingMobileNumber = ({navigation}) => {
+
+  const route=useRoute()
+  const data=route.params
+  const email=data?.email
+  const [mobileNumber, setMobileNumber] = useState('')
+  const handleSubmit = async() => {
     if (mobileNumber.length == 10) {
-      console.log(mobileNumber)
+      const data={
+        mobileNumber:mobileNumber,
+        email:email
+      }
+      try {
+        const response = await API.post('/api/send-Otp',data)
+        successToastMessage(response?.msg)
+        navigation.navigate('OtpVerification', { mobileNumber: data.mobileNumber });        
+      } 
+      catch (error) {
+        errorToastMessage(error?.response?.data?.msg)
+        
+      }
     }
     else {
       alert('Please enter a valid mobile number')
     }
   }
-  const [mobileNumber, setMobileNumber] = useState('')
 
   return (
     <>

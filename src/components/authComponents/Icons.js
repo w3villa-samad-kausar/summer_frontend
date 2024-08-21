@@ -1,50 +1,54 @@
 import React from 'react'
-import { Image, StyleSheet, TouchableOpacity, View } from 'react-native'
-import ImageUrl from '../../constants/ImageUrl'
+import {  StyleSheet, TouchableOpacity, View } from 'react-native'
 import { Icon } from '@rneui/themed'
 import {
   GoogleSignin,
   statusCodes,
 } from '@react-native-google-signin/google-signin';
+import Config from 'react-native-config';
+import API from '../../helpers/api/ApiHelper';
+import { successToastMessage } from '../../utility/ToastMessage';
+import { useNavigation } from '@react-navigation/native';
 
 
 
 
-const Icons = (navigation) => {
+const Icons = () => {
+  const navigation = useNavigation()
   return (
     <View style={styles.iconContainer}>
       <TouchableOpacity onPress={() => {
         GoogleSignin.configure({
-          androidClientId: '875917285754-1bl3bptndiqr25kkq1et2nnukhtevqi5.apps.googleusercontent.com',
+          androidClientId: Config.ANDROID_CLIENT_ID,
 
         });
         GoogleSignin.hasPlayServices().then((hasPlayService) => {
           if (hasPlayService) {
             GoogleSignin.signIn().then(async (userInfo) => {
-              console.log(JSON.stringify(userInfo))
               if (userInfo) {
                 const data = {
                   email: userInfo.user.email,
                   name: userInfo.user.name,
                 }
                 try {
-                  const response = await axios.post('http://10.0.2.2:4000/api/login', data);
-
-                  console.log(response.data);
+                  const response = await API.post('/api/social-login', data);
+                  successToastMessage(response?.msg)
+                  if(response?.msg==='User created , please verify mobile number'){
+                    navigation.navigate('MobileNumber',{email:data.email})
+                  }
+                  
                   // Handle successful response, like navigating to another screen
-                  navigation.navigate('OtpVerification');
                 } catch (error) {
                   console.error('Login failed:', error);
                   // Handle error, like showing an error message
                 }
               }
-              navigation.navigate("MobileNumber")
             }).catch((e) => {
-              console.log("ERROR IS: " + JSON.stringify(e));
+              console.log("ERROR IS123: " + JSON.stringify(e));
             })
           }
         }).catch((e) => {
-          console.log("ERROR IS: " + JSON.stringify(e));
+          console.log("ERROR IS567: " + JSON.stringify(e));
         })
       }}>
 

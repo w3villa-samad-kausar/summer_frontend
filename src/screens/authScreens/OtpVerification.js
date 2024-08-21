@@ -1,11 +1,11 @@
 import React, { useState, useRef } from 'react'
 import { StyleSheet, Text, TextInput, View, TouchableOpacity, TouchableHighlight, TouchableNativeFeedback, Touchable } from 'react-native'
 import CustomStatusBar from '../../components/CustomStatusBar'
-import axios from 'axios'
 import { useRoute } from '@react-navigation/native';
 import { errorToastMessage, successToastMessage } from '../../utility/ToastMessage';
 import colors from '../../assets/colors';
 import { setStoredToken } from '../../utility/AuthToken';
+import API from '../../helpers/api/ApiHelper';
 
 const OtpVerification = ({ navigation }) => {
   const route = useRoute()
@@ -41,13 +41,12 @@ const OtpVerification = ({ navigation }) => {
       mobileNumber: finalMobile
     }
     try {
-      const response = await axios.post('http://10.0.2.2:4000/api/verify-otp', data)
-      console.log("RES>>>>", response?.data)
-      await setStoredToken(response.data.token)
-      successToastMessage(response?.data?.msg)
+      const response = await API.post('/api/verify-otp', data)
+      await setStoredToken(response?.token)
+      successToastMessage(response?.msg)
 
     } catch (error) {
-      console.log('ERRRR>>>>',error?.response?.data?.msg)
+      console.log('ERRRR>>>>',error?.response)
       errorToastMessage(error?.response?.data?.msg)
     }
   }
@@ -57,7 +56,7 @@ const OtpVerification = ({ navigation }) => {
       mobileNumber:finalMobile
     }
     try {
-      const response=await axios.post('http://10.0.2.2:4000/api/resend-otp',data)
+      const response=await API.post('/api/resend-otp',data)
       successToastMessage(response?.data?.msg)
       
     } catch (error) {
@@ -74,7 +73,7 @@ const OtpVerification = ({ navigation }) => {
       <View style={styles.container}>
         <Text style={styles.heading}>OTP Verification</Text>
         <Text style={styles.text}>We have sent a Verification code to</Text>
-        <Text style={styles.number}>+91 1234567890</Text>
+        <Text style={styles.number}>{finalMobile}</Text>
         <View style={styles.inputContainer}>
           {otp.map((digit, index) => (
             <TextInput
