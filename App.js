@@ -12,7 +12,7 @@ const App = () => {
   useEffect(() => {
     const fetchToken = async () => {
       const token = await getAuthToken()
-      if(token){
+      if (token) {
         setToken(token)
       }
     }
@@ -21,16 +21,14 @@ const App = () => {
 
   return (
     <GestureHandlerRootView>
-      
-        
-          {/* <ProfileStack /> */}
-        
+
+      {
+        token ? (
+          <ProfileStack />
+        ) : (
           <AuthStack />
-        
-      
-
-      {/* <AskingMobileNumber /> */}
-
+        )
+      }
 
     </GestureHandlerRootView>
   )

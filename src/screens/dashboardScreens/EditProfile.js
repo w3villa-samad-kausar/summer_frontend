@@ -1,22 +1,25 @@
 import { ScrollView } from 'react-native'
-import React from 'react'
+import React, { useState } from 'react'
 import PageHeading from '../../components/profileComponents/PageHeading'
 import NameAndPhoto from '../../components/profileComponents/NameAndPhoto'
 import InputFields from '../../components/profileComponents/InputFields'
+import { useRoute } from '@react-navigation/native'
 
 const EditProfile = ({navigation}) => {
+  const route=useRoute()
+  const [name,setName]=useState(route.params?.name)
+  const [email,setEmail]=useState(route.params?.email)
+  const [phone,setPhone]=useState(route.params?.mobileNumber)
+  const [address,setAddress]=useState(route.params?.address)
+  const tier=route.params?.plan
   return (
     <ScrollView>
       <PageHeading pageName='Edit Profile' onPressHandler={()=>{navigation.navigate("ProfileOptions")}}></PageHeading>
-      <NameAndPhoto name='Samad Kausar' tierName='Basic User' navigation={navigation}></NameAndPhoto>
-      <InputFields label='First name' value='samad' firstElement={true}/>
-      <InputFields label='Last name' value='kausar'/>
-      <InputFields label='Email' value='samad@gmail.com'/>
-      <InputFields label='Phone number' value='01700000000'/>
-      <InputFields label='Address' value='Dhaka, Bangladesh'/>
-      <InputFields label='City' value='Dhaka'/>
-      <InputFields label='Country' value='Bangladesh'/>
-      <InputFields label='Zip code' value='1200'/>
+      <NameAndPhoto name={name} tierName={tier} navigation={navigation}></NameAndPhoto>
+      <InputFields label='Name' value={name} firstElement={true}/>
+      <InputFields label='Email' value={email}/>
+      <InputFields label='Phone number' value={phone}/>
+      <InputFields label='Address' value={address}/>
       
     </ScrollView>
   )

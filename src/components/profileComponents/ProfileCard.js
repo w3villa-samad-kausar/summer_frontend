@@ -3,12 +3,16 @@ import { Dimensions, ScrollView, StyleSheet, Text, TextInput, View } from 'react
 import Modal from "react-native-modal";
 import { TouchableOpacity } from 'react-native-gesture-handler';
 import { Icon } from '@rneui/themed';
+import { useRoute } from '@react-navigation/native';
 
 const width = Dimensions.get('window').width;
 const height = Dimensions.get('window').height;
 
 const ProfileCard = () => {
-  const [isModalVisible, setModalVisible] = useState(false);
+
+  const route=useRoute()
+  const data=route?.params
+  const [isModalVisible, setModalVisible] = useState(true);
   const [name, setName] = useState('');
   const [email, setEmail] = useState('');
   const [mobile, setMobile] = useState('');
@@ -22,10 +26,10 @@ const ProfileCard = () => {
   useEffect(() => {
     // Example API data
     const fetchedData = {
-      name: "John Doe",
-      email: "johndoe@example.com",
-      mobile: "+1234567890",
-      address: "123 Main St, Springfield, USA"
+      name:data.name,
+      email:data.email,
+      mobile:data.mobileNumber,
+      address:data.address
     };
     
     // Set the data into state variables

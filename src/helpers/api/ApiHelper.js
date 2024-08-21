@@ -18,7 +18,7 @@ API.interceptors.request.use(
         if (token) {
             config.headers = {
                 ...configHeaders,
-                'Authorization': token,
+                'Bearer': token,
             };
         }
         return config;

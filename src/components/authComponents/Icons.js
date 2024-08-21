@@ -1,5 +1,5 @@
 import React from 'react'
-import {  StyleSheet, TouchableOpacity, View } from 'react-native'
+import { StyleSheet, TouchableOpacity, View } from 'react-native'
 import { Icon } from '@rneui/themed'
 import {
   GoogleSignin,
@@ -9,6 +9,7 @@ import Config from 'react-native-config';
 import API from '../../helpers/api/ApiHelper';
 import { successToastMessage } from '../../utility/ToastMessage';
 import { useNavigation } from '@react-navigation/native';
+import { setStoredToken } from '../../utility/AuthToken';
 
 
 
@@ -32,11 +33,14 @@ const Icons = () => {
                 }
                 try {
                   const response = await API.post('/api/social-login', data);
-                  successToastMessage(response?.msg)
-                  if(response?.msg==='User created , please verify mobile number'){
-                    navigation.navigate('MobileNumber',{email:data.email})
+                  if (response?.token) {
+                    await setStoredToken(response?.token)
                   }
-                  
+                  successToastMessage(response?.msg)
+                  if (response?.msg === 'User created , please verify mobile number') {
+                    navigation.navigate('MobileNumber', { email: data.email })
+                  }
+
                   // Handle successful response, like navigating to another screen
                 } catch (error) {
                   console.error('Login failed:', error);
