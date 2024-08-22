@@ -2,9 +2,10 @@ import { Image, Modal, StyleSheet, TouchableOpacity, TouchableWithoutFeedback, V
 import React, { useState } from 'react'
 import ImageUrl from '../../constants/ImageUrl'
 
-const ProfilePhoto = () => {
+const ProfilePhoto = ({profilePicture}) => {
   const [modalVisible, setModalVisible] = useState(false);
 
+  console.log("photo",profilePicture)
   return (
     <>
       <Modal
@@ -18,7 +19,7 @@ const ProfilePhoto = () => {
           <View style={styles.centeredView}>
             <TouchableWithoutFeedback>
               <View style={styles.modalView}>
-                <Image source={ImageUrl.profilePhoto} style={styles.modalImage} />
+                <Image source={{uri:profilePicture}} style={styles.modalImage} />
               </View>
             </TouchableWithoutFeedback>
           </View>
@@ -26,7 +27,7 @@ const ProfilePhoto = () => {
       </Modal>
 
       <TouchableOpacity onPress={() => setModalVisible(true)}>
-        <Image source={ImageUrl.profilePhoto} style={styles.imageStyling} />
+        <Image source={{uri:profilePicture}} style={styles.imageStyling} />
       </TouchableOpacity>
     </>
   )

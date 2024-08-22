@@ -21,7 +21,8 @@ const DashboardScreen = ({navigation}) => {
         email: response[0].email,
         mobileNumber: response[0].mobile_number,
         address: response[0].address,
-        tier:response[0].plan
+        tier:response[0].plan,
+        profilePicture:response[0].profile_picture_url
       }
 
 

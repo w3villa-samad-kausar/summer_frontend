@@ -10,8 +10,8 @@ const height = Dimensions.get('window').height;
 
 const ProfileCard = () => {
 
-  const route=useRoute()
-  const data=route?.params
+  const route = useRoute()
+  const data = route?.params
   const [isModalVisible, setModalVisible] = useState(true);
   const [name, setName] = useState('');
   const [email, setEmail] = useState('');
@@ -26,12 +26,12 @@ const ProfileCard = () => {
   useEffect(() => {
     // Example API data
     const fetchedData = {
-      name:data.name,
-      email:data.email,
-      mobile:data.mobileNumber,
-      address:data.address
+      name: data.name,
+      email: data.email,
+      mobile: data.mobileNumber,
+      address: data.address
     };
-    
+
     // Set the data into state variables
     setName(fetchedData.name);
     setEmail(fetchedData.email);
@@ -70,7 +70,7 @@ const ProfileCard = () => {
                 editable={false}
               />
             </View>
-            
+
             <View style={styles.fieldBox}>
               <Text style={styles.label}>Email</Text>
               <TextInput
@@ -116,7 +116,7 @@ const styles = StyleSheet.create({
     borderRadius: 20,
     marginVertical: 15,
     padding: 10,
-    top:height-70
+    top: height - 70
   },
   swipeBar: {
     alignSelf: 'center',
@@ -156,6 +156,6 @@ const styles = StyleSheet.create({
     color: '#333',
   },
   addressInput: {
-    height: 80, 
+    height: 80,
   },
 });

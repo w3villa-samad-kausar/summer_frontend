@@ -5,7 +5,7 @@ import { TouchableOpacity } from 'react-native'
 import API from '../../helpers/api/ApiHelper'
 import { errorToastMessage } from '../../utility/ToastMessage'
 
-const NameAndPhoto = ({ name, tierName, navigation }) => {
+const NameAndPhoto = ({ name, tierName,profilePicture, navigation }) => {
   const handlenavigation = async () => {
     try {
 
@@ -16,10 +16,11 @@ const NameAndPhoto = ({ name, tierName, navigation }) => {
         name: response[0].name,
         email: response[0].email,
         mobileNumber: response[0].mobile_number,
-        address: response[0].address
+        address: response[0].address,
+        profilePicture: response[0].profile_picture_url,
       }
       
-      // console.log("no errr>>>",data)
+      console.log("no errr>>>",response)
 
       navigation.navigate('ProfileScreen',data)
 
@@ -32,7 +33,7 @@ const NameAndPhoto = ({ name, tierName, navigation }) => {
   }
   return (
     <View style={styles.container}>
-      <ProfilePhoto></ProfilePhoto>
+      <ProfilePhoto profilePicture={profilePicture}></ProfilePhoto>
       <View style={styles.nameContainer}>
         <TouchableOpacity onPress={handlenavigation}>
           <Text style={styles.name}>{name}</Text>

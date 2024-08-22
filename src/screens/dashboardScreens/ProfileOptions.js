@@ -18,6 +18,8 @@ const ProfileOptions = ({ navigation }) => {
   const email = route.params?.email
   const mobileNumber = route.params?.mobileNumber
   const address = route.params?.address
+  const profilePicture = route.params?.profilePicture
+  // console.log(profilePicture)
 
   const deletHandler=()=>{
     Alert.alert(
@@ -59,7 +61,9 @@ const ProfileOptions = ({ navigation }) => {
         </PageHeading>
 
         <NameAndPhoto
-          name={name} tierName={plan}
+          name={name}
+          tierName={plan}
+          profilePicture={profilePicture}
           navigation={navigation}>
         </NameAndPhoto>
 
@@ -72,7 +76,8 @@ const ProfileOptions = ({ navigation }) => {
                 email,
                 mobileNumber,
                 address,
-                plan
+                plan,
+                profilePicture,
               })
             }}>
         </OptionNames>
