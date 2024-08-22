@@ -45,7 +45,6 @@ const EditProfile = ({ navigation }) => {
       mobile_number: values.mobileNumber,
       address: values.address,
     };
-    console.log(data);
     try {
       const response = await API.post('/api/update',data)
       successToastMessage(response?.msg)

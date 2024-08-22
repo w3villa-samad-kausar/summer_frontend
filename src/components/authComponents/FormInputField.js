@@ -3,6 +3,7 @@ import { StyleSheet, TextInput, Text, View, Dimensions } from 'react-native';
 import colors from '../../assets/colors';
 
 const width=Dimensions.get('screen').width
+const height=Dimensions.get('screen').height
 const FormInputField = ({
   haswidth,
   hasMultiLine,

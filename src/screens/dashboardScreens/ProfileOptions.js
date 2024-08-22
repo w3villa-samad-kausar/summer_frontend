@@ -4,27 +4,95 @@ import PageHeading from '../../components/profileComponents/PageHeading'
 
 import NameAndPhoto from '../../components/profileComponents/NameAndPhoto'
 import OptionNames from '../../components/profileComponents/OptionNames'
-import { ScrollView } from 'react-native'
+import { Alert, ScrollView } from 'react-native'
 import { useRoute } from '@react-navigation/native'
+import API from '../../helpers/api/ApiHelper'
+import { deleteStoredToken } from '../../utility/AuthToken'
+import { successToastMessage } from '../../utility/ToastMessage'
 
-const ProfileOptions = ({navigation}) => {
-  const route=useRoute()
+const ProfileOptions = ({ navigation }) => {
+  const route = useRoute()
   // console.log(route.params)
-  const name=route.params?.name
-  const plan=route.params?.tier
-  const email=route.params?.email
-  const mobileNumber=route.params?.mobileNumber
-  const address=route.params?.address
+  const name = route.params?.name
+  const plan = route.params?.tier
+  const email = route.params?.email
+  const mobileNumber = route.params?.mobileNumber
+  const address = route.params?.address
+
+  const deletHandler=()=>{
+    Alert.alert(
+      "Confirmation",
+      "Are you sure you want to proceed?",
+      [
+        {
+          text: "Cancel",
+          // onPress: () => console.log("Cancel Pressed"), // Alert closes after this
+          style: "cancel",
+        },
+        {
+          text: "OK",
+          onPress: async () => {
+            try {
+              const response= await API.delete('/api/delete',email)
+              successToastMessage(response?.msg)
+              console.log(response?.msg)
+              deleteStoredToken()
+
+              
+            } catch (error) {
+              console.log(error)
+              
+            }
+          }, 
+        },
+      ],
+      { cancelable: false }
+    );
+  }
   return (
     <>
       <ScrollView>
 
-        <PageHeading pageName='Profile' onPressHandler={()=>{navigation.navigate('Dashboard')}}></PageHeading>
-        <NameAndPhoto name={name} tierName={plan} navigation={navigation}></NameAndPhoto>
-        <OptionNames optionName="Edit Profile" onPresshandler={()=>{navigation.navigate('EditProfile',{name,email,mobileNumber,address,plan})}}></OptionNames>
-        <OptionNames optionName="Settings" hasMarginTop={true}></OptionNames>
-        <OptionNames optionName="Logout" hasMarginTop={true} hasColour={true} hasIcon={true}></OptionNames>
-      
+        <PageHeading
+          pageName='Profile'
+          onPressHandler={() => { navigation.navigate('Dashboard') }}>
+        </PageHeading>
+
+        <NameAndPhoto
+          name={name} tierName={plan}
+          navigation={navigation}>
+        </NameAndPhoto>
+
+        <OptionNames
+          optionName="Edit Profile"
+          onPresshandler={
+            () => {
+              navigation.navigate('EditProfile', {
+                name,
+                email,
+                mobileNumber,
+                address,
+                plan
+              })
+            }}>
+        </OptionNames>
+
+        <OptionNames
+          optionName="Delete"
+          hasMarginTop={true}
+          hasColour={true}
+          hasIcon={true}
+          onPresshandler={deletHandler}
+          >
+        </OptionNames>
+
+        <OptionNames
+          optionName="Logout"
+          hasMarginTop={true}
+          hasColour={true}
+          hasIcon={true}>
+        </OptionNames>
+
       </ScrollView>
     </>
   )

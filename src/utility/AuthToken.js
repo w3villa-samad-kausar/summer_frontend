@@ -17,3 +17,7 @@ const getStoredToken = async () => {
 export const setStoredToken = async (token) => {
     await AsyncStorage.setItem('authToken', token) 
 }
+
+export const deleteStoredToken=async()=>{
+    await AsyncStorage.removeItem('authToken')
+}
