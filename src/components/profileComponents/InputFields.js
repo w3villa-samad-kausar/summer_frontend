@@ -1,11 +1,11 @@
 import { StyleSheet, Text, TextInput, View } from 'react-native'
 import React from 'react'
 
-const InputFields = ({label,value,firstElement}) => {
+const InputFields = ({label,value,firstElement,onChangeText}) => {
   return (
     <View style={[styles.container, firstElement && styles.firstElement]} >
       <Text style={styles.text}>{label}</Text>
-      <TextInput style={styles.textInput} value={value}></TextInput>
+      <TextInput style={styles.textInput} value={value} onChangeText={onChangeText}></TextInput>
     </View>
   )
 }

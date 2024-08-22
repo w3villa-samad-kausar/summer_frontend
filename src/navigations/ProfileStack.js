@@ -5,6 +5,7 @@ import EditProfile from '../screens/dashboardScreens/EditProfile'
 import UserProfileScreen from '../screens/dashboardScreens/UserProfileScreen'
 import { createNativeStackNavigator } from '@react-navigation/native-stack'
 import { NavigationContainer } from '@react-navigation/native'
+import Toast from 'react-native-toast-message'
 
 const ProfileStack = () => {
   const Stack = createNativeStackNavigator()
@@ -29,6 +30,7 @@ const ProfileStack = () => {
           component={UserProfileScreen}
           options={{ headerShown: false }} />
       </Stack.Navigator>
+      <Toast />
     </NavigationContainer>
 
   )

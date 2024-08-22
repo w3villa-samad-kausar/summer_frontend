@@ -4,7 +4,8 @@ import colors from '../../assets/colors';
 
 const width=Dimensions.get('screen').width
 const FormInputField = ({
-  
+  haswidth,
+  hasMultiLine,
   placeholderText,
   hasMarginTop,
   keyboardType,
@@ -18,7 +19,7 @@ const FormInputField = ({
   <View style={styles.container}>
     <TextInput
       style={[
-        styles.textInput, hasMarginTop && styles.marginTop || error && styles.errorMarginTop
+        styles.textInput, haswidth&& styles.widthAdjust ,hasMultiLine&&styles.heightAdjust, hasMarginTop && styles.marginTop || error && styles.errorMarginTop
       ]}
       placeholder={placeholderText}
       secureTextEntry={isSecureText}
@@ -26,6 +27,7 @@ const FormInputField = ({
       value={value}
       onChangeText={onChangeText}
       onBlur={onBlur}
+      multiline={hasMultiLine}
     />
     {touched && error && (
       <Text style={styles.error}>{error}</Text>
@@ -63,7 +65,14 @@ const styles = StyleSheet.create({
   },
   errorMarginTop:{
     marginTop:10
+  },
+  widthAdjust:{
+    width:width-50
+  },
+  heightAdjust:{
+    height:height-800
   }
+  
 });
 
 export default FormInputField;
