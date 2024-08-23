@@ -1,67 +1,65 @@
 import { View, Text, StyleSheet, Image, TouchableOpacity } from 'react-native'
 import React from 'react'
 import CustomScrollView from '../../components/authComponents/CustomScrollView'
-import MyCarousel  from '../../components/profileComponents/Carousel'
+import MyCarousel from '../../components/profileComponents/Carousel'
 import { Icon } from '@rneui/themed'
 import API from '../../helpers/api/ApiHelper'
 import { errorToastMessage } from '../../utility/ToastMessage'
 
 
-const DashboardScreen = ({navigation}) => {
-  const profileFetch=async()=>{
-    
+const DashboardScreen = ({ navigation }) => {
+  const profileFetch = async () => {
+
     try {
-      
+
       const response = await API.get('/api/get-userdata')
-      
+
       // console.log("no errr>>>",response[0].name)
 
-      const data={
+      const data = {
         name: response[0].name,
         email: response[0].email,
         mobileNumber: response[0].mobile_number,
         address: response[0].address,
-        tier:response[0].plan,
-        profilePicture:response[0].profile_picture_url
+        tier: response[0].plan,
+        profilePicture: response[0].profile_picture_url
       }
 
 
-      navigation.navigate('ProfileOptions',data)
-      
-      
+      navigation.navigate('ProfileOptions', data)
+
+
     } catch (error) {
-      
+
       errorToastMessage(error?.response?.data)
       // console.log("errr>>>",error?.response?.data)
     }
   }
   return (
 
+    <View style={styles.container}>
 
-    <CustomScrollView contentContainerStyle={overRiddenStyle}>
       <View style={styles.header}>
         <Text style={styles.centerMesssageText} >Hello Samad</Text>
         <TouchableOpacity onPress={profileFetch}>
-        <Icon 
-          type='antdesign'
-          name='user'
-          size={30}
-        />
+          <Icon
+            type='antdesign'
+            name='user'
+            size={30}
+          />
         </TouchableOpacity>
       </View>
-      
+
       <MyCarousel />
-    </CustomScrollView>
+    </View>
 
   )
 }
-const overRiddenStyle = {
-  alignItems: undefined,
-  paddingVertical: undefined,
-  justifyContent: 'center',
 
-}
 const styles = StyleSheet.create({
+  container: {
+    flex:1,
+  },
   centerMesssage: {
     flex: 1,
     justifyContent: 'space-evenly',
