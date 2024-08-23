@@ -7,7 +7,11 @@ import { setStoredToken } from "../../utility/AuthToken";
 
 const initialState = {
     loading: false,
-    isLoggedIn: null
+    isLoggedIn: null,
+    user: null,
+    error: null,
+    token: null,
+    isRegistered:null
 }
 
 export const signIn = createAsyncThunk('auth/signIn', async (data) => {
@@ -21,6 +25,18 @@ export const signIn = createAsyncThunk('auth/signIn', async (data) => {
     } catch (error) {
         errorToastMessage(error?.response?.data?.msg)
     }
+})
+
+export const signUp=createAsyncThunk('auth/signUp',async(data)=>{
+    try {
+        const response = await API.post('/api/register', data);
+  
+        if (response) {
+          successToastMessage(response?.data?.msg);
+        }
+      } catch (error) {
+        errorToastMessage(error?.response?.data?.msg);
+      }
 })
 
 const authSlice = createSlice({
@@ -39,6 +55,19 @@ const authSlice = createSlice({
             state.loading = false
         })
     },
+    extraReducers: (builder) => {
+        builder.addCase(signUp.pending, (state, action) => {
+            state.loading = true
+        })
+        builder.addCase(signUp.fulfilled, (state, action) => {
+            state.loading = false
+            state.isRegistered = action.payload
+        })
+        builder.addCase(signUp.rejected, (state, action) => {
+            state.loading = false
+        })
+    },
+    
 })
 
 

@@ -12,9 +12,12 @@ import { Formik } from 'formik'
 import FormInputField from '../../components/authComponents/FormInputField'
 import { Dimensions, ScrollView, StyleSheet, View } from 'react-native'
 import API from '../../helpers/api/ApiHelper'
+import { useDispatch } from 'react-redux'
+import { signUp } from '../../redux/reducers/AuthSlice'
 
 const height = Dimensions.get('screen').height
 const SignupScreen = ({ navigation }) => {
+  const dispatch=useDispatch()
 
   const validationSchema = Yup.object().shape({
     name: Yup.string()
@@ -47,16 +50,13 @@ const SignupScreen = ({ navigation }) => {
       password: values.password,
       confirmPassword: values.confirmPassword
     }
-    try {
-      const response = await API.post('/api/register', data);
 
-      if (response) {
-        successToastMessage(response?.data?.msg);
-        navigation.navigate('OtpVerification', { mobileNumber: data.mobileNumber });
-      }
-    } catch (error) {
-      errorToastMessage(error?.response?.data?.msg);
+    const action=await dispatch(signUp(data))
+    console.log(action)
+    if (action.payload) {
+      navigation.navigate('OtpVerification', { mobileNumber: data.mobileNumber });
     }
+    
 
 
   }

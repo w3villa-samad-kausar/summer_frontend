@@ -1,6 +1,5 @@
 import React from 'react';
 import { Formik } from 'formik';
-import axios from 'axios';
 import FormInputField from '../../components/authComponents/FormInputField';
 import BackgroundImage from '../../components/authComponents/BackgroundImage';
 import SubmitButton from '../../components/authComponents/SubmitButton';
@@ -9,10 +8,7 @@ import OrComponent from '../../components/authComponents/OrComponent';
 import Icons from '../../components/authComponents/Icons';
 import CustomStatusBar from '../../components/CustomStatusBar';
 import * as Yup from 'yup';
-import { Dimensions, ScrollView, StyleSheet, View } from 'react-native';
-import { setStoredToken } from '../../utility/AuthToken';
-import API from '../../helpers/api/ApiHelper';
-import { errorToastMessage, successToastMessage } from '../../utility/ToastMessage';
+import { Dimensions, ScrollView, StyleSheet} from 'react-native';
 import { useDispatch } from 'react-redux';
 import { signIn } from '../../redux/reducers/AuthSlice';
 
