@@ -8,11 +8,10 @@ import SigninScreen from '../screens/authScreens/SigninScreen';
 import SignupScreen from '../screens/authScreens/SignupScreen';
 import OtpVerification from '../screens/authScreens/OtpVerification';
 import AskingMobileNumber from '../screens/authScreens/AskingMobileNumber';
-const AuthStack=()=>{
+const AuthStack = () => {
     const Stack = createNativeStackNavigator()
     return (
 
-    <NavigationContainer>
         <Stack.Navigator initialRouteName='SignUp'>
             <Stack.Screen
                 name="SignIn"
@@ -31,9 +30,7 @@ const AuthStack=()=>{
                 component={AskingMobileNumber}
                 options={{ headerShown: false }} />
         </Stack.Navigator>
-        <Toast />
-    </NavigationContainer>
-)
+    )
 }
 
-export default  AuthStack
+export default AuthStack

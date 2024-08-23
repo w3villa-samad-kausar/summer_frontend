@@ -11,27 +11,24 @@ const ProfileStack = () => {
   const Stack = createNativeStackNavigator()
   return (
 
-    <NavigationContainer>
-      <Stack.Navigator initialRouteName='Dashboard'>
-        <Stack.Screen
-          name="Dashboard"
-          component={DashboardScreen}
-          options={{ headerShown: false }} />
-        <Stack.Screen
-          name="ProfileOptions"
-          component={ProfileOptions}
-          options={{ headerShown: false }} />
-        <Stack.Screen
-          name="EditProfile"
-          component={EditProfile}
-          options={{ headerShown: false }} />
-        <Stack.Screen
-          name='ProfileScreen'
-          component={UserProfileScreen}
-          options={{ headerShown: false }} />
-      </Stack.Navigator>
-      <Toast />
-    </NavigationContainer>
+    <Stack.Navigator initialRouteName='Dashboard'>
+      <Stack.Screen
+        name="Dashboard"
+        component={DashboardScreen}
+        options={{ headerShown: false }} />
+      <Stack.Screen
+        name="ProfileOptions"
+        component={ProfileOptions}
+        options={{ headerShown: false }} />
+      <Stack.Screen
+        name="EditProfile"
+        component={EditProfile}
+        options={{ headerShown: false }} />
+      <Stack.Screen
+        name='ProfileScreen'
+        component={UserProfileScreen}
+        options={{ headerShown: false }} />
+    </Stack.Navigator>
 
   )
 }

@@ -13,6 +13,8 @@ import { Dimensions, ScrollView, StyleSheet, View } from 'react-native';
 import { setStoredToken } from '../../utility/AuthToken';
 import API from '../../helpers/api/ApiHelper';
 import { errorToastMessage, successToastMessage } from '../../utility/ToastMessage';
+import { useDispatch } from 'react-redux';
+import { signIn } from '../../redux/reducers/AuthSlice';
 
 const height = Dimensions.get('screen').height
 
@@ -29,23 +31,17 @@ const validationSchema = Yup.object().shape({
 
 
 const SigninScreen = ({ navigation }) => {
+  const dispatch = useDispatch()
+
   const handleSignIn = async (values) => {
     data = {
       email: values.email,
       password: values.password
     }
-    try {
-      const response = await API.post('/api/login', data);
-      if(response?.token){
-        await setStoredToken(response?.token)
-      }
-      successToastMessage(response?.msg)
-      // Handle successful response, like navigating to another screen
-      // navigation.navigate('OtpVerification');
-    } catch (error) {
-      // Handle error, like showing an error message
-      errorToastMessage(error?.response?.data?.msg)
-    }
+
+    const action = await dispatch(signIn(data))
+    console.log("action", action)
+
   };
 
   return (
