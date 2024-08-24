@@ -6,8 +6,11 @@ import { errorToastMessage, successToastMessage } from '../../utility/ToastMessa
 import colors from '../../assets/colors';
 import { setStoredToken } from '../../utility/AuthToken';
 import API from '../../helpers/api/ApiHelper';
+import { useDispatch } from 'react-redux';
+import { otpVerification, resendOtp } from '../../redux/reducers/AuthSlice';
 
 const OtpVerification = ({ navigation }) => {
+  const dispatch = useDispatch()                       
   const route = useRoute()
   const mobileNumber = route.params
   const finalMobile = mobileNumber?.mobileNumber
@@ -40,29 +43,20 @@ const OtpVerification = ({ navigation }) => {
       otp: finalOtp,
       mobileNumber: finalMobile
     }
-    try {
-      const response = await API.post('/api/verify-otp', data)
-      await setStoredToken(response?.token)
-      successToastMessage(response?.msg)
-
-    } catch (error) {
-      console.log('ERRRR>>>>',error?.response)
-      errorToastMessage(error?.response?.data?.msg)
+    const action = await dispatch(otpVerification(data))
+    if (action.payload) {
+      setStoredToken(action.payload.token)
+      successToastMessage('OTP verified successfully')
     }
+    
   }
 
-  const resendOtp=async()=>{
+  const handleResendOtp=async()=>{
     const data={
       mobileNumber:finalMobile
     }
-    try {
-      const response=await API.post('/api/resend-otp',data)
-      successToastMessage(response?.data?.msg)
-      
-    } catch (error) {
-      errorToastMessage(error?.response?.data?.msg)
-
-    }
+    const action =await dispatch(resendOtp(data))
+    console.log(action)
   }
 
   const isSubmitDisabled = otp.includes('')
@@ -100,7 +94,7 @@ const OtpVerification = ({ navigation }) => {
           <Text style={styles.text}>
             Didn't receive the code?
           </Text>
-            <TouchableOpacity onPress={resendOtp}>
+            <TouchableOpacity onPress={handleResendOtp}>
               <Text style={styles.resendText}>Resend</Text>
             </TouchableOpacity>
         </View>

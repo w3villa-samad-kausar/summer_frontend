@@ -1,60 +1,15 @@
 import React from 'react'
 import { StyleSheet, TouchableOpacity, View } from 'react-native'
 import { Icon } from '@rneui/themed'
-import {
-  GoogleSignin,
-  statusCodes,
-} from '@react-native-google-signin/google-signin';
-import Config from 'react-native-config';
-import API from '../../helpers/api/ApiHelper';
-import { successToastMessage } from '../../utility/ToastMessage';
-import { useNavigation } from '@react-navigation/native';
-import { setStoredToken } from '../../utility/AuthToken';
 
 
 
 
-const Icons = () => {
-  const navigation = useNavigation()
+
+const Icons = ({onGooglePress}) => {
   return (
     <View style={styles.iconContainer}>
-      <TouchableOpacity onPress={() => {
-        GoogleSignin.configure({
-          androidClientId: Config.ANDROID_CLIENT_ID,
-
-        });
-        GoogleSignin.hasPlayServices().then((hasPlayService) => {
-          if (hasPlayService) {
-            GoogleSignin.signIn().then(async (userInfo) => {
-              if (userInfo) {
-                const data = {
-                  email: userInfo.user.email,
-                  name: userInfo.user.name,
-                }
-                try {
-                  const response = await API.post('/api/social-login', data);
-                  if (response?.token) {
-                    await setStoredToken(response?.token)
-                  }
-                  successToastMessage(response?.msg)
-                  if (response?.msg === 'User created , please verify mobile number') {
-                    navigation.navigate('MobileNumber', { email: data.email })
-                  }
-
-                  // Handle successful response, like navigating to another screen
-                } catch (error) {
-                  console.error('Login failed:', error);
-                  // Handle error, like showing an error message
-                }
-              }
-            }).catch((e) => {
-              console.log("ERROR IS123: " + JSON.stringify(e));
-            })
-          }
-        }).catch((e) => {
-          console.log("ERROR IS567: " + JSON.stringify(e));
-        })
-      }}>
+      <TouchableOpacity onPress={onGooglePress}>
 
         <Icon
           type='antdesign'

@@ -30,8 +30,8 @@ const DashboardScreen = ({ navigation }) => {
 
 
     } catch (error) {
-
-      errorToastMessage(error?.response?.data)
+      console.log(error?.response?.data?.msg)
+      errorToastMessage(error?.response?.data?.msg)
       // console.log("errr>>>",error?.response?.data)
     }
   }
