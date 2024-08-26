@@ -1,4 +1,4 @@
-import { ScrollView, View, Text, TouchableOpacity } from 'react-native';
+import { ScrollView, View, Text, TouchableOpacity, StyleSheet } from 'react-native';
 import React, { useState, useEffect } from 'react';
 import PageHeading from '../../components/profileComponents/PageHeading';
 import NameAndPhoto from '../../components/profileComponents/NameAndPhoto';
@@ -10,6 +10,7 @@ import * as Yup from 'yup';
 import FormLabel from '../../components/profileComponents/FieldLabel';
 import API from '../../helpers/api/ApiHelper';
 import { errorToastMessage, successToastMessage } from '../../utility/ToastMessage';
+import MapView from '../../components/profileComponents/MapComponent';
 
 const validationSchema = Yup.object().shape({
   name: Yup.string().required('Name is required'),
@@ -32,6 +33,7 @@ const EditProfile = ({ navigation }) => {
   });
   const [addressSuggestions, setAddressSuggestions] = useState([]);
   const [showSuggestions, setShowSuggestions] = useState(false);
+  const [selectedLocation, setSelectedLocation] = useState({ latitude: null, longitude: null });
 
   useEffect(() => {
     if (route.params) {
@@ -46,11 +48,9 @@ const EditProfile = ({ navigation }) => {
     if (text.length >= 3) { // Fetch suggestions when the user types at least 3 characters
       try {
         const response = await API.get(`/api/address-auto-complete?q=${text}`);
-        console.log(response)
         setAddressSuggestions(response);
         setShowSuggestions(true);
       } catch (error) {
-        // console.log(error?.response?.data?.msg)
         errorToastMessage(error?.response?.data?.msg)
       }
     } else {
@@ -60,6 +60,7 @@ const EditProfile = ({ navigation }) => {
 
   const handleSuggestionSelect = (suggestion, setFieldValue) => {
     setFieldValue('address', suggestion.display_name);
+    setSelectedLocation({ latitude: suggestion.lat, longitude: suggestion.lon });
     setShowSuggestions(false);
   };
 
@@ -147,13 +148,17 @@ const EditProfile = ({ navigation }) => {
             />
 
             {showSuggestions && (
-              <View style={{ backgroundColor: '#fff', padding: 10 }}>
+              <View style={styles.suggestionContainer}>
                 {addressSuggestions?.map((suggestion, index) => (
                   <TouchableOpacity key={index} onPress={() => handleSuggestionSelect(suggestion, setFieldValue)}>
-                    <Text>{suggestion.display_name}</Text>
+                    <Text style={styles.suggestionText}>{suggestion.display_name}</Text>
                   </TouchableOpacity>
                 ))}
               </View>
+            )}
+            
+            {selectedLocation.latitude && selectedLocation.longitude && (
+              <MapView latitude={selectedLocation.latitude} longitude={selectedLocation.longitude} />
             )}
 
             <SubmitButton label="Update" onPress={handleSubmit} />
@@ -163,5 +168,18 @@ const EditProfile = ({ navigation }) => {
     </ScrollView>
   );
 };
+
+const styles = StyleSheet.create({
+  suggestionContainer: {
+    padding: 10,
+    backgroundColor: '#f0f0f0',
+    borderRadius: 10,
+  },
+  suggestionText: {
+    padding: 15,
+    fontSize: 15,
+    color: '#000',
+  },
+});
 
 export default EditProfile;
