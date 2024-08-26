@@ -16,7 +16,7 @@ import Config from 'react-native-config'
 
 const height = Dimensions.get('screen').height
 const SignupScreen = ({ navigation }) => {
-  const dispatch = useDispatch()
+  const dispatch = useDispatch();
 
   const validationSchema = Yup.object().shape({
     name: Yup.string()

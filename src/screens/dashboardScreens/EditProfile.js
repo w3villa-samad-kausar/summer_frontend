@@ -1,4 +1,4 @@
-import { ScrollView } from 'react-native';
+import { ScrollView, View, Text, TouchableOpacity } from 'react-native';
 import React, { useState, useEffect } from 'react';
 import PageHeading from '../../components/profileComponents/PageHeading';
 import NameAndPhoto from '../../components/profileComponents/NameAndPhoto';
@@ -30,6 +30,8 @@ const EditProfile = ({ navigation }) => {
     mobileNumber: '',
     address: '',
   });
+  const [addressSuggestions, setAddressSuggestions] = useState([]);
+  const [showSuggestions, setShowSuggestions] = useState(false);
 
   useEffect(() => {
     if (route.params) {
@@ -37,6 +39,29 @@ const EditProfile = ({ navigation }) => {
       setInitialValues({ name, email, mobileNumber, address });
     }
   }, [route.params]);
+
+  const handleAddressChange = async (text, setFieldValue) => {
+    setFieldValue('address', text);
+
+    if (text.length >= 3) { // Fetch suggestions when the user types at least 3 characters
+      try {
+        const response = await API.get(`/api/address-auto-complete?q=${text}`);
+        console.log(response)
+        setAddressSuggestions(response);
+        setShowSuggestions(true);
+      } catch (error) {
+        // console.log(error?.response?.data?.msg)
+        errorToastMessage(error?.response?.data?.msg)
+      }
+    } else {
+      setShowSuggestions(false);
+    }
+  };
+
+  const handleSuggestionSelect = (suggestion, setFieldValue) => {
+    setFieldValue('address', suggestion.display_name);
+    setShowSuggestions(false);
+  };
 
   const updateHandler = async (values) => {
     const data = {
@@ -46,10 +71,10 @@ const EditProfile = ({ navigation }) => {
       address: values.address,
     };
     try {
-      const response = await API.post('/api/update',data)
-      successToastMessage(response?.msg)
+      const response = await API.post('/api/update', data);
+      successToastMessage(response?.msg);
     } catch (error) {
-      errorToastMessage(error?.response?.data?.msg)
+      errorToastMessage(error?.response?.data?.msg);
     }
   };
 
@@ -68,7 +93,7 @@ const EditProfile = ({ navigation }) => {
         enableReinitialize={true}
         onSubmit={updateHandler}
       >
-        {({ handleChange, handleBlur, handleSubmit, values, errors, touched }) => (
+        {({ handleChange, handleBlur, handleSubmit, values, errors, touched, setFieldValue }) => (
           <>
             <FormLabel labelText="Name" />
             <FormInputField
@@ -93,11 +118,9 @@ const EditProfile = ({ navigation }) => {
               error={errors.email}
               touched={touched.email}
               haswidth={true}
-
             />
 
             <FormLabel labelText="Mobile Number" />
-
             <FormInputField
               placeholderText="Enter mobile number"
               hasMarginTop={true}
@@ -108,22 +131,30 @@ const EditProfile = ({ navigation }) => {
               error={errors.mobileNumber}
               touched={touched.mobileNumber}
               haswidth={true}
-
             />
 
             <FormLabel labelText="Address" />
-
             <FormInputField
               placeholderText="Enter address"
               hasMarginTop={true}
               value={values.address}
-              onChangeText={handleChange('address')}
+              onChangeText={(text) => handleAddressChange(text, setFieldValue)}
               onBlur={handleBlur('address')}
               error={errors.address}
               touched={touched.address}
               haswidth={true}
               hasMultiLine={true}
             />
+
+            {showSuggestions && (
+              <View style={{ backgroundColor: '#fff', padding: 10 }}>
+                {addressSuggestions?.map((suggestion, index) => (
+                  <TouchableOpacity key={index} onPress={() => handleSuggestionSelect(suggestion, setFieldValue)}>
+                    <Text>{suggestion.display_name}</Text>
+                  </TouchableOpacity>
+                ))}
+              </View>
+            )}
 
             <SubmitButton label="Update" onPress={handleSubmit} />
           </>

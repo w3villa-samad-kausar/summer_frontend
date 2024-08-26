@@ -51,6 +51,24 @@ const ProfileOptions = ({ navigation }) => {
       { cancelable: false }
     );
   }
+  const logoutHandler=()=>{
+    Alert.alert(
+      "Confirmation",
+      "Are you sure you want to logout?",
+      [
+        {
+          text: "Cancel",
+          // onPress: () => console.log("Cancel Pressed"), // Alert closes after this
+          style: "cancel",
+        },
+        {
+          text: "OK",
+          onPress: ()=>deleteStoredToken()
+        },
+      ],
+      { cancelable: false }
+    );
+  }
   return (
     <>
       <ScrollView>
@@ -95,7 +113,8 @@ const ProfileOptions = ({ navigation }) => {
           optionName="Logout"
           hasMarginTop={true}
           hasColour={true}
-          hasIcon={true}>
+          hasIcon={true}
+          onPresshandler={logoutHandler}>
         </OptionNames>
 
       </ScrollView>

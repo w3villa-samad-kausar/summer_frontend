@@ -1,11 +1,12 @@
 import { Image, Modal, StyleSheet, TouchableOpacity, TouchableWithoutFeedback, View } from 'react-native'
 import React, { useState } from 'react'
 import ImageUrl from '../../constants/ImageUrl'
+import { Text } from '@rneui/base';
+import SubmitButton from '../authComponents/SubmitButton';
 
 const ProfilePhoto = ({profilePicture}) => {
   const [modalVisible, setModalVisible] = useState(false);
 
-  console.log("photo",profilePicture)
   return (
     <>
       <Modal
@@ -19,15 +20,17 @@ const ProfilePhoto = ({profilePicture}) => {
           <View style={styles.centeredView}>
             <TouchableWithoutFeedback>
               <View style={styles.modalView}>
-                <Image source={{uri:profilePicture}} style={styles.modalImage} />
+                <Image source={{ uri: profilePicture }} style={styles.modalImage} />
+                <SubmitButton label="Update" ></SubmitButton>
               </View>
             </TouchableWithoutFeedback>
           </View>
         </TouchableWithoutFeedback>
       </Modal>
 
-      <TouchableOpacity onPress={() => setModalVisible(true)}>
-        <Image source={{uri:profilePicture}} style={styles.imageStyling} />
+      <TouchableOpacity style={styles.button} onPress={() => setModalVisible(true)}>
+        <Image source={{ uri: profilePicture }} style={styles.imageStyling} />
+        <Text style={styles.buttonText}>View Profile Picture</Text>
       </TouchableOpacity>
     </>
   )
@@ -36,22 +39,33 @@ const ProfilePhoto = ({profilePicture}) => {
 export default ProfilePhoto
 
 const styles = StyleSheet.create({
+  button: {
+    alignItems: 'center',
+    backgroundColor: '#f0f0f0', // Light gray background for the button
+    padding: 10,
+    borderRadius: 10,
+    marginTop: 20,
+  },
+  buttonText: {
+    marginTop: 5,
+    color: '#333', // Dark gray text color
+    fontWeight: 'bold',
+    fontSize: 14,
+  },
   imageStyling: {
     width: 80,
     height: 80,
     borderRadius: 50,
     borderWidth: 1,
     borderColor: 'black',
-    marginTop: 20,
   },
   centeredView: {
     flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
-    backgroundColor: 'rgba(0, 0, 0, 0.5)', // Add a semi-transparent background to the modal
+    backgroundColor: 'rgba(0, 0, 0, 0.5)',
   },
   modalView: {
-    //backgroundColor: 'rgba(255, 255, 255, 0.9)',
     borderRadius: 20,
     padding: 10,
     alignItems: 'center',
@@ -62,5 +76,11 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     borderColor: 'black',
     borderRadius: 20,
-  }
+  },
+  modalText: {
+    marginTop: 15,
+    color: '#007AFF', // iOS-style blue color
+    fontSize: 16,
+    fontWeight: '600',
+  },
 })
