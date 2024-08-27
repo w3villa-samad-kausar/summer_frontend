@@ -26,6 +26,7 @@ const MyCarousel = () => {
             const response = await API.post('/api/payment', data);
             if (response) {
                 setShowCheckout(true);
+                console.log(response)
             }
         } catch (error) {
             console.log(error?.response?.data);

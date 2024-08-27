@@ -8,10 +8,12 @@ import { setStoredToken } from '../../utility/AuthToken';
 import API from '../../helpers/api/ApiHelper';
 import { useDispatch } from 'react-redux';
 import { otpVerification, resendOtp } from '../../redux/reducers/AuthSlice';
+import LoadingModal from '../../components/universalComponents/LoadingModal';
 
 const OtpVerification = ({ navigation }) => {
   const dispatch = useDispatch()                       
   const route = useRoute()
+  const [loading,setLoading]=useState(false)
   const mobileNumber = route.params
   const finalMobile = mobileNumber?.mobileNumber
 
@@ -39,11 +41,13 @@ const OtpVerification = ({ navigation }) => {
 
   const handleSubmit = async () => {
     const finalOtp = otp.join('')
+    setLoading(true)
     const data = {
       otp: finalOtp,
       mobileNumber: finalMobile
     }
     await dispatch(otpVerification(data))
+    setLoading(false)
   }
 
   const handleResendOtp=async()=>{
@@ -92,6 +96,8 @@ const OtpVerification = ({ navigation }) => {
             <TouchableOpacity onPress={handleResendOtp}>
               <Text style={styles.resendText}>Resend</Text>
             </TouchableOpacity>
+            {loading && <LoadingModal isVisible={loading} />}
+
         </View>
       </View>
     </>

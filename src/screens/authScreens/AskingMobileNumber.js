@@ -7,16 +7,18 @@ import CustomStatusBar from '../../components/CustomStatusBar'
 import { useRoute } from '@react-navigation/native'
 import API from '../../helpers/api/ApiHelper'
 import { errorToastMessage, successToastMessage } from '../../utility/ToastMessage'
+import LoadingModal from '../../components/universalComponents/LoadingModal'
 width = Dimensions.get('screen').width
 height = Dimensions.get('screen').height
 const AskingMobileNumber = ({navigation}) => {
-
+  const [loading,setLoading]=useState(false)
   const route=useRoute()
   const data=route.params
   const email=data?.email
   const [mobileNumber, setMobileNumber] = useState('')
   const handleSubmit = async() => {
     if (mobileNumber.length == 10) {
+      setLoading(true)
       const data={
         mobileNumber:mobileNumber,
         email:email
@@ -24,11 +26,15 @@ const AskingMobileNumber = ({navigation}) => {
       try {
         const response = await API.post('/api/send-Otp',data)
         successToastMessage(response?.msg)
+        
         navigation.navigate('OtpVerification', { mobileNumber: data.mobileNumber });        
       } 
       catch (error) {
         errorToastMessage(error?.response?.data?.msg)
         
+      }
+      finally{
+        setLoading(false)
       }
     }
     else {
@@ -62,6 +68,8 @@ const AskingMobileNumber = ({navigation}) => {
             onPress={handleSubmit}>
             <Text style={styles.buttonText}>Send OTP</Text>
           </TouchableOpacity>
+          {loading && <LoadingModal isVisible={loading} />}
+
         </View>
       </View>
     </>
