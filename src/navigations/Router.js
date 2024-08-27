@@ -1,8 +1,5 @@
 import { useSelector } from "react-redux"
 import AuthStack from "./AuthStack"
-import ProfileStack from "./DashboardStack"
-import { useEffect, useState } from "react"
-import { getAuthToken } from "../utility/AuthToken"
 import DashboardStack from "./DashboardStack"
 
 const Router = () => {

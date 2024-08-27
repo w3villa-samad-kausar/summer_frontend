@@ -41,31 +41,7 @@ const SignupScreen = ({ navigation }) => {
       .required('Confirm Password is required'),
   })
 
-  const onGooglePress = async () => {
-    GoogleSignin.configure({
-      androidClientId: Config.ANDROID_CLIENT_ID,
-    });
-    GoogleSignin.hasPlayServices().then((hasPlayService) => {
-      if (hasPlayService) {
-        GoogleSignin.signIn().then(async (userInfo) => {
-          if (userInfo) {
-            const data = {
-              email: userInfo.user.email,
-              name: userInfo.user.name,
-            }
-
-              const action=await dispatch(googleSignin(data))
-              console.log(action)
-            
-          }
-        }).catch((e) => {
-          console.log("ERROR IS123: " + JSON.stringify(e));
-        })
-      }
-    }).catch((e) => {
-      console.log("ERROR IS567: " + JSON.stringify(e));
-    })
-  }
+  
 
   
 const handleSignUp = async (values) => {
@@ -166,7 +142,7 @@ return (
               onPress={() => { navigation.navigate('SignIn') }}
             />
             <OrComponent />
-            <Icons onGooglePress={onGooglePress} />
+            <Icons />
 
 
           </ScrollView>

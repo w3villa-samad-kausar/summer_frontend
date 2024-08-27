@@ -11,20 +11,22 @@ import AdminDashboardScreen from '../screens/adminScreens/AdminDashboardScreen'
 const DashboardStack = () => {
   const Stack = createNativeStackNavigator()
   const loginUser = useSelector(state => state.auth.isLoggedIn)
+  console.log(loginUser)
   return (
 
     <Stack.Navigator initialRouteName='DiscoveryDashboard'>
       {
-        loginUser?.role === 'USER' ? (
-          <Stack.Screen
-            name="DiscoveryDashboard"
-            component={DiscoveryDashboard}
-            options={{ headerShown: false }} />
-        ) : (
+        loginUser?.role === 'ADMIN' ? (
           <Stack.Screen
             name="AdminDashboard"
             component={AdminDashboardScreen}
             options={{ headerShown: false }} />
+        ) : (
+          <Stack.Screen
+            name="DiscoveryDashboard"
+            component={DiscoveryDashboard}
+            options={{ headerShown: false }} />
+          
         )
       }
     </Stack.Navigator>

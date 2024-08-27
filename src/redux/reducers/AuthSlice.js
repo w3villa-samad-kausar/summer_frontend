@@ -10,8 +10,7 @@ const initialState = {
     isLoggedIn: null,
     user: null,
     error: null,
-    token: null,
-    isRegistered: null
+    isRegistered: null,
 }
 
 export const signIn = createAsyncThunk('auth/signIn', async (data) => {
@@ -44,11 +43,7 @@ export const googleSignin = createAsyncThunk('auth/googleLogin', async (data) =>
         const response = await API.post('/api/social-login', data);
         if (response?.token) {
             await setStoredToken(response?.token)
-        }
-        successToastMessage(response?.msg)
-        if (response?.msg === 'User created , please verify mobile number') {
-            navigation.navigate('MobileNumber', { email: data.email })
-        }
+        }        
         return response
 
         // Handle successful response, like navigating to another screen
@@ -108,7 +103,7 @@ const authSlice = createSlice({
         })
         builder.addCase(googleSignin.fulfilled, (state, action) => {
             state.loading = false
-            state.isRegistered = action.payload
+            state.isLoggedIn = action.payload
         })
         builder.addCase(googleSignin.rejected, (state, action) => {
             state.loading = false
