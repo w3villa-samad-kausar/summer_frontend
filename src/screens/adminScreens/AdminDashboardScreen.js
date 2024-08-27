@@ -1,27 +1,9 @@
 import { StyleSheet, Text, TouchableOpacity, View, FlatList, RefreshControl } from 'react-native'
 import React, { useState } from 'react'
 import API from '../../helpers/api/ApiHelper'
-import { Icon } from '@rneui/themed'
 
 const AdminDashboardScreen = () => {
     const [refresh, setRefresh] = useState(false)
-
-    const profileFetch = async () => {
-        try {
-
-            const response = await API.get('/api/get-userdata')
-            const data = {
-                name: response[0].name,
-                email: response[0].email,
-                mobileNumber: response[0].mobile_number,
-                profilePicture: response[0].profile_picture_url
-            }
-        } catch (error) {
-
-            errorToastMessage(error?.response?.data)
-            // console.log("errr>>>",error?.response?.data)
-        }
-    }
 
     const users = [
         {
@@ -75,14 +57,7 @@ const AdminDashboardScreen = () => {
                 refreshControl={<RefreshControl refreshing={refresh} onRefresh={onRefresh} />}
                 ListHeaderComponent={
                     <View style={styles.header}>
-                        <Text style={styles.centerMesssageText} >Hello</Text>
-                        <TouchableOpacity onPress={profileFetch}>
-                            <Icon
-                                type='antdesign'
-                                name='user'
-                                size={30}
-                            />
-                        </TouchableOpacity>
+                        <Text style={styles.centerMesssageText} >Hello Admin</Text>
                     </View>
                 }
             />
@@ -118,14 +93,7 @@ const styles = StyleSheet.create({
         flexDirection: 'row',
         justifyContent: 'space-between',
         alignItems: 'center',
-        // marginTop:,
         padding: 20
-        // gap:180
     },
-    profileImage: {
-        width: 50,
-        height: 50,
-
-    }
 
 })

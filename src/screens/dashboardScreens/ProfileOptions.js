@@ -7,11 +7,14 @@ import OptionNames from '../../components/profileComponents/OptionNames'
 import { Alert, ScrollView } from 'react-native'
 import { useRoute } from '@react-navigation/native'
 import API from '../../helpers/api/ApiHelper'
-import { deleteStoredToken } from '../../utility/AuthToken'
+import { deleteStoredToken, removeStoredToken } from '../../utility/AuthToken'
 import { successToastMessage } from '../../utility/ToastMessage'
+import { resetAuth } from '../../redux/reducers/AuthSlice'
+import { useDispatch } from 'react-redux'
 
 const ProfileOptions = ({ navigation }) => {
   const route = useRoute()
+  const dispatch = useDispatch()
   // console.log(route.params)
   const name = route.params?.name
   const plan = route.params?.tier
@@ -63,12 +66,17 @@ const ProfileOptions = ({ navigation }) => {
         },
         {
           text: "OK",
-          onPress: ()=>deleteStoredToken()
+          onPress: clearToken
         },
       ],
       { cancelable: false }
     );
   }
+
+  const clearToken = async () => {
+    dispatch(resetAuth())
+  }
+  
   return (
     <>
       <ScrollView>

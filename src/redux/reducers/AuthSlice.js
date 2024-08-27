@@ -63,10 +63,11 @@ export const googleSignin = createAsyncThunk('auth/googleLogin', async (data) =>
 export const otpVerification = createAsyncThunk('auth/otpVerification', async (data) => {
     try {
         const response = await API.post('/api/verify-otp', data)
-        await setStoredToken(response?.token)
+        if (response?.token) {
+            await setStoredToken(response?.token)
+        }
         successToastMessage(response?.msg)
         return response
-
     } catch (error) {
         console.log('ERRRR>>>>', error?.response?.data?.msg)
         errorToastMessage(error?.response?.data?.msg)
@@ -87,7 +88,11 @@ export const resendOtp = createAsyncThunk('auth/resendotp', async (data) => {
 const authSlice = createSlice({
     name: 'auth',
     initialState,
-    reducers: {},
+    reducers: {
+        resetAuth: (state) => {
+            state.isLoggedIn = null
+        }
+    },
     extraReducers: (builder) => {
         builder.addCase(signIn.pending, (state, action) => {
             state.loading = true
@@ -143,5 +148,6 @@ const authSlice = createSlice({
 
 })
 
+export const {resetAuth} = authSlice.actions
 
 export default authSlice.reducer

@@ -43,12 +43,7 @@ const OtpVerification = ({ navigation }) => {
       otp: finalOtp,
       mobileNumber: finalMobile
     }
-    const action = await dispatch(otpVerification(data))
-    if (action.payload) {
-      setStoredToken(action.payload.token)
-      successToastMessage('OTP verified successfully')
-    }
-    
+    await dispatch(otpVerification(data))
   }
 
   const handleResendOtp=async()=>{

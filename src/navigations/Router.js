@@ -1,25 +1,15 @@
 import { useSelector } from "react-redux"
 import AuthStack from "./AuthStack"
-import ProfileStack from "./ProfileStack"
+import ProfileStack from "./DashboardStack"
 import { useEffect, useState } from "react"
 import { getAuthToken } from "../utility/AuthToken"
+import DashboardStack from "./DashboardStack"
 
 const Router = () => {
-    const isLoggedIn = useSelector(state => state.auth.isLoggedIn)
-    const [isloggedIn, setIsLoggedIn] = useState(isLoggedIn?.token ? true : false)
+    const authToken = useSelector(state => state.auth.isLoggedIn?.token)
 
-    useEffect(() => {
-        const fetchToken = async () => {
-            const token = await getAuthToken()
-            if (token) {
-                setIsLoggedIn(token)
-            }
-        }
-        fetchToken()
-    }, []);
-
-    return isloggedIn ? (
-        <ProfileStack />
+    return authToken ? (
+        <DashboardStack />
     ) : (
         <AuthStack />
     )

@@ -1,11 +1,6 @@
 import React from 'react'
 import { StyleSheet, TouchableOpacity, View } from 'react-native'
 import { Icon } from '@rneui/themed'
-
-
-
-
-
 const Icons = ({onGooglePress}) => {
   return (
     <View style={styles.iconContainer}>
