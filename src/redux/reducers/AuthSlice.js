@@ -20,7 +20,6 @@ export const signIn = createAsyncThunk('auth/signIn', async (data) => {
         if (response?.token) {
             await setStoredToken(response?.token)
         }
-        successToastMessage(response?.msg)
         return response
     } catch (error) {
         errorToastMessage(error?.response?.data?.msg)

@@ -35,8 +35,7 @@ const SigninScreen = ({ navigation }) => {
       password: values.password
     }
 
-    const action = await dispatch(signIn(data))
-    console.log("action", action)
+    await dispatch(signIn(data))
 
   };
 

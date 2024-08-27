@@ -1,58 +1,100 @@
-import React from 'react';
-import { View, Text, Dimensions, StyleSheet, TouchableOpacity } from 'react-native';
+import React, { useState } from 'react';
+import { View, Text, Dimensions, StyleSheet, TouchableOpacity, ScrollView } from 'react-native';
 import Swiper from 'react-native-swiper';
+import API from '../../helpers/api/ApiHelper';
+import SubmitButton from '../authComponents/SubmitButton';
+import LoadingModal from '../universalComponents/LoadingModal';
 
 const { width, height } = Dimensions.get('window');
 
 const MyCarousel = () => {
-    const handleCardPress = (plan) => {
-        console.log(`${plan} Plan selected`);
+    const [showCheckout, setShowCheckout] = useState(false);
+    const [loading, setLoading] = useState(false);
+    const [currentIndex, setCurrentIndex] = useState(0);
+
+    const handleCardPress = async (plan, amount, index) => {
+        if (plan === "Free") {
+            setShowCheckout(false);
+            setCurrentIndex(index);  // Set the current index to the clicked card
+            return;
+        }
+
+        setLoading(true);
+        const data = { amount };
+
+        try {
+            const response = await API.post('/api/payment', data);
+            if (response) {
+                setShowCheckout(true);
+            }
+        } catch (error) {
+            console.log(error?.response?.data);
+        } finally {
+            setLoading(false);
+            setCurrentIndex(index);  // Set the current index to the clicked card
+        }
+    };
+
+    const handleCheckout = () => {
+        // Handle checkout logic here
+        console.log('Proceeding to checkout...');
     };
 
     return (
         <View style={styles.container}>
-            <Text style={styles.upgradeText}>Unlock more features by upgrading your plan!</Text>
-            <Swiper 
-                style={styles.wrapper} 
-                showsButtons={true} 
-                scrollEnabled={true} 
-                dotStyle={styles.dot} 
-                activeDotStyle={styles.activeDot}
-                buttonWrapperStyle={styles.buttonWrapper}
-                nextButton={<Text style={styles.buttonText}>›</Text>}
-                prevButton={<Text style={styles.buttonText}>‹</Text>}
-            >
-                <TouchableOpacity style={[styles.slide, styles.freePlan]} onPress={() => handleCardPress('Free')}>
-                <Text style={styles.text}>Free Plan</Text>
-                    <Text style={styles.featuresText}>- Limited Access to Features</Text>
-                    <Text style={styles.featuresText}>- Basic Support</Text>
-                    <Text style={styles.featuresText}>- 5 GB Storage</Text>
-                </TouchableOpacity>
-                <TouchableOpacity style={[styles.slide, styles.silverPlan]} onPress={() => handleCardPress('Silver')}>
-                <Text style={styles.text}>Silver Plan</Text>
-                    <Text style={styles.featuresText}>- Full Access to Features</Text>
-                    <Text style={styles.featuresText}>- Priority Support</Text>
-                    <Text style={styles.featuresText}>- 50 GB Storage</Text>
-                    <Text style={styles.featuresText}>- No Ads</Text>
-                </TouchableOpacity>
-                <TouchableOpacity style={[styles.slide, styles.goldPlan]} onPress={() => handleCardPress('Gold')}>
-                <Text style={styles.text}>Gold Plan</Text>
-                    <Text style={styles.featuresText}>- Full Access to All Features</Text>
-                    <Text style={styles.featuresText}>- 24/7 VIP Support</Text>
-                    <Text style={styles.featuresText}>- 200 GB Storage</Text>
-                    <Text style={styles.featuresText}>- No Ads</Text>
-                    <Text style={styles.featuresText}>- Early Access to New Features</Text>
-                </TouchableOpacity>
-            </Swiper>
+            <ScrollView>
+                <Text style={styles.upgradeText}>Unlock more features by upgrading your plan!</Text>
+                <Swiper 
+                    style={styles.wrapper} 
+                    showsButtons={true} 
+                    scrollEnabled={true} 
+                    dotStyle={styles.dot} 
+                    activeDotStyle={styles.activeDot}
+                    buttonWrapperStyle={styles.buttonWrapper}
+                    nextButton={<Text style={styles.buttonText}>›</Text>}
+                    prevButton={<Text style={styles.buttonText}>‹</Text>}
+                    index={currentIndex}  // Control the current index
+                    onIndexChanged={(index) => setCurrentIndex(index)} // Update index on swipe
+                >
+                    <TouchableOpacity style={[styles.slide, styles.freePlan]} onPress={() => handleCardPress('Free', 0, 0)}>
+                        <Text style={styles.text}>Free Plan</Text>
+                        <Text style={styles.featuresText}>- Limited Access to Features</Text>
+                        <Text style={styles.featuresText}>- Basic Support</Text>
+                        <Text style={styles.featuresText}>- 5 GB Storage</Text>
+                    </TouchableOpacity>
+                    <TouchableOpacity style={[styles.slide, styles.silverPlan]} onPress={() => handleCardPress('Silver', 500, 1)}>
+                        <Text style={styles.text}>Silver Plan</Text>
+                        <Text style={styles.featuresText}>- Full Access to Features</Text>
+                        <Text style={styles.featuresText}>- Priority Support</Text>
+                        <Text style={styles.featuresText}>- 50 GB Storage</Text>
+                        <Text style={styles.featuresText}>- No Ads</Text>
+                        <Text style={[styles.featuresText, { fontSize: 22, marginTop: 20, color: "green" }]}>For $5 only</Text>
+                    </TouchableOpacity>
+                    <TouchableOpacity style={[styles.slide, styles.goldPlan]} onPress={() => handleCardPress('Gold', 1000, 2)}>
+                        <Text style={styles.text}>Gold Plan</Text>
+                        <Text style={styles.featuresText}>- Full Access to All Features</Text>
+                        <Text style={styles.featuresText}>- 24/7 VIP Support</Text>
+                        <Text style={styles.featuresText}>- 200 GB Storage</Text>
+                        <Text style={styles.featuresText}>- No Ads</Text>
+                        <Text style={styles.featuresText}>- Early Access to New Features</Text>
+                        <Text style={[styles.featuresText, { fontSize: 22, marginTop: 20, color: "green" }]}>For $10 only</Text>
+                    </TouchableOpacity>
+                </Swiper>
+                {loading && <LoadingModal isVisible={loading} />}
+                {!loading && showCheckout && (
+                    <SubmitButton label="Checkout" onPress={handleCheckout} />
+                )}
+            </ScrollView>
         </View>
     );
 };
 
 const styles = StyleSheet.create({
     container: {
-        flex: 1,  
-        justifyContent: 'center',  
-        alignItems: 'center',  
+        marginTop: 30,
+        flex: 1,
+        justifyContent: 'center',
+        alignItems: 'center',
         backgroundColor: '#f7f7f7',
     },
     upgradeText: {
@@ -94,11 +136,6 @@ const styles = StyleSheet.create({
         textAlign: 'center',
         marginBottom: 10,
     },
-    features: {
-        color: '#fff',
-        fontSize: 16,
-        textAlign: 'center',
-    },
     featuresText: {
         color: '#fff',
         fontSize: 18,
@@ -106,22 +143,22 @@ const styles = StyleSheet.create({
         marginVertical: 5,
     },
     dot: {
-        backgroundColor: 'rgba(255, 255, 255, 0.5)',
+        backgroundColor: 'rgba(0, 0, 0, 0.9)',
         width: 8,
         height: 8,
         borderRadius: 4,
         margin: 3,
     },
     activeDot: {
-        backgroundColor: '#fff',
-        width: 10,
-        height: 10,
-        borderRadius: 5,
+        backgroundColor: 'black',
+        width: 12,
+        height: 12,
+        borderRadius: 50,
         margin: 3,
     },
     buttonWrapper: {
         backgroundColor: 'transparent',
-        paddingHorizontal: 10,
+        paddingHorizontal: 20,
         paddingVertical: 20,
     },
     buttonText: {

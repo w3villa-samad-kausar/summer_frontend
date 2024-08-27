@@ -1,8 +1,35 @@
-import { StyleSheet, Text, TouchableOpacity, View, FlatList, RefreshControl } from 'react-native'
+import { StyleSheet, Text, TouchableOpacity, View, FlatList, RefreshControl, Alert } from 'react-native'
 import React, { useState } from 'react'
 import API from '../../helpers/api/ApiHelper'
+import { Icon } from '@rneui/themed'
+import { useDispatch } from 'react-redux'
+import { resetAuth } from '../../redux/reducers/AuthSlice'
 
 const AdminDashboardScreen = () => {
+    const dispatch=useDispatch()
+    const logoutHandler=()=>{
+        Alert.alert(
+          "Confirmation",
+          "Are you sure you want to logout?",
+          [
+            {
+              text: "Cancel",
+              // onPress: () => console.log("Cancel Pressed"), // Alert closes after this
+              style: "cancel",
+            },
+            {
+              text: "OK",
+              onPress: clearToken
+            },
+          ],
+          { cancelable: false }
+        );
+      }
+    
+      const clearToken = async () => {
+        dispatch(resetAuth())
+      }
+      
     const [refresh, setRefresh] = useState(false)
 
     const users = [
@@ -58,6 +85,14 @@ const AdminDashboardScreen = () => {
                 ListHeaderComponent={
                     <View style={styles.header}>
                         <Text style={styles.centerMesssageText} >Hello Admin</Text>
+                        <TouchableOpacity onPress={logoutHandler} >
+                            <Icon
+                                type='antdesign'
+                                name='logout'
+                                size={30}
+                                color='red'
+                            />
+                        </TouchableOpacity>
                     </View>
                 }
             />
