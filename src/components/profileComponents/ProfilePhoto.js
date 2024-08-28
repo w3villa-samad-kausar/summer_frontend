@@ -1,6 +1,5 @@
 import { Image, Modal, StyleSheet, TouchableOpacity, TouchableWithoutFeedback, View } from 'react-native'
 import React, { useState } from 'react'
-import ImageUrl from '../../constants/ImageUrl'
 import { Text } from '@rneui/base';
 import SubmitButton from '../authComponents/SubmitButton';
 

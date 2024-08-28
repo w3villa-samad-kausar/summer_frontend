@@ -2,7 +2,6 @@ import { ScrollView, View, Text, TouchableOpacity, StyleSheet } from 'react-nati
 import React, { useState, useEffect } from 'react';
 import PageHeading from '../../components/profileComponents/PageHeading';
 import NameAndPhoto from '../../components/profileComponents/NameAndPhoto';
-import { useRoute } from '@react-navigation/native';
 import SubmitButton from '../../components/authComponents/SubmitButton';
 import { Formik } from 'formik';
 import FormInputField from '../../components/authComponents/FormInputField';
@@ -11,6 +10,8 @@ import FormLabel from '../../components/profileComponents/FieldLabel';
 import API from '../../helpers/api/ApiHelper';
 import { errorToastMessage, successToastMessage } from '../../utility/ToastMessage';
 import MapView from '../../components/profileComponents/MapComponent';
+import { useDispatch, useSelector } from 'react-redux';
+import { getUserData } from '../../redux/reducers/UserSlice';
 
 const validationSchema = Yup.object().shape({
   name: Yup.string().required('Name is required'),
@@ -24,34 +25,47 @@ const validationSchema = Yup.object().shape({
 });
 
 const EditProfile = ({ navigation }) => {
-  const route = useRoute();
+  const dispatch = useDispatch();
   const [initialValues, setInitialValues] = useState({
     name: '',
     email: '',
     mobileNumber: '',
     address: '',
+    profilePicture:'',
+    tierName:'',
   });
   const [addressSuggestions, setAddressSuggestions] = useState([]);
   const [showSuggestions, setShowSuggestions] = useState(false);
   const [selectedLocation, setSelectedLocation] = useState({ latitude: null, longitude: null });
 
+
   useEffect(() => {
-    if (route.params) {
-      const { name, email, mobileNumber, address } = route.params;
-      setInitialValues({ name, email, mobileNumber, address });
-    }
-  }, [route.params]);
+    const profileFetch = async () => {
+      const action = await dispatch(getUserData());
+      const fetchedUserData = action.payload[0]; // Assuming payload contains the user data
+      setInitialValues({
+        name: fetchedUserData.name,
+        email: fetchedUserData.email,
+        mobileNumber: fetchedUserData.mobile_number,
+        address: fetchedUserData.address,
+        profilePicture:fetchedUserData.profile_picture_url,
+        tierName:fetchedUserData.plan,
+      });
+    };
+
+    profileFetch();
+  }, [dispatch]);
 
   const handleAddressChange = async (text, setFieldValue) => {
     setFieldValue('address', text);
 
-    if (text.length >= 3) { // Fetch suggestions when the user types at least 3 characters
+    if (text.length >= 3) {
       try {
         const response = await API.get(`/api/address-auto-complete?q=${text}`);
         setAddressSuggestions(response);
         setShowSuggestions(true);
       } catch (error) {
-        errorToastMessage(error?.response?.data?.msg)
+        errorToastMessage(error?.response?.data?.msg);
       }
     } else {
       setShowSuggestions(false);
@@ -86,7 +100,7 @@ const EditProfile = ({ navigation }) => {
         onPressHandler={() => navigation.navigate('ProfileOptions')}
       />
 
-      <NameAndPhoto name={initialValues.name} tierName={route.params?.plan} navigation={navigation} />
+      <NameAndPhoto name={initialValues.name} tierName={initialValues?.tierName} profilePicture={initialValues?.profilePicture}  />
 
       <Formik
         initialValues={initialValues}

@@ -1,46 +1,29 @@
 import { View, Text, StyleSheet, TouchableOpacity } from 'react-native'
-import React from 'react'
+import React, { useEffect, useState } from 'react'
 import MyCarousel from '../../components/profileComponents/Carousel'
 import { Icon } from '@rneui/themed'
-import API from '../../helpers/api/ApiHelper'
-import { errorToastMessage } from '../../utility/ToastMessage'
+import { useDispatch, useSelector } from 'react-redux'
+import { getUserData } from '../../redux/reducers/UserSlice'
 
 
 const DashboardScreen = ({ navigation }) => {
+  const dispatch = useDispatch()
+  const [userData, setUserData] = useState(null)
+
   const profileFetch = async () => {
-
-    try {
-
-      const response = await API.get('/api/get-userdata')
-
-      // console.log("no errr>>>",response[0].name)
-
-      const data = {
-        name: response[0].name,
-        email: response[0].email,
-        mobileNumber: response[0].mobile_number,
-        address: response[0].address,
-        tier: response[0].plan,
-        profilePicture: response[0].profile_picture_url
-      }
-
-
-      navigation.navigate('ProfileOptions', data)
-
-
-    } catch (error) {
-      console.log(error?.response?.data?.msg)
-      errorToastMessage(error?.response?.data?.msg)
-      // console.log("errr>>>",error?.response?.data)
-    }
+      const action = await dispatch(getUserData())
+      setUserData(action.payload[0]) // Assuming action.payload contains the fetched user data
   }
+
+  useEffect(() => {
+    profileFetch()
+  }, [])
+
   return (
-
     <View style={styles.container}>
-
       <View style={styles.header}>
-        <Text style={styles.centerMesssageText} >Hello Samad</Text>
-        <TouchableOpacity onPress={profileFetch}>
+        <Text style={styles.centerMesssageText} >Hello, {userData?.name || ''}</Text>
+        <TouchableOpacity onPress={() => navigation.navigate('ProfileOptions')}>
           <Icon
             type='antdesign'
             name='user'
@@ -51,13 +34,12 @@ const DashboardScreen = ({ navigation }) => {
 
       <MyCarousel />
     </View>
-
   )
 }
 
 const styles = StyleSheet.create({
   container: {
-    flex:1,
+    flex: 1,
   },
   centerMesssage: {
     flex: 1,
@@ -72,16 +54,12 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'center',
-    // marginTop:,
     padding: 20
-    // gap:180
   },
   profileImage: {
     width: 50,
     height: 50,
-
   }
-
 })
 
 export default DashboardScreen

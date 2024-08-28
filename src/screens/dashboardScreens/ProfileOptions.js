@@ -1,67 +1,64 @@
-
-import React from 'react'
+import React, { useEffect, useState } from 'react'
 import PageHeading from '../../components/profileComponents/PageHeading'
-
 import NameAndPhoto from '../../components/profileComponents/NameAndPhoto'
 import OptionNames from '../../components/profileComponents/OptionNames'
 import { Alert, ScrollView } from 'react-native'
-import { useRoute } from '@react-navigation/native'
 import API from '../../helpers/api/ApiHelper'
-import { deleteStoredToken, removeStoredToken } from '../../utility/AuthToken'
+import { deleteStoredToken } from '../../utility/AuthToken'
 import { successToastMessage } from '../../utility/ToastMessage'
 import { resetAuth } from '../../redux/reducers/AuthSlice'
 import { useDispatch } from 'react-redux'
+import { getUserData } from '../../redux/reducers/UserSlice'
 
 const ProfileOptions = ({ navigation }) => {
-  const route = useRoute()
   const dispatch = useDispatch()
-  // console.log(route.params)
-  const name = route.params?.name
-  const plan = route.params?.tier
-  const email = route.params?.email
-  const mobileNumber = route.params?.mobileNumber
-  const address = route.params?.address
-  const profilePicture = route.params?.profilePicture
-  // console.log(profilePicture)
+  const [userData, setUserData] = useState(null)
 
-  const deletHandler=()=>{
+  const profileFetch = async () => {
+    const action = await dispatch(getUserData())
+    setUserData(action.payload[0]) // Assuming action.payload[0] contains the fetched user data
+  }
+
+  useEffect(() => {
+    profileFetch()
+  }, [])
+
+  const deleteHandler = () => {
+
     Alert.alert(
       "Confirmation",
       "Are you sure you want to proceed?",
       [
         {
           text: "Cancel",
-          // onPress: () => console.log("Cancel Pressed"), // Alert closes after this
           style: "cancel",
         },
         {
           text: "OK",
           onPress: async () => {
             try {
-              const response= await API.delete('/api/delete',email)
+              const response = await API.delete('/api/delete', userData?.email) // Pass email in request body
               successToastMessage(response?.msg)
-              console.log(response?.msg)
-              deleteStoredToken()
-
-              
+              dispatch(resetAuth())
+              await deleteStoredToken()
+              navigation.navigate('Signin') // Navigate to Signin screen after deletion
             } catch (error) {
               console.log(error)
-              
             }
-          }, 
+          },
         },
       ],
       { cancelable: false }
     );
   }
-  const logoutHandler=()=>{
+
+  const logoutHandler = () => {
     Alert.alert(
       "Confirmation",
       "Are you sure you want to logout?",
       [
         {
           text: "Cancel",
-          // onPress: () => console.log("Cancel Pressed"), // Alert closes after this
           style: "cancel",
         },
         {
@@ -76,55 +73,41 @@ const ProfileOptions = ({ navigation }) => {
   const clearToken = async () => {
     dispatch(resetAuth())
   }
-  
+
   return (
     <>
       <ScrollView>
-
         <PageHeading
           pageName='Profile'
-          onPressHandler={() => { navigation.navigate('Dashboard') }}>
-        </PageHeading>
+          onPressHandler={() => { navigation.navigate('Dashboard') }}
+        />
 
         <NameAndPhoto
-          name={name}
-          tierName={plan}
-          profilePicture={profilePicture}
-          navigation={navigation}>
-        </NameAndPhoto>
+          name={userData?.name || ''} // Safe access
+          tierName={userData?.plan || ''}
+          profilePicture={userData?.profile_picture_url || ''}
+        />
 
         <OptionNames
           optionName="Edit Profile"
-          onPresshandler={
-            () => {
-              navigation.navigate('EditProfile', {
-                name,
-                email,
-                mobileNumber,
-                address,
-                plan,
-                profilePicture,
-              })
-            }}>
-        </OptionNames>
+          onPresshandler={() => navigation.navigate('EditProfile')}
+        />
 
         <OptionNames
           optionName="Delete"
           hasMarginTop={true}
           hasColour={true}
           hasIcon={true}
-          onPresshandler={deletHandler}
-          >
-        </OptionNames>
+          onPresshandler={deleteHandler}
+        />
 
         <OptionNames
           optionName="Logout"
           hasMarginTop={true}
           hasColour={true}
           hasIcon={true}
-          onPresshandler={logoutHandler}>
-        </OptionNames>
-
+          onPresshandler={logoutHandler}
+        />
       </ScrollView>
     </>
   )

@@ -1,17 +1,16 @@
 import React, { useState, useEffect } from 'react';
-import { Dimensions, ScrollView, StyleSheet, Text, TextInput, View } from 'react-native';
+import { Dimensions, ScrollView, StyleSheet, Text, TextInput, View, BackHandler } from 'react-native';
 import Modal from "react-native-modal";
 import { TouchableOpacity } from 'react-native-gesture-handler';
 import { Icon } from '@rneui/themed';
-import { useRoute } from '@react-navigation/native';
+import { useDispatch } from 'react-redux';
+import { getUserData } from '../../redux/reducers/UserSlice';
 
 const width = Dimensions.get('window').width;
 const height = Dimensions.get('window').height;
 
 const ProfileCard = () => {
-
-  const route = useRoute()
-  const data = route?.params
+  const dispatch = useDispatch();
   const [isModalVisible, setModalVisible] = useState(true);
   const [name, setName] = useState('');
   const [email, setEmail] = useState('');
@@ -22,22 +21,31 @@ const ProfileCard = () => {
     setModalVisible(!isModalVisible);
   };
 
-  // Simulate fetching data from an API
-  useEffect(() => {
-    // Example API data
-    const fetchedData = {
-      name: data.name,
-      email: data.email,
-      mobile: data.mobileNumber,
-      address: data.address
-    };
+  const fetchUserData = async () => {
+    const action = await dispatch(getUserData());
+    const fetchedUserData = action.payload[0];
+    setName(fetchedUserData.name);
+    setEmail(fetchedUserData.email);
+    setMobile(fetchedUserData.mobile_number);
+    setAddress(fetchedUserData.address);
+  };
 
-    // Set the data into state variables
-    setName(fetchedData.name);
-    setEmail(fetchedData.email);
-    setMobile(fetchedData.mobile);
-    setAddress(fetchedData.address);
-  }, []);
+  useEffect(() => {
+    fetchUserData();
+
+    const backHandler = BackHandler.addEventListener(
+      "hardwareBackPress",
+      () => {
+        if (isModalVisible) {
+          toggleModal();
+          return true; // Prevent default back action
+        }
+        return false; // Allow default back action
+      }
+    );
+
+    return () => backHandler.remove();
+  }, [isModalVisible]);
 
   return (
     <View style={{ flex: 1 }}>
@@ -55,6 +63,7 @@ const ProfileCard = () => {
         isVisible={isModalVisible}
         swipeDirection={['down']}
         onSwipeComplete={toggleModal}
+        onBackdropPress={toggleModal} // Close the modal on background touch
         style={styles.modal}
       >
         <View style={styles.modalContent}>
@@ -103,9 +112,7 @@ const ProfileCard = () => {
       </Modal>
     </View>
   );
-}
-
-export default ProfileCard;
+};
 
 const styles = StyleSheet.create({
   caretUp: {
@@ -159,3 +166,5 @@ const styles = StyleSheet.create({
     height: 80,
   },
 });
+
+export default ProfileCard;

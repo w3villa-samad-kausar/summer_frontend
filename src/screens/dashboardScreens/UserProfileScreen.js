@@ -8,7 +8,6 @@ import { TouchableOpacity } from 'react-native-gesture-handler'
 const UserProfileScreen = () => {
   return (
     <>
-        
         <CoverProfilePhoto />
         <ProfileCard />
     </>

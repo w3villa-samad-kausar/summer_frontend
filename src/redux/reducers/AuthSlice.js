@@ -8,9 +8,6 @@ import { setStoredToken } from "../../utility/AuthToken";
 const initialState = {
     loading: false,
     isLoggedIn: null,
-    user: null,
-    error: null,
-    isRegistered: null,
 }
 
 export const signIn = createAsyncThunk('auth/signIn', async (data) => {

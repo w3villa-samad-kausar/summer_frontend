@@ -4,32 +4,12 @@ import ProfilePhoto from './ProfilePhoto'
 import { TouchableOpacity } from 'react-native'
 import API from '../../helpers/api/ApiHelper'
 import { errorToastMessage } from '../../utility/ToastMessage'
+import { useNavigation } from '@react-navigation/native'
 
-const NameAndPhoto = ({ name, tierName,profilePicture, navigation }) => {
+const NameAndPhoto = ({ name, tierName,profilePicture }) => {
+  const navigation=useNavigation()  
   const handlenavigation = async () => {
-    try {
-
-      const response = await API.get('/api/get-userdata')
-
-      
-      const data={
-        name: response[0].name,
-        email: response[0].email,
-        mobileNumber: response[0].mobile_number,
-        address: response[0].address,
-        profilePicture: response[0].profile_picture_url,
-      }
-      
-      console.log("no errr>>>",response)
-
-      navigation.navigate('ProfileScreen',data)
-
-
-    } catch (error) {
-
-      errorToastMessage(error?.response?.data)
-      // console.log("errr>>>",error?.response?.data)
-    }
+    navigation.navigate('ProfileScreen')
   }
   return (
     <View style={styles.container}>
