@@ -113,7 +113,7 @@ const authSlice = createSlice({
         })
         builder.addCase(signUp.fulfilled, (state, action) => {
             state.loading = false
-            state.isRegistered = action.payload
+            state.isLoggedIn = action.payload
         })
         builder.addCase(signUp.rejected, (state, action) => {
             state.loading = false
