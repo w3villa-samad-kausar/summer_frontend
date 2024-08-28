@@ -28,9 +28,8 @@ export const signIn = createAsyncThunk('auth/signIn', async (data) => {
 export const signUp = createAsyncThunk('auth/signUp', async (data) => {
     try {
         const response = await API.post('/api/register', data);
-
         if (response) {
-            successToastMessage(response?.data?.msg);
+            successToastMessage(response?.msg);
         }
         return response
     } catch (error) {

@@ -13,10 +13,12 @@ import { useDispatch } from 'react-redux'
 import { signUp, googleSignin } from '../../redux/reducers/AuthSlice'
 import { GoogleSignin } from '@react-native-google-signin/google-signin'
 import Config from 'react-native-config'
+import LoadingModal from '../../components/universalComponents/LoadingModal'
 
 const height = Dimensions.get('screen').height
 const SignupScreen = ({ navigation }) => {
   const dispatch = useDispatch();
+  const [loading, setLoading] = useState(false);
 
   const validationSchema = Yup.object().shape({
     name: Yup.string()
@@ -41,116 +43,122 @@ const SignupScreen = ({ navigation }) => {
       .required('Confirm Password is required'),
   })
 
-  
 
-  
-const handleSignUp = async (values) => {
-  const data = {
-    name: values.name,
-    email: values.email,
-    mobileNumber: values.mobileNumber,
-    password: values.password,
-    confirmPassword: values.confirmPassword
+
+
+  const handleSignUp = async (values) => {
+    setLoading(true);
+    const data = {
+      name: values.name,
+      email: values.email,
+      mobileNumber: values.mobileNumber,
+      password: values.password,
+      confirmPassword: values.confirmPassword
+    }
+
+    const action = await dispatch(signUp(data))
+
+    // console.log(action)
+    if (action?.payload?.msg == "User registered. Check messages for OTP") {
+      
+      navigation.navigate('OtpVerification', { mobileNumber: data.mobileNumber });
+    }
+    setLoading(false)
+
+
+
   }
 
-  const action = await dispatch(signUp(data))
-  console.log(action)
-  console.log(action?.meta?.requestStatus)
-  if (action.meta.requestStatus == "fulfilled") {
-    navigation.navigate('OtpVerification', { mobileNumber: data.mobileNumber });
-  }
+  return (
+    <Formik
+      initialValues={{ name: '', email: '', mobileNumber: '', password: '', confirmPassword: '' }}
+      validationSchema={validationSchema}
+      onSubmit={handleSignUp}>
+      {({ handleChange, handleBlur, handleSubmit, values, errors, touched }) => {
+        return (
+
+          <>
+            <BackgroundImage height='35%' />
+            <CustomStatusBar />
+            <ScrollView style={styles.container} >
+              <FormInputField
+                placeholderText="Enter name"
+                hasMarginTop={true}
+                keyboardType="default"
+                value={values.name}
+                onChangeText={handleChange('name')}
+                onBlur={handleBlur('name')}
+                error={errors.name}
+                touched={touched.name}
+              />
+              <FormInputField
+                placeholderText="Enter email"
+                hasMarginTop={true}
+                keyboardType="email-address"
+                value={values.email}
+                onChangeText={handleChange('email')}
+                onBlur={handleBlur('email')}
+                error={errors.email}
+                touched={touched.email}
+              />
+
+              <FormInputField
+                placeholderText="Enter mobile number"
+                hasMarginTop={true}
+                keyboardType="number"
+                value={values.mobileNumber}
+                onChangeText={handleChange('mobileNumber')}
+                onBlur={handleBlur('mobileNumber')}
+                error={errors.mobileNumber}
+                touched={touched.mobileNumber}
+              />
+
+              <FormInputField
+                placeholderText="Enter password"
+                hasMarginTop={true}
+                isSecureText={true}
+                value={values.password}
+                onChangeText={handleChange('password')}
+                onBlur={handleBlur('password')}
+                error={errors.password}
+                touched={touched.password}
+              />
+
+
+              <FormInputField
+                placeholderText="Re-enter password"
+                hasMarginTop={true}
+                isSecureText={true}
+                value={values.confirmPassword}
+                onChangeText={handleChange('confirmPassword')}
+                onBlur={handleBlur('confirmPassword')}
+                error={errors.confirmPassword}
+                touched={touched.confirmPassword}
+              />
+
+
+              <SubmitButton
+                label="Sign Up"
+                onPress={handleSubmit} />
+              {loading && <LoadingModal isVisible={loading} />}
 
 
 
-}
-
-return (
-  <Formik
-    initialValues={{ name: '', email: '', mobileNumber: '', password: '', confirmPassword: '' }}
-    validationSchema={validationSchema}
-    onSubmit={handleSignUp}>
-    {({ handleChange, handleBlur, handleSubmit, values, errors, touched }) => {
-      return (
-
-        <>
-          <BackgroundImage height='35%' />
-          <CustomStatusBar />
-          <ScrollView style={styles.container} >
-            <FormInputField
-              placeholderText="Enter name"
-              hasMarginTop={true}
-              keyboardType="default"
-              value={values.name}
-              onChangeText={handleChange('name')}
-              onBlur={handleBlur('name')}
-              error={errors.name}
-              touched={touched.name}
-            />
-            <FormInputField
-              placeholderText="Enter email"
-              hasMarginTop={true}
-              keyboardType="email-address"
-              value={values.email}
-              onChangeText={handleChange('email')}
-              onBlur={handleBlur('email')}
-              error={errors.email}
-              touched={touched.email}
-            />
-
-            <FormInputField
-              placeholderText="Enter mobile number"
-              hasMarginTop={true}
-              keyboardType="number"
-              value={values.mobileNumber}
-              onChangeText={handleChange('mobileNumber')}
-              onBlur={handleBlur('mobileNumber')}
-              error={errors.mobileNumber}
-              touched={touched.mobileNumber}
-            />
-
-            <FormInputField
-              placeholderText="Enter password"
-              hasMarginTop={true}
-              isSecureText={true}
-              value={values.password}
-              onChangeText={handleChange('password')}
-              onBlur={handleBlur('password')}
-              error={errors.password}
-              touched={touched.password}
-            />
+              <SigninSignupToggler
+                question="Already have an account?"
+                button=" Sign In"
+                onPress={() => { navigation.navigate('SignIn') }}
+              />
+              <OrComponent />
+              <Icons />
 
 
-            <FormInputField
-              placeholderText="Re-enter password"
-              hasMarginTop={true}
-              isSecureText={true}
-              value={values.confirmPassword}
-              onChangeText={handleChange('confirmPassword')}
-              onBlur={handleBlur('confirmPassword')}
-              error={errors.confirmPassword}
-              touched={touched.confirmPassword}
-            />
-
-
-            <SubmitButton
-              label="Sign Up"
-              onPress={handleSubmit} />
-
-            <SigninSignupToggler
-              question="Already have an account?"
-              button=" Sign In"
-              onPress={() => { navigation.navigate('SignIn') }}
-            />
-            <OrComponent />
-            <Icons />
-
-
-          </ScrollView>
-        </>
-      )
-    }}
-  </Formik>
-)
+            </ScrollView>
+          </>
+        )
+      }}
+    </Formik>
+  )
 }
 
 const styles = StyleSheet.create({

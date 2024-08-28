@@ -55,7 +55,6 @@ const OtpVerification = ({ navigation }) => {
       mobileNumber:finalMobile
     }
     const action =await dispatch(resendOtp(data))
-    console.log(action)
   }
 
   const isSubmitDisabled = otp.includes('')
