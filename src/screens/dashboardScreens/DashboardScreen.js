@@ -2,7 +2,7 @@ import { View, Text, StyleSheet, TouchableOpacity } from 'react-native'
 import React, { useEffect, useState } from 'react'
 import MyCarousel from '../../components/profileComponents/Carousel'
 import { Icon } from '@rneui/themed'
-import { useDispatch, useSelector } from 'react-redux'
+import { useDispatch } from 'react-redux'
 import { getUserData } from '../../redux/reducers/UserSlice'
 
 
