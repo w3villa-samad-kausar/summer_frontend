@@ -9,8 +9,10 @@ import { useNavigation } from '@react-navigation/native';
 import { useDispatch } from 'react-redux';
 import { googleSignin } from '../../redux/reducers/AuthSlice';
 const Icons = () => {
-  const dispatch=useDispatch();
+  const dispatch = useDispatch();
   const navigation = useNavigation()
+
+  
   return (
     <View style={styles.iconContainer}>
       <TouchableOpacity onPress={() => {
@@ -28,11 +30,11 @@ const Icons = () => {
                 }
                 const action = await dispatch(googleSignin(data))
 
+                // Handle successful response, like navigating to another screen
                 if (action?.payload?.msg === 'User created , please verify mobile number') {
                   navigation.navigate('MobileNumber', { email: data.email })
                 }
 
-                // Handle successful response, like navigating to another screen
 
               }
             }).catch((e) => {
@@ -50,7 +52,7 @@ const Icons = () => {
           size={30}
           color='red' />
       </TouchableOpacity>
-      <TouchableOpacity>
+      <TouchableOpacity >
 
         <Icon
           type='antdesign'

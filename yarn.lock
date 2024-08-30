@@ -3226,7 +3226,6 @@ __metadata:
     react: 18.2.0
     react-native: 0.74.3
     react-native-config: ^1.5.3
-    react-native-fbsdk-next: ^13.0.0
     react-native-formik: ^1.7.8
     react-native-gesture-handler: ^2.18.1
     react-native-image-crop-picker: ^0.41.2
@@ -8491,19 +8490,6 @@ __metadata:
     react-native-windows:
       optional: true
   checksum: 0eb74e0a10ae6e96422671482da83dea16571f4f5ad848d1f18015dccbecb9cbc066788df72a88c630abf4aed0edb7616ec27704817cff18bd6ed7d61979d671
-  languageName: node
-  linkType: hard
-
-"react-native-fbsdk-next@npm:^13.0.0":
-  version: 13.0.0
-  resolution: "react-native-fbsdk-next@npm:13.0.0"
-  peerDependencies:
-    expo: ">=47.0.0"
-    react-native: ">=0.63.3"
-  peerDependenciesMeta:
-    expo:
-      optional: true
-  checksum: ba0cd96ad369b5607b27fad3cc49cdc58a3428a7c90343caac52af019fe43b8558b449edbb9a2dcf215d6280c985b7724e1a65ee5999f7532c97400124aebf3b
   languageName: node
   linkType: hard
 
