@@ -2,7 +2,6 @@ import React, { useEffect, useState } from 'react';
 import { View, Text, StyleSheet, TouchableOpacity, Modal } from 'react-native';
 import { useDispatch } from 'react-redux';
 import { Icon } from '@rneui/themed';
-import axios from 'axios';
 
 import MyCarousel from '../../components/profileComponents/Carousel';
 import { getUserData } from '../../redux/reducers/UserSlice';
@@ -18,15 +17,9 @@ const DashboardScreen = ({ navigation }) => {
     try {
       const action = await dispatch(getUserData());
       setUserData(action.payload[0]);
-      
-      // Fetch next_action from AsyncStorage
+
+      // Set nextAction based on the fetched user data
       setNextAction(action.payload[0].next_action);
-      console.log("nextAction",action.payload[0])
-      
-      // Show modal if next_action is "Email Verification"
-      if (nextAction === "Email Verification") {
-        setModalVisible(true);
-      }
     } catch (error) {
       console.error('Error fetching user data:', error);
     }
@@ -36,12 +29,19 @@ const DashboardScreen = ({ navigation }) => {
     profileFetch();
   }, []);
 
-  const handleSendVerification = async () => {
-    const data={
-      email: userData.email,
+  useEffect(() => {
+    // Show modal if nextAction is "Email Verification"
+    if (nextAction === "Email Verification") {
+      setModalVisible(true);
     }
+  }, [nextAction]);
+
+  const handleSendVerification = async () => {
+    const data = {
+      email: userData.email,
+    };
     try {
-      const response = await API.post('/api/resend-email-verification',data);
+      const response = await API.post('/api/resend-email-verification', data);
       if (response) {
         alert('Verification email sent successfully!');
       }
@@ -124,10 +124,9 @@ const styles = StyleSheet.create({
     alignItems: "center",
     marginTop: 22,
     backgroundColor: 'rgba(0, 0, 0, 0.5)',
-
   },
   modalView: {
-    height:300,
+    height: 300,
     width: 300,
     margin: 20,
     backgroundColor: "white",
@@ -148,31 +147,31 @@ const styles = StyleSheet.create({
     padding: 10,
     elevation: 2,
     marginTop: 10,
-    justifyContent:'center',
-    alignItems:"center"
+    justifyContent: 'center',
+    alignItems: "center"
   },
   buttonSend: {
     backgroundColor: "#2196F3",
-    height:80,
+    height: 80,
     width: 170,
   },
   buttonLater: {
     backgroundColor: "#f44336",
-    height:50,
+    height: 50,
     width: 170,
   },
   textStyle: {
     color: "white",
     fontWeight: "bold",
     textAlign: "center",
-    fontSize:16
+    fontSize: 16
   },
   modalText: {
     marginBottom: 15,
     textAlign: "center",
-    fontWeight:"600",
-    fontSize:20,
-    color:'black'
+    fontWeight: "600",
+    fontSize: 20,
+    color: 'black'
   }
 });
 
