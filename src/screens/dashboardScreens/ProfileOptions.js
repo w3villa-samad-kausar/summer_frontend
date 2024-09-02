@@ -2,14 +2,16 @@ import React, { useEffect, useState } from 'react'
 import PageHeading from '../../components/profileComponents/PageHeading'
 import NameAndPhoto from '../../components/profileComponents/NameAndPhoto'
 import OptionNames from '../../components/profileComponents/OptionNames'
-import { Alert, ScrollView } from 'react-native'
+import { Alert, Dimensions, ScrollView, StyleSheet, Text, TouchableOpacity, View } from 'react-native'
 import API from '../../helpers/api/ApiHelper'
 import { deleteStoredToken } from '../../utility/AuthToken'
 import { successToastMessage } from '../../utility/ToastMessage'
 import { resetAuth } from '../../redux/reducers/AuthSlice'
 import { useDispatch } from 'react-redux'
 import { getUserData } from '../../redux/reducers/UserSlice'
-
+import colors from '../../assets/colors'
+const height=Dimensions.get('window').height
+const width=Dimensions.get('window').width
 const ProfileOptions = ({ navigation }) => {
   const dispatch = useDispatch()
   const [userData, setUserData] = useState(null)
@@ -94,23 +96,42 @@ const ProfileOptions = ({ navigation }) => {
         />
 
         <OptionNames
-          optionName="Delete"
-          hasMarginTop={true}
-          hasColour={true}
-          hasIcon={true}
-          onPresshandler={deleteHandler}
-        />
-
-        <OptionNames
           optionName="Logout"
           hasMarginTop={true}
           hasColour={true}
           hasIcon={true}
           onPresshandler={logoutHandler}
         />
+
+        <View style={styles.deleteButtonContainer}>
+          <TouchableOpacity style={styles.deleteButton} onPress={deleteHandler}>
+            <Text style={styles.deleteButtonText}>Delete Profile</Text>
+          </TouchableOpacity>
+        </View>
       </ScrollView>
     </>
   )
 }
-
+const styles=StyleSheet.create({
+  deleteButtonContainer: {
+    marginVertical:height-400,
+    // left:width/20,
+    alignItems:"center",
+    justifyContent:"center",
+    alignSelf:"center"
+  },
+  deleteButton:{
+    width:width/2,
+    height:40,
+    backgroundColor:"red",
+    justifyContent:"center",
+    alignItems:"center",
+    borderRadius:10,
+    elevation:5,
+  },
+  deleteButtonText:{
+    color:"white",
+    fontSize:14,
+  }
+})
 export default ProfileOptions

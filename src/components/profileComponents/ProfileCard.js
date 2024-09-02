@@ -197,7 +197,7 @@ const ProfileCard = () => {
             <View style={styles.buttonContainer}>
 
               <TouchableOpacity style={styles.donwloadButton} onPress={downloadProfileSummary}>
-                <Text style={styles.donwloadButtonText}>Donwload profile</Text>
+                <Text style={styles.donwloadButtonText}>Download profile</Text>
               </TouchableOpacity>
             </View>
 
