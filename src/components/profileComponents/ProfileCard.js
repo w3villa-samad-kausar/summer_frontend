@@ -1,11 +1,13 @@
 import React, { useState, useEffect } from 'react';
-import { Dimensions, ScrollView, StyleSheet, Text, TextInput, View, BackHandler } from 'react-native';
+import { Dimensions, ScrollView, StyleSheet, Text, TextInput, View, BackHandler, Button, TouchableOpacity, Alert } from 'react-native';
 import Modal from "react-native-modal";
-import { TouchableOpacity } from 'react-native-gesture-handler';
 import { Icon } from '@rneui/themed';
 import { useDispatch } from 'react-redux';
 import { getUserData } from '../../redux/reducers/UserSlice';
-
+import colors from '../../assets/colors';
+import RNFS from 'react-native-fs';
+import RNHTMLtoPDF from 'react-native-html-to-pdf';
+import { errorToastMessage } from '../../utility/ToastMessage';
 const width = Dimensions.get('window').width;
 const height = Dimensions.get('window').height;
 
@@ -16,6 +18,8 @@ const ProfileCard = () => {
   const [email, setEmail] = useState('');
   const [mobile, setMobile] = useState('');
   const [address, setAddress] = useState('');
+  const [plan, setPlan] = useState('');
+  const [profilePicture, setProfilePicture] = useState(false);
 
   const toggleModal = () => {
     setModalVisible(!isModalVisible);
@@ -28,6 +32,8 @@ const ProfileCard = () => {
     setEmail(fetchedUserData.email);
     setMobile(fetchedUserData.mobile_number);
     setAddress(fetchedUserData.address);
+    setPlan(fetchedUserData.plan);
+    setProfilePicture(fetchedUserData.profile_picture_url);
   };
 
   useEffect(() => {
@@ -46,6 +52,78 @@ const ProfileCard = () => {
 
     return () => backHandler.remove();
   }, [isModalVisible]);
+
+  const createProfileSummary = (profileData) => {
+    return `
+      <html>
+      <head>
+        <style>
+          body { font-family: Arial, sans-serif; padding: 20px; }
+          .header { text-align: center; margin-bottom: 20px; }
+          .profile-picture { text-align: center; margin-bottom: 20px; }
+          .profile-picture img { border-radius: 50%; width: 150px; height: 150px; }
+          .profile-info { margin-top: 20px; }
+          .profile-info p { margin: 10px 0; }
+          .profile-info p strong { display: inline-block; width: 150px; }
+        </style>
+      </head>
+      <body>
+        <div class="header">
+          <h1>Profile Summary</h1>
+        </div>
+        <div class="profile-picture">
+          <img src="${profileData.profilePicture}" alt="Profile Picture" />
+        </div>
+        <div class="profile-info">
+          <p><strong>Name:</strong> ${profileData.name}</p>
+          <p><strong>Email:</strong> ${profileData.email}</p>
+          <p><strong>Mobile Number:</strong> ${profileData.mobile}</p>
+          <p><strong>Address:</strong> ${profileData.address}</p>
+          <p><strong>Subscription Plan:</strong> ${profileData.plan}</p>
+        </div>
+      </body>
+      </html>
+    `;
+  };
+
+  const downloadProfileSummary = async () => {
+    const profileData = {
+      profilePicture: profilePicture,
+      name: name,
+      email: email,
+      mobile: mobile,
+      address: address,
+      plan: plan
+    }
+    try {
+      const htmlContent = createProfileSummary(profileData);
+      const fileName = `Profile_Summary_${profileData.name}`;
+      const filePath = `${RNFS.DownloadDirectoryPath}/${fileName}`;
+      const options = {
+        html: htmlContent,
+        fileName: fileName,
+        directory: 'Downloads',
+        path: filePath
+      };
+
+      const pdfFile = await RNHTMLtoPDF.convert(options);
+      console.log(pdfFile)
+      if (pdfFile){
+        Alert.alert(
+          'Profile Summary Downloaded',
+        )
+      }
+      // FileViewer.open(pdfFile.filePath)
+      //   .then(() => {
+      //     console.log('Profile summary downloaded successfully!');
+      //   })
+      //   .catch(err => console.log('Error opening PDF:', err));
+    } catch (error) {
+      console.error('Error generating profile summary PDF:', error);
+      errorToastMessage('Error generating profile summary PDF')
+    }
+  };
+
 
   return (
     <View style={{ flex: 1 }}>
@@ -99,6 +177,15 @@ const ProfileCard = () => {
             </View>
 
             <View style={styles.fieldBox}>
+              <Text style={styles.label}>Plan</Text>
+              <TextInput
+                style={styles.input}
+                value={plan}
+                editable={false}
+              />
+            </View>
+
+            <View style={styles.fieldBox}>
               <Text style={styles.label}>Address</Text>
               <TextInput
                 style={[styles.input, styles.addressInput]}
@@ -107,6 +194,14 @@ const ProfileCard = () => {
                 multiline
               />
             </View>
+            <View style={styles.buttonContainer}>
+
+              <TouchableOpacity style={styles.donwloadButton} onPress={downloadProfileSummary}>
+                <Text style={styles.donwloadButtonText}>Donwload profile</Text>
+              </TouchableOpacity>
+            </View>
+
+
           </ScrollView>
         </View>
       </Modal>
@@ -142,7 +237,7 @@ const styles = StyleSheet.create({
     padding: 15,
     borderTopLeftRadius: 20,
     borderTopRightRadius: 20,
-    height: '60%',
+    height: '65%',
   },
   scrollViewContent: {
     paddingBottom: 20,
@@ -165,6 +260,24 @@ const styles = StyleSheet.create({
   addressInput: {
     height: 80,
   },
+  buttonContainer: {
+    justifyContent: "center",
+    alignItems: "center"
+  },
+  donwloadButton: {
+    width: width - 300,
+    height: 50,
+    backgroundColor: colors.buttonColor,
+    justifyContent: 'center',
+    alignItems: 'center',
+    borderRadius: 10,
+
+  },
+  donwloadButtonText: {
+    fontSize: 12,
+    color: colors.secondaryBackground,
+
+  }
 });
 
 export default ProfileCard;
