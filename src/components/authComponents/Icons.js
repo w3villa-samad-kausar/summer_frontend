@@ -1,5 +1,5 @@
-import React from 'react'
-import { StyleSheet, TouchableOpacity, View } from 'react-native'
+import React, { useState } from 'react'
+import { Alert, StyleSheet, TouchableOpacity, View } from 'react-native'
 import { Icon } from '@rneui/themed'
 import {
   GoogleSignin
@@ -7,12 +7,75 @@ import {
 import Config from 'react-native-config';
 import { useNavigation } from '@react-navigation/native';
 import { useDispatch } from 'react-redux';
-import { googleSignin } from '../../redux/reducers/AuthSlice';
+import { socialSignin } from '../../redux/reducers/AuthSlice';
+import {
+  AccessToken,
+  GraphRequest,
+  GraphRequestManager,
+  LoginManager,
+} from 'react-native-fbsdk-next'
+
 const Icons = () => {
   const dispatch = useDispatch();
   const navigation = useNavigation()
+  const [userInfo, setUserInfo] = useState(null)
 
-  
+  const facebookLoginHandler = () => {
+    LoginManager.logInWithPermissions(['public_profile', 'email']).then(
+      login => {
+        console.log('login', login)
+        if (login.isCancelled) {
+          console.log('Login cancelled');
+        } else {
+          AccessToken.getCurrentAccessToken().then(data => {
+            const accessToken = data.accessToken.toString();
+            getInfoFromToken(accessToken);
+          });
+        }
+      },
+      error => {
+        console.log('Login fail with error: ' + error);
+      },
+    );
+  }
+
+  const getInfoFromToken = async(token) => {
+    const PROFILE_REQUEST_PARAMS = {
+      fields: {
+        string: 'id,email,name,first_name,last_name',
+      },
+    };
+    const profileRequest = new GraphRequest(
+      '/me',
+      { token, parameters: PROFILE_REQUEST_PARAMS },
+      (error, user) => {
+        if (error) {
+          console.log('login info has error: ' + error);
+        } else {
+          setUserInfo(user);
+          console.log('result:', user);
+        }
+      },
+    );
+    new GraphRequestManager().addRequest(profileRequest).start();
+  }
+
+  console.log("userInfo", userInfo)
+  if (userInfo){
+    const data={
+      name:userInfo.name,
+      email:userInfo.email,
+    }
+    const action =  dispatch(socialSignin(data))
+    if (action?.payload?.msg === 'User created , please verify mobile number') {
+      navigation.navigate('MobileNumber', { email: data.email })
+    }
+    // else{
+    //   console.log(action?.payload?.msg)
+    // }
+  }
+
+
   return (
     <View style={styles.iconContainer}>
       <TouchableOpacity onPress={() => {
@@ -28,7 +91,7 @@ const Icons = () => {
                   email: userInfo.user.email,
                   name: userInfo.user.name,
                 }
-                const action = await dispatch(googleSignin(data))
+                const action = await dispatch(socialSignin(data))
 
                 // Handle successful response, like navigating to another screen
                 if (action?.payload?.msg === 'User created , please verify mobile number') {
@@ -52,7 +115,7 @@ const Icons = () => {
           size={30}
           color='red' />
       </TouchableOpacity>
-      <TouchableOpacity >
+      <TouchableOpacity onPress={facebookLoginHandler}>
 
         <Icon
           type='antdesign'

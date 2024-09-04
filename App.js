@@ -11,17 +11,46 @@ import { NavigationContainer } from '@react-navigation/native'
 import Router from './src/navigations/Router'
 import Toast from 'react-native-toast-message'
 import { PersistGate } from 'redux-persist/integration/react';
+import { PermissionsAndroid, Platform, Alert } from 'react-native';
+import messaging from '@react-native-firebase/messaging';
+import { getFcmToken, notificationListener } from './src/utility/fcmToken'
 
 const App = () => {
+
+  useEffect(() => {
+    async function requestNotificationPermission() {
+      try {
+        if (Platform.OS === 'android') {
+          const granted = await PermissionsAndroid.request(
+            PermissionsAndroid.PERMISSIONS.POST_NOTIFICATIONS
+          );
+          if (granted === PermissionsAndroid.RESULTS.GRANTED) {
+            const token = await getFcmToken()
+            console.log("Notificationtoken", token)
+            notificationListener()
+          } else {
+            Alert.alert(
+              'Permission Required',
+              'Please enable notifications in the app settings.'
+            );
+          }
+        }
+      } catch (err) {
+        console.warn(err);
+      }
+    }
+    requestNotificationPermission();
+  }, [])
+
 
   return (
     <GestureHandlerRootView>
       <Provider store={store}>
-      <PersistGate loading={null} persistor={persistor}>
-        <NavigationContainer>
-          <Router />
-        </NavigationContainer>
-      </PersistGate>
+        <PersistGate loading={null} persistor={persistor}>
+          <NavigationContainer>
+            <Router />
+          </NavigationContainer>
+        </PersistGate>
       </Provider>
       <Toast />
     </GestureHandlerRootView>

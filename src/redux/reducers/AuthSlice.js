@@ -34,7 +34,7 @@ export const signUp = createAsyncThunk('auth/signUp', async (data) => {
     }
 })
 
-export const googleSignin = createAsyncThunk('auth/googleLogin', async (data) => {
+export const socialSignin = createAsyncThunk('auth/socialLogin', async (data) => {
     try {
         const response = await API.post('/api/social-login', data);
         if (response?.token) {
@@ -44,7 +44,7 @@ export const googleSignin = createAsyncThunk('auth/googleLogin', async (data) =>
 
         // Handle successful response, like navigating to another screen
     } catch (error) {
-        console.error('Login failed:', error);
+        console.error('Login failed:', error?.response);
         // Handle error, like showing an error message
     }
 })
@@ -94,14 +94,14 @@ const authSlice = createSlice({
         builder.addCase(signIn.rejected, (state, action) => {
             state.loading = false
         })
-        builder.addCase(googleSignin.pending, (state, action) => {
+        builder.addCase(socialSignin.pending, (state, action) => {
             state.loading = true
         })
-        builder.addCase(googleSignin.fulfilled, (state, action) => {
+        builder.addCase(socialSignin.fulfilled, (state, action) => {
             state.loading = false
             state.isLoggedIn = action.payload
         })
-        builder.addCase(googleSignin.rejected, (state, action) => {
+        builder.addCase(socialSignin.rejected, (state, action) => {
             state.loading = false
         })
         builder.addCase(signUp.pending, (state, action) => {

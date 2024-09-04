@@ -6,14 +6,17 @@ import API from '../../helpers/api/ApiHelper'
 import { errorToastMessage } from '../../utility/ToastMessage'
 import { useNavigation } from '@react-navigation/native'
 
-const NameAndPhoto = ({ name, tierName,profilePicture }) => {
-  const navigation=useNavigation()  
+const NameAndPhoto = ({ name, tierName, profilePicture }) => {
+  const navigation = useNavigation()
   const handlenavigation = async () => {
     navigation.navigate('ProfileScreen')
   }
   return (
     <View style={styles.container}>
-      <ProfilePhoto profilePicture={profilePicture}></ProfilePhoto>
+      {profilePicture && (
+        <ProfilePhoto profilePicture={profilePicture} />
+      )}
+
       <View style={styles.nameContainer}>
         <TouchableOpacity onPress={handlenavigation}>
           <Text style={styles.name}>{name}</Text>

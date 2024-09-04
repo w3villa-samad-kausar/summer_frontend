@@ -87,7 +87,7 @@ const ProfileOptions = ({ navigation }) => {
         <NameAndPhoto
           name={userData?.name || ''} // Safe access
           tierName={userData?.plan || ''}
-          profilePicture={userData?.profile_picture_url || ''}
+          profilePicture={userData?.profile_picture_url}
         />
 
         <OptionNames
