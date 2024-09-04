@@ -4,8 +4,10 @@ import { useDispatch } from 'react-redux';
 import { Icon } from '@rneui/themed';
 
 import MyCarousel from '../../components/profileComponents/Carousel';
-import { getUserData } from '../../redux/reducers/UserSlice';
+import { getUserData, storeFcmToken } from '../../redux/reducers/UserSlice';
 import API from '../../helpers/api/ApiHelper';
+import { requestNotificationPermission } from '../../utility/NotificationPermission';
+import { getFcmToken } from '../../utility/fcmToken';
 
 const DashboardScreen = ({ navigation }) => {
   const dispatch = useDispatch();
@@ -24,9 +26,30 @@ const DashboardScreen = ({ navigation }) => {
       console.error('Error fetching user data:', error);
     }
   };
+  const handlePermissionGranted = async () => {
+    try {
+      const token = await getFcmToken(); // Get the FCM token
+      console.log("fcm token>>>",token)
+      const data = {
+        email: userData?.email,
+        token,
+      };
+
+      // Call API to insert the device token into the database
+      try {
+        const action =await dispatch(storeFcmToken(data))
+        console.log(action?.payload?.msg)
+      } catch (error) {
+        console.log(error)
+      }
+    } catch (error) {
+      console.error('Error saving device token:', error);
+    }
+  };
 
   useEffect(() => {
     profileFetch();
+    requestNotificationPermission(handlePermissionGranted);
   }, []);
 
   useEffect(() => {

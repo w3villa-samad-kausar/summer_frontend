@@ -17,6 +17,15 @@ export const getUserData=createAsyncThunk('user/userData',async()=>{
     }
 })
 
+export const storeFcmToken=createAsyncThunk('/user/fcmToken',async(data)=>{
+    try {
+        const response = await API.post('/api/update-fcm-token',data)
+        return response
+    } catch (error) {
+        errorToastMessage(error?.response?.data?.msg)
+    }
+})
+
 const userSlice = createSlice({
     name: 'users',
     initialState,
@@ -30,6 +39,15 @@ const userSlice = createSlice({
             state.userData = action.payload
         })
         builder.addCase(getUserData.rejected, (state, action) => {
+            state.loading = false
+        })
+        builder.addCase(storeFcmToken.pending, (state, action) => {
+            state.loading = true
+        })
+        builder.addCase(storeFcmToken.fulfilled, (state, action) => {
+            state.loading = false
+        })
+        builder.addCase(storeFcmToken.rejected, (state, action) => {
             state.loading = false
         })
     }
