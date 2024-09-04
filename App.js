@@ -14,6 +14,7 @@ import { PersistGate } from 'redux-persist/integration/react';
 import { PermissionsAndroid, Platform, Alert } from 'react-native';
 import messaging from '@react-native-firebase/messaging';
 import { getFcmToken, notificationListener } from './src/utility/fcmToken'
+import NotificationController from './src/helpers/NotificationController.android'
 
 const App = () => {
 
@@ -40,6 +41,7 @@ const App = () => {
       }
     }
     requestNotificationPermission();
+    notificationListener();
   }, [])
 
 
@@ -49,6 +51,7 @@ const App = () => {
         <PersistGate loading={null} persistor={persistor}>
           <NavigationContainer>
             <Router />
+            <NotificationController />
           </NavigationContainer>
         </PersistGate>
       </Provider>
