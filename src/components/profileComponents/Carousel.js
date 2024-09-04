@@ -29,8 +29,7 @@ const MyCarousel = () => {
         try {
             const response = await API.post('/api/payment', data);
             if (response) {
-                console.log(response)
-                setPaymentData({ ...paymentData, customer: response?.customer, ephemeralKey: response?.ephemeralKey?.secret, paymentIntent: response?.paymentIntent?.client_secret })
+                setPaymentData({ ...paymentData, customer: response?.customer, ephemeralKey: response?.ephemeralKey?.secret, paymentIntent: response?.paymentIntent?.client_secret,amount:response?.paymentIntent?.amount })
                 setShowCheckout(true);
             }
         } catch (error) {
@@ -40,12 +39,36 @@ const MyCarousel = () => {
             setCurrentIndex(index);  // Set the current index to the clicked card
         }
     };
+    const handlePlanUpdate=async(amount)=>{
+        if (amount==500){
+            setShowCheckout(false);
+            const data={
+                plan:"silver",
+            }
+            try {
+             const response =await API.post('/api/update-plan',data)
+            } catch (error) {
+             console.log(error)   
+            }
+        }
+        if (amount==1000){
+            setShowCheckout(false);
+            const data={
+                plan:"gold",
+            }
+            try {
+             const response =await API.post('/api/update-plan',data)
+             console.log(response)   
+            } catch (error) {
+             console.log(error)   
+            }
+        }
+    }
 
 
 
     const handleCheckout = async () => {
         // Handle checkout logic here
-        console.log("paymentData", paymentData)
 
         if (paymentData) {
             const { error } = await initPaymentSheet({
@@ -65,7 +88,7 @@ const MyCarousel = () => {
                 if (error) {
                     Alert.alert(`Error code: ${error.code}`, error.message);
                 } else {
-                    Alert.alert('Success', 'Your order is confirmed!');
+                    handlePlanUpdate(paymentData?.amount)
                 }
             }
             else {
