@@ -2,8 +2,8 @@
 #
 .DS_Store
 
-android/app/google-services.json
-android/app/src/main/res/values/strings.xml
+google-services.json
+strings.xml
 
 # Xcode
 #
