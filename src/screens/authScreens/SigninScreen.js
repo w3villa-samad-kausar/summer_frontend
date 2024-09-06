@@ -9,7 +9,7 @@ import Icons from '../../components/authComponents/Icons';
 import CustomStatusBar from '../../components/CustomStatusBar';
 import * as Yup from 'yup';
 import { Dimensions, ScrollView, StyleSheet} from 'react-native';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { signIn } from '../../redux/reducers/AuthSlice';
 
 const height = Dimensions.get('screen').height
@@ -28,6 +28,7 @@ const validationSchema = Yup.object().shape({
 
 const SigninScreen = ({ navigation }) => {
   const dispatch = useDispatch()
+  const loading = useSelector(state => state.auth?.loading)
 
   const handleSignIn = async (values) => {
     data = {
@@ -75,7 +76,7 @@ const SigninScreen = ({ navigation }) => {
                 touched={touched.password}
               />
 
-              <SubmitButton label="Sign In" onPress={handleSubmit} />
+              <SubmitButton label="Sign In" onPress={handleSubmit} isLoading={loading} />
               <SigninSignupToggler
                 question="Do not have an account?"
                 button=" Sign Up"

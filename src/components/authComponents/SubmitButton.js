@@ -1,17 +1,21 @@
 import React from 'react'
-import { StyleSheet, Text, TouchableOpacity, View } from 'react-native'
+import { ActivityIndicator, StyleSheet, Text, TouchableOpacity, View } from 'react-native'
 import colors from '../../assets/colors'
 
-const SubmitButton = ({label,onPress}) => {
+const SubmitButton = ({ label, onPress, isLoading }) => {
   return (
     <View style={[styles.buttonContainer]}>
       <TouchableOpacity style={styles.loginButton} onPress={onPress}>
-        <Text style={styles.loginButtonText}>{label}</Text>
+        {
+          isLoading ? <ActivityIndicator size="small" color='white' /> : (
+            <Text style={styles.loginButtonText}>{label}</Text>
+          )
+        }
       </TouchableOpacity>
     </View>
   )
 }
-const styles=StyleSheet.create({
+const styles = StyleSheet.create({
   buttonContainer: {
     flexDirection: 'row',
     justifyContent: 'center',
@@ -23,6 +27,8 @@ const styles=StyleSheet.create({
     width: 200,
     borderRadius: 20,
     opacity: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
   },
   loginButtonText: {
     fontSize: 20,

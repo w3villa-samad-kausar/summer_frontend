@@ -31,23 +31,14 @@ const userSlice = createSlice({
     initialState,
     reducers: {},
     extraReducers: (builder) => {
-        builder.addCase(getUserData.pending, (state, action) => {
+        builder.addMatcher(getUserData.pending, storeFcmToken.pending,(state) => {
             state.loading = true
         })
         builder.addCase(getUserData.fulfilled, (state, action) => {
             state.loading = false
             state.userData = action.payload
         })
-        builder.addCase(getUserData.rejected, (state, action) => {
-            state.loading = false
-        })
-        builder.addCase(storeFcmToken.pending, (state, action) => {
-            state.loading = true
-        })
-        builder.addCase(storeFcmToken.fulfilled, (state, action) => {
-            state.loading = false
-        })
-        builder.addCase(storeFcmToken.rejected, (state, action) => {
+        builder.addMatcher(getUserData.rejected,storeFcmToken.fulfilled,storeFcmToken.rejected, (state) => {
             state.loading = false
         })
     }

@@ -39,13 +39,11 @@ export const socialSignin = createAsyncThunk('auth/socialLogin', async (data) =>
         const response = await API.post('/api/social-login', data);
         if (response?.token) {
             await setStoredToken(response?.token)
-        }        
+        }
         return response
 
-        // Handle successful response, like navigating to another screen
     } catch (error) {
         console.error('Login failed:', error?.response);
-        // Handle error, like showing an error message
     }
 })
 
@@ -84,60 +82,19 @@ const authSlice = createSlice({
         }
     },
     extraReducers: (builder) => {
-        builder.addCase(signIn.pending, (state, action) => {
-            state.loading = true
+        builder.addMatcher(signIn.pending, socialSignin.pending, signUp.pending, otpVerification.pending, resendOtp.pending, (state) => {
+            state.isLoading = true
         })
-        builder.addCase(signIn.fulfilled, (state, action) => {
+        builder.addMatcher(signIn.rejected, socialSignin.rejected, signUp.rejected, otpVerification.rejected, resendOtp.rejected, resendOtp.fulfilled, (state) => {
+            state.isLoading = false
+        })
+        builder.addMatcher(signIn.fulfilled, socialSignin.fulfilled, signUp.fulfilled, otpVerification.fulfilled, (state, action) => {
             state.loading = false
             state.isLoggedIn = action.payload
         })
-        builder.addCase(signIn.rejected, (state, action) => {
-            state.loading = false
-        })
-        builder.addCase(socialSignin.pending, (state, action) => {
-            state.loading = true
-        })
-        builder.addCase(socialSignin.fulfilled, (state, action) => {
-            state.loading = false
-            state.isLoggedIn = action.payload
-        })
-        builder.addCase(socialSignin.rejected, (state, action) => {
-            state.loading = false
-        })
-        builder.addCase(signUp.pending, (state, action) => {
-            state.loading = true
-        })
-        builder.addCase(signUp.fulfilled, (state, action) => {
-            state.loading = false
-            state.isLoggedIn = action.payload
-        })
-        builder.addCase(signUp.rejected, (state, action) => {
-            state.loading = false
-        })
-        builder.addCase(otpVerification.pending, (state, action) => {
-            state.loading = true
-        })
-        builder.addCase(otpVerification.fulfilled, (state, action) => {
-            state.loading = false
-            state.isLoggedIn = action.payload
-        })
-        builder.addCase(otpVerification.rejected, (state, action) => {
-            state.loading = false
-        })
-        builder.addCase(resendOtp.pending, (state, action) => {
-            state.loading = true
-        })
-        builder.addCase(resendOtp.fulfilled, (state, action) => {
-            state.loading = false
-        })
-        builder.addCase(resendOtp.rejected, (state, action) => {
-            state.loading = false
-        })
-
     },
-
 })
 
-export const {resetAuth} = authSlice.actions
+export const { resetAuth } = authSlice.actions
 
 export default authSlice.reducer
