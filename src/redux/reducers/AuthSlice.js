@@ -1,4 +1,4 @@
-import { createAsyncThunk, createSlice } from "@reduxjs/toolkit"
+import { createAsyncThunk, createSlice, isAnyOf } from "@reduxjs/toolkit"
 import API from "../../helpers/api/ApiHelper";
 import { errorToastMessage, successToastMessage } from "../../utility/ToastMessage";
 import { setStoredToken } from "../../utility/AuthToken";
@@ -82,13 +82,13 @@ const authSlice = createSlice({
         }
     },
     extraReducers: (builder) => {
-        builder.addMatcher(signIn.pending, socialSignin.pending, signUp.pending, otpVerification.pending, resendOtp.pending, (state) => {
-            state.isLoading = true
+        builder.addMatcher(isAnyOf(signIn.pending, socialSignin.pending, signUp.pending, otpVerification.pending, resendOtp.pending), state => {
+            state.loading = true
         })
-        builder.addMatcher(signIn.rejected, socialSignin.rejected, signUp.rejected, otpVerification.rejected, resendOtp.rejected, resendOtp.fulfilled, (state) => {
-            state.isLoading = false
+        builder.addMatcher(isAnyOf(signIn.rejected, socialSignin.rejected, signUp.rejected, otpVerification.rejected, resendOtp.rejected, resendOtp.fulfilled), state => {
+            state.loading = false
         })
-        builder.addMatcher(signIn.fulfilled, socialSignin.fulfilled, signUp.fulfilled, otpVerification.fulfilled, (state, action) => {
+        builder.addMatcher(isAnyOf(signIn.fulfilled, socialSignin.fulfilled, signUp.fulfilled, otpVerification.fulfilled), (state, action) => {
             state.loading = false
             state.isLoggedIn = action.payload
         })

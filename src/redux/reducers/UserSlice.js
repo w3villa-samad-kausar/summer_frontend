@@ -1,4 +1,4 @@
-import { createAsyncThunk, createSlice } from "@reduxjs/toolkit"
+import { createAsyncThunk, createSlice, isAnyOf } from "@reduxjs/toolkit"
 import API from "../../helpers/api/ApiHelper"
 import { errorToastMessage } from "../../utility/ToastMessage"
 
@@ -31,14 +31,14 @@ const userSlice = createSlice({
     initialState,
     reducers: {},
     extraReducers: (builder) => {
-        builder.addMatcher(getUserData.pending, storeFcmToken.pending,(state) => {
-            state.loading = true
-        })
         builder.addCase(getUserData.fulfilled, (state, action) => {
             state.loading = false
             state.userData = action.payload
         })
-        builder.addMatcher(getUserData.rejected,storeFcmToken.fulfilled,storeFcmToken.rejected, (state) => {
+        builder.addMatcher(isAnyOf(getUserData.pending, storeFcmToken.pending),state => {
+            state.loading = true
+        })
+        builder.addMatcher(isAnyOf(getUserData.rejected,storeFcmToken.fulfilled,storeFcmToken.rejected), state => {
             state.loading = false
         })
     }
