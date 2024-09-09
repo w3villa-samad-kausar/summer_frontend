@@ -33,7 +33,7 @@ const userSlice = createSlice({
     extraReducers: (builder) => {
         builder.addCase(getUserData.fulfilled, (state, action) => {
             state.loading = false
-            state.userData = action.payload
+            state.userData = action?.payload
         })
         builder.addMatcher(isAnyOf(getUserData.pending, storeFcmToken.pending),state => {
             state.loading = true

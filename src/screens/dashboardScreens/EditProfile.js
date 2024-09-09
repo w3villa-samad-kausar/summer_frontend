@@ -1,5 +1,5 @@
 import { ScrollView, View, Text, TouchableOpacity, StyleSheet } from 'react-native';
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import PageHeading from '../../components/profileComponents/PageHeading';
 import NameAndPhoto from '../../components/profileComponents/NameAndPhoto';
 import SubmitButton from '../../components/authComponents/SubmitButton';
@@ -26,6 +26,7 @@ const validationSchema = Yup.object().shape({
 
 const EditProfile = ({ navigation }) => {
   const dispatch = useDispatch();
+  const { userData } = useSelector((state) => state.user); // Accessing the user data directly from Redux store
   const [initialValues, setInitialValues] = useState({
     name: '',
     email: '',
@@ -38,24 +39,23 @@ const EditProfile = ({ navigation }) => {
   const [showSuggestions, setShowSuggestions] = useState(false);
   const [selectedLocation, setSelectedLocation] = useState({ latitude: null, longitude: null });
 
-
-  useEffect(() => {
-    const profileFetch = async () => {
-      const action = await dispatch(getUserData());
-      const fetchedUserData = action.payload[0]; // Assuming payload contains the user data
-      setInitialValues({
-        name: fetchedUserData.name,
-        email: fetchedUserData.email,
-        mobileNumber: fetchedUserData.mobile_number,
-        address: fetchedUserData.address,
-        profilePicture:fetchedUserData.profile_picture_url,
-        tierName:fetchedUserData.plan,
-      });
-    };
-
-    profileFetch();
+  const profileFetch = useCallback(async () => {
+    const action = await dispatch(getUserData());
+    const fetchedUserData = action.payload[0];
+    setInitialValues({
+      name: fetchedUserData.name,
+      email: fetchedUserData.email,
+      mobileNumber: fetchedUserData.mobile_number,
+      address: fetchedUserData.address,
+      profilePicture: fetchedUserData.profile_picture_url,
+      tierName: fetchedUserData.plan,
+    });
   }, [dispatch]);
 
+  useEffect(() => {
+    profileFetch(); // Call only once when component mounts
+  }, [profileFetch]);
+  
   const handleAddressChange = async (text, setFieldValue) => {
     setFieldValue('address', text);
 
@@ -100,7 +100,7 @@ const EditProfile = ({ navigation }) => {
         onPressHandler={() => navigation.navigate('ProfileOptions')}
       />
 
-      <NameAndPhoto name={initialValues.name} tierName={initialValues?.tierName} profilePicture={initialValues?.profilePicture}  />
+      <NameAndPhoto name={initialValues.name} tierName={initialValues?.tierName} profilePicture={initialValues?.profilePicture} />
 
       <Formik
         initialValues={initialValues}

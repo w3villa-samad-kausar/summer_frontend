@@ -1,4 +1,4 @@
-import { Alert, Image, Modal, StyleSheet, TouchableOpacity, TouchableWithoutFeedback, View } from 'react-native'
+import { Alert, Image, Modal, StyleSheet, TouchableOpacity, TouchableWithoutFeedback, View, ActivityIndicator } from 'react-native'
 import React, { useEffect, useState } from 'react'
 import { Text } from '@rneui/base';
 import SubmitButton from '../authComponents/SubmitButton';
@@ -9,12 +9,13 @@ import axios from 'axios';
 import Config from 'react-native-config';
 import { getAuthToken } from '../../utility/AuthToken';
 
-const ProfilePhoto = ({ profilePicture, onUpdatePicture }) => {
+const ProfilePhoto = ({ profilePicture }) => {
   const dispatch = useDispatch();
   const url = Config.BASE_URL;
   const [newProfilePicture, setNewProfilepicture] = useState(profilePicture);
   const [modalVisible, setModalVisible] = useState(false);
   const [pickerModalVisible, setPickerModalVisible] = useState(false);
+  const [loadingImage, setLoadingImage] = useState(true); // Local loading state
   const [email, setEmail] = useState('');
 
   const profileFetch = async () => {
@@ -22,6 +23,7 @@ const ProfilePhoto = ({ profilePicture, onUpdatePicture }) => {
       const action = await dispatch(getUserData());
       setNewProfilepicture(action.payload[0].profile_picture_url);
       setEmail(action.payload[0].email);  // Store the email for later use
+      setLoadingImage(false)
     } catch (error) {
       console.error('Error fetching profile data:', error);
       Alert.alert('Error', 'Failed to load profile data.');
@@ -57,7 +59,8 @@ const ProfilePhoto = ({ profilePicture, onUpdatePicture }) => {
   };
 
   const uploadImage = async (image) => {
-    const token =await getAuthToken();
+    const token = await getAuthToken();
+    setLoadingImage(true); // Set loading state to true
 
     const formData = new FormData();
     formData.append('image', {
@@ -84,6 +87,8 @@ const ProfilePhoto = ({ profilePicture, onUpdatePicture }) => {
     } catch (error) {
       console.error('Error uploading image:', error?.response);
       Alert.alert('Error', 'An error occurred while uploading the image.');
+    } finally {
+      setLoadingImage(false); // Set loading state back to false
     }
   };
 
@@ -131,7 +136,13 @@ const ProfilePhoto = ({ profilePicture, onUpdatePicture }) => {
       </Modal>
 
       <TouchableOpacity style={styles.button} onPress={() => setModalVisible(true)}>
-        <Image source={{ uri: newProfilePicture }} style={styles.imageStyling} />
+        {
+          loadingImage ? ( // Use local loading state here
+            <ActivityIndicator size="small" color='black' />
+          ) : (
+            <Image source={{ uri: newProfilePicture }} style={styles.imageStyling} />
+          )
+        }
         <Text style={styles.buttonText}>View Profile Picture</Text>
       </TouchableOpacity>
     </>
@@ -143,14 +154,14 @@ export default ProfilePhoto;
 const styles = StyleSheet.create({
   button: {
     alignItems: 'center',
-    backgroundColor: '#f0f0f0', 
+    backgroundColor: '#f0f0f0',
     padding: 10,
     borderRadius: 10,
     marginTop: 20,
   },
   buttonText: {
     marginTop: 5,
-    color: '#333', 
+    color: '#333',
     fontWeight: 'bold',
     fontSize: 14,
   },

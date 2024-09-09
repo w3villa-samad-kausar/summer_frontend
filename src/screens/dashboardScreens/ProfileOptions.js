@@ -1,32 +1,30 @@
-import React, { useEffect, useState } from 'react'
-import PageHeading from '../../components/profileComponents/PageHeading'
-import NameAndPhoto from '../../components/profileComponents/NameAndPhoto'
-import OptionNames from '../../components/profileComponents/OptionNames'
-import { Alert, Dimensions, ScrollView, StyleSheet, Text, TouchableOpacity, View } from 'react-native'
-import API from '../../helpers/api/ApiHelper'
-import { deleteStoredToken } from '../../utility/AuthToken'
-import { successToastMessage } from '../../utility/ToastMessage'
-import { resetAuth } from '../../redux/reducers/AuthSlice'
-import { useDispatch } from 'react-redux'
-import { getUserData } from '../../redux/reducers/UserSlice'
-import colors from '../../assets/colors'
-const height=Dimensions.get('window').height
-const width=Dimensions.get('window').width
-const ProfileOptions = ({ navigation }) => {
-  const dispatch = useDispatch()
-  const [userData, setUserData] = useState(null)
+import React, { useEffect } from 'react';
+import { Alert, Dimensions, ScrollView, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
+import { useDispatch, useSelector } from 'react-redux';
+import PageHeading from '../../components/profileComponents/PageHeading';
+import NameAndPhoto from '../../components/profileComponents/NameAndPhoto';
+import OptionNames from '../../components/profileComponents/OptionNames';
+import API from '../../helpers/api/ApiHelper';
+import { deleteStoredToken } from '../../utility/AuthToken';
+import { successToastMessage } from '../../utility/ToastMessage';
+import { resetAuth } from '../../redux/reducers/AuthSlice';
+import { getUserData } from '../../redux/reducers/UserSlice';
 
-  const profileFetch = async () => {
-    const action = await dispatch(getUserData())
-    setUserData(action.payload[0]) // Assuming action.payload[0] contains the fetched user data
-  }
+const height = Dimensions.get('window').height;
+const width = Dimensions.get('window').width;
+
+const ProfileOptions = ({ navigation }) => {
+  const dispatch = useDispatch();
+  const { userData } = useSelector((state) => state.user); // Accessing the user data directly from Redux store
 
   useEffect(() => {
-    profileFetch()
-  }, [])
+    // Only fetch user data if it's not already available
+    if (!userData) {
+      dispatch(getUserData());
+    }
+  }, [dispatch, userData]);
 
   const deleteHandler = () => {
-
     Alert.alert(
       "Confirmation",
       "Are you sure you want to proceed?",
@@ -39,20 +37,20 @@ const ProfileOptions = ({ navigation }) => {
           text: "OK",
           onPress: async () => {
             try {
-              const response = await API.delete('/api/delete', userData?.email) // Pass email in request body
-              successToastMessage(response?.msg)
-              dispatch(resetAuth())
-              await deleteStoredToken()
-              navigation.navigate('Signin') // Navigate to Signin screen after deletion
+              const response = await API.delete('/api/delete', userData?.email); // Pass email in request body
+              successToastMessage(response?.msg);
+              dispatch(resetAuth());
+              await deleteStoredToken();
+              navigation.navigate('Signin'); // Navigate to Signin screen after deletion
             } catch (error) {
-              console.log(error)
+              console.log(error);
             }
           },
         },
       ],
       { cancelable: false }
     );
-  }
+  };
 
   const logoutHandler = () => {
     Alert.alert(
@@ -65,29 +63,29 @@ const ProfileOptions = ({ navigation }) => {
         },
         {
           text: "OK",
-          onPress: clearToken
+          onPress: clearToken,
         },
       ],
       { cancelable: false }
     );
-  }
+  };
 
   const clearToken = async () => {
-    dispatch(resetAuth())
-  }
+    dispatch(resetAuth());
+  };
 
   return (
     <>
       <ScrollView>
         <PageHeading
           pageName='Profile'
-          onPressHandler={() => { navigation.navigate('Dashboard') }}
+          onPressHandler={() => navigation.navigate('Dashboard')}
         />
 
         <NameAndPhoto
-          name={userData?.name || ''} // Safe access
-          tierName={userData?.plan || ''}
-          profilePicture={userData?.profile_picture_url}
+          name={userData[0]?.name || ''} // Safe access
+          tierName={userData[0]?.plan || ''}
+          profilePicture={userData[0]?.profile_picture_url}
         />
 
         <OptionNames
@@ -110,28 +108,29 @@ const ProfileOptions = ({ navigation }) => {
         </View>
       </ScrollView>
     </>
-  )
-}
-const styles=StyleSheet.create({
+  );
+};
+
+const styles = StyleSheet.create({
   deleteButtonContainer: {
-    marginVertical:height-400,
-    // left:width/20,
-    alignItems:"center",
-    justifyContent:"center",
-    alignSelf:"center"
+    marginVertical: height - 400,
+    alignItems: "center",
+    justifyContent: "center",
+    alignSelf: "center",
   },
-  deleteButton:{
-    width:width/2,
-    height:40,
-    backgroundColor:"red",
-    justifyContent:"center",
-    alignItems:"center",
-    borderRadius:10,
-    elevation:5,
+  deleteButton: {
+    width: width / 2,
+    height: 40,
+    backgroundColor: "red",
+    justifyContent: "center",
+    alignItems: "center",
+    borderRadius: 10,
+    elevation: 5,
   },
-  deleteButtonText:{
-    color:"white",
-    fontSize:14,
-  }
-})
-export default ProfileOptions
+  deleteButtonText: {
+    color: "white",
+    fontSize: 14,
+  },
+});
+
+export default ProfileOptions;

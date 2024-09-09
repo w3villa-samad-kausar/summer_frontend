@@ -1,16 +1,12 @@
 import React from 'react'
-import { ActivityIndicator, StyleSheet, Text, TouchableOpacity, View } from 'react-native'
+import { StyleSheet, Text, TouchableOpacity, View } from 'react-native'
 import colors from '../../assets/colors'
 
-const SubmitButton = ({ label, onPress, isLoading }) => {
+const SubmitButton = ({ label, onPress}) => {
   return (
     <View style={[styles.buttonContainer]}>
       <TouchableOpacity style={styles.loginButton} onPress={onPress}>
-        {
-          isLoading ? <ActivityIndicator size="small" color='white' /> : (
             <Text style={styles.loginButtonText}>{label}</Text>
-          )
-        }
       </TouchableOpacity>
     </View>
   )

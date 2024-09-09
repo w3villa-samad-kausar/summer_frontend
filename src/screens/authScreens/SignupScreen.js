@@ -8,17 +8,15 @@ import SigninSignupToggler from '../../components/authComponents/SigninSignupTog
 import * as Yup from 'yup'
 import { Formik } from 'formik'
 import FormInputField from '../../components/authComponents/FormInputField'
-import { Dimensions, ScrollView, StyleSheet, View } from 'react-native'
-import { useDispatch } from 'react-redux'
-import { signUp, googleSignin } from '../../redux/reducers/AuthSlice'
-import { GoogleSignin } from '@react-native-google-signin/google-signin'
-import Config from 'react-native-config'
+import { Dimensions, ScrollView, StyleSheet } from 'react-native'
+import { useDispatch, useSelector } from 'react-redux'
+import { signUp} from '../../redux/reducers/AuthSlice'
 import LoadingModal from '../../components/universalComponents/LoadingModal'
 
 const height = Dimensions.get('screen').height
 const SignupScreen = ({ navigation }) => {
   const dispatch = useDispatch();
-  const [loading, setLoading] = useState(false);
+  const loading = useSelector(state => state?.auth?.loading)
 
   const validationSchema = Yup.object().shape({
     name: Yup.string()
@@ -47,7 +45,6 @@ const SignupScreen = ({ navigation }) => {
 
 
   const handleSignUp = async (values) => {
-    setLoading(true);
     const data = {
       name: values.name,
       email: values.email,
@@ -63,10 +60,6 @@ const SignupScreen = ({ navigation }) => {
       
       navigation.navigate('OtpVerification', { mobileNumber: data.mobileNumber });
     }
-    setLoading(false)
-
-
-
   }
 
   return (

@@ -11,6 +11,7 @@ import * as Yup from 'yup';
 import { Dimensions, ScrollView, StyleSheet} from 'react-native';
 import { useDispatch, useSelector } from 'react-redux';
 import { signIn } from '../../redux/reducers/AuthSlice';
+import LoadingModal from '../../components/universalComponents/LoadingModal';
 
 const height = Dimensions.get('screen').height
 
@@ -28,8 +29,7 @@ const validationSchema = Yup.object().shape({
 
 const SigninScreen = ({ navigation }) => {
   const dispatch = useDispatch()
-  const loading = useSelector(state => state.auth?.loading)
-
+  const loading = useSelector(state => state?.auth?.loading)
   const handleSignIn = async (values) => {
     data = {
       email: values.email,
@@ -76,7 +76,9 @@ const SigninScreen = ({ navigation }) => {
                 touched={touched.password}
               />
 
-              <SubmitButton label="Sign In" onPress={handleSubmit} isLoading={loading} />
+              <SubmitButton label="Sign In" onPress={handleSubmit} />
+              {loading && <LoadingModal isVisible={loading} />}
+
               <SigninSignupToggler
                 question="Do not have an account?"
                 button=" Sign Up"
