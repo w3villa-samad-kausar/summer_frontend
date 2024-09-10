@@ -1,4 +1,5 @@
 import messaging from "@react-native-firebase/messaging";
+import PushNotification from 'react-native-push-notification'
 
 export const getFcmToken = async () => {
     try {
@@ -13,7 +14,13 @@ export const getFcmToken = async () => {
 export const notificationListener = () => {
     messaging().onMessage(remoteMessage => {
         console.log('Foreground message:', remoteMessage);
-        // Display the notification to the user
+        PushNotification.localNotification({
+            channelId: "channel-id", // Use the same channel ID
+            message: remoteMessage.notification.body,
+            title: remoteMessage.notification.title,
+            bigPictureUrl: remoteMessage.notification.android?.imageUrl, // Handle possible undefined values
+            smallIcon: remoteMessage.notification.android?.imageUrl, // Handle possible undefined values
+        });
     });
 
     messaging().onNotificationOpenedApp(remoteMessage => {

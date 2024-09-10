@@ -18,8 +18,19 @@ const MyCarousel = () => {
 
     const handleCardPress = async (plan, amount, index) => {
         if (plan === "Free") {
+            setLoading(true)
             setShowCheckout(false);
             setCurrentIndex(index);  // Set the current index to the clicked card
+            const data={
+                plan:"free",
+            }
+            try {
+             const response =await API.post('/api/update-plan',data)
+             setLoading(false)
+             console.log(response)
+            } catch (error) {
+             console.log(error)   
+            }
             return;
         }
 

@@ -12,6 +12,7 @@ import NotificationController from './src/helpers/NotificationController.android
 const App = () => {
 
   useEffect(() => { 
+    NotificationController()
     notificationListener();
   }, [])
 

@@ -19,9 +19,7 @@ const ProfileOptions = ({ navigation }) => {
 
   useEffect(() => {
     // Only fetch user data if it's not already available
-    if (!userData) {
       dispatch(getUserData());
-    }
   }, [dispatch, userData]);
 
   const deleteHandler = () => {

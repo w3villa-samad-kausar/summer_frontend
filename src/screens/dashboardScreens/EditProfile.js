@@ -12,6 +12,7 @@ import { errorToastMessage, successToastMessage } from '../../utility/ToastMessa
 import MapView from '../../components/profileComponents/MapComponent';
 import { useDispatch, useSelector } from 'react-redux';
 import { getUserData } from '../../redux/reducers/UserSlice';
+import LoadingModal from '../../components/universalComponents/LoadingModal';
 
 const validationSchema = Yup.object().shape({
   name: Yup.string().required('Name is required'),
@@ -32,12 +33,13 @@ const EditProfile = ({ navigation }) => {
     email: '',
     mobileNumber: '',
     address: '',
-    profilePicture:'',
-    tierName:'',
+    profilePicture: '',
+    tierName: '',
   });
   const [addressSuggestions, setAddressSuggestions] = useState([]);
   const [showSuggestions, setShowSuggestions] = useState(false);
   const [selectedLocation, setSelectedLocation] = useState({ latitude: null, longitude: null });
+  const [loading,setLoading]=useState(false)
 
   const profileFetch = useCallback(async () => {
     const action = await dispatch(getUserData());
@@ -55,7 +57,7 @@ const EditProfile = ({ navigation }) => {
   useEffect(() => {
     profileFetch(); // Call only once when component mounts
   }, [profileFetch]);
-  
+
   const handleAddressChange = async (text, setFieldValue) => {
     setFieldValue('address', text);
 
@@ -79,6 +81,7 @@ const EditProfile = ({ navigation }) => {
   };
 
   const updateHandler = async (values) => {
+    setLoading(true)
     const data = {
       name: values.name,
       email: values.email,
@@ -87,9 +90,13 @@ const EditProfile = ({ navigation }) => {
     };
     try {
       const response = await API.post('/api/update', data);
+      setLoading(false)
+      await profileFetch();
       successToastMessage(response?.msg);
+    
     } catch (error) {
-      errorToastMessage(error?.response?.data?.msg);
+      console.log(error)
+      errorToastMessage(error);
     }
   };
 
@@ -100,7 +107,11 @@ const EditProfile = ({ navigation }) => {
         onPressHandler={() => navigation.navigate('ProfileOptions')}
       />
 
-      <NameAndPhoto name={initialValues.name} tierName={initialValues?.tierName} profilePicture={initialValues?.profilePicture} />
+      <NameAndPhoto
+        name={userData[0]?.name || ''} // Safe access
+        tierName={userData[0]?.plan || ''}
+        profilePicture={userData[0]?.profile_picture_url}
+      />
 
       <Formik
         initialValues={initialValues}
@@ -170,12 +181,13 @@ const EditProfile = ({ navigation }) => {
                 ))}
               </View>
             )}
-            
+
             {selectedLocation.latitude && selectedLocation.longitude && (
               <MapView latitude={selectedLocation.latitude} longitude={selectedLocation.longitude} />
             )}
 
             <SubmitButton label="Update" onPress={handleSubmit} />
+            <LoadingModal isVisible={loading}/>
           </>
         )}
       </Formik>

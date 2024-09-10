@@ -29,7 +29,6 @@ const DashboardScreen = ({ navigation }) => {
   const handlePermissionGranted = async () => {
     try {
       const token = await getFcmToken(); // Get the FCM token
-      console.log("fcm token>>>",token)
       const data = {
         email: userData?.email,
         token,
@@ -38,7 +37,6 @@ const DashboardScreen = ({ navigation }) => {
       // Call API to insert the device token into the database
       try {
         const action =await dispatch(storeFcmToken(data))
-        console.log(action?.payload?.msg)
       } catch (error) {
         console.log(error)
       }
