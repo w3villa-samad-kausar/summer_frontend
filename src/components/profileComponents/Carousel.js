@@ -12,14 +12,12 @@ const { width, height } = Dimensions.get('window');
 const MyCarousel = () => {
     const [showCheckout, setShowCheckout] = useState(false);
     const [loading, setLoading] = useState(false);
-    const [selectedPlan, setSelectedPlan] = useState(null);  
     const [paymentData, setPaymentData] = useState({ customer: '', ephemeralKey: '', paymentIntent: '' });
     const [isSwiperScrollEnabled, setSwiperScrollEnabled] = useState(true);
     const publishableKey = Config.STRIPE_PUBLISHABLE_KEY;
 
     const handleCardPress = async (plan, amount) => {
         setSwiperScrollEnabled(false);
-        setSelectedPlan(plan);
         setLoading(true);
 
         if (plan === "Free") {

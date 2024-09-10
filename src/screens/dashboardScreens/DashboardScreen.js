@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { View, Text, StyleSheet, TouchableOpacity, Modal } from 'react-native';
 import { useDispatch } from 'react-redux';
 import { Icon } from '@rneui/themed';
-
+import SkeletonPlaceholder from 'react-native-skeleton-placeholder';
 import MyCarousel from '../../components/profileComponents/Carousel';
 import { getUserData, storeFcmToken } from '../../redux/reducers/UserSlice';
 import API from '../../helpers/api/ApiHelper';
@@ -14,32 +14,27 @@ const DashboardScreen = ({ navigation }) => {
   const [userData, setUserData] = useState(null);
   const [nextAction, setNextAction] = useState(null);
   const [modalVisible, setModalVisible] = useState(false);
+  const [isLoading, setIsLoading] = useState(true); // Add loading state
 
   const profileFetch = async () => {
     try {
       const action = await dispatch(getUserData());
       setUserData(action.payload[0]);
-
-      // Set nextAction based on the fetched user data
       setNextAction(action.payload[0].next_action);
+      setIsLoading(false); // Stop loading when data is fetched
     } catch (error) {
       console.error('Error fetching user data:', error);
     }
   };
+
   const handlePermissionGranted = async () => {
     try {
-      const token = await getFcmToken(); // Get the FCM token
+      const token = await getFcmToken();
       const data = {
         email: userData?.email,
         token,
       };
-
-      // Call API to insert the device token into the database
-      try {
-        const action =await dispatch(storeFcmToken(data))
-      } catch (error) {
-        console.log(error)
-      }
+      await dispatch(storeFcmToken(data));
     } catch (error) {
       console.error('Error saving device token:', error);
     }
@@ -51,16 +46,13 @@ const DashboardScreen = ({ navigation }) => {
   }, []);
 
   useEffect(() => {
-    // Show modal if nextAction is "Email Verification"
-    if (nextAction === "Email Verification") {
+    if (nextAction === 'Email Verification') {
       setModalVisible(true);
     }
   }, [nextAction]);
 
   const handleSendVerification = async () => {
-    const data = {
-      email: userData.email,
-    };
+    const data = { email: userData.email };
     try {
       const response = await API.post('/api/resend-email-verification', data);
       if (response) {
@@ -75,18 +67,27 @@ const DashboardScreen = ({ navigation }) => {
 
   return (
     <View style={styles.container}>
-      <View style={styles.header}>
-        <Text style={styles.centerMessageText}>Hello, {userData?.name || ''}</Text>
-        <TouchableOpacity onPress={() => navigation.navigate('ProfileOptions')}>
-          <Icon
-            type='antdesign'
-            name='user'
-            size={30}
-          />
-        </TouchableOpacity>
-      </View>
-
-      <MyCarousel />
+      {isLoading ? (
+        <SkeletonPlaceholder>
+          <SkeletonPlaceholder.Item flexDirection="row" justifyContent="space-between" alignItems="center" padding={20}>
+            <SkeletonPlaceholder.Item width={150} height={30} borderRadius={4} />
+            <SkeletonPlaceholder.Item width={50} height={50} borderRadius={50} />
+          </SkeletonPlaceholder.Item>
+          <SkeletonPlaceholder.Item marginTop={20}>
+            <SkeletonPlaceholder.Item width="90%" height={200} borderRadius={10} marginLeft={20}/>
+          </SkeletonPlaceholder.Item>
+        </SkeletonPlaceholder>
+      ) : (
+        <>
+          <View style={styles.header}>
+            <Text style={styles.centerMessageText}>Hello, {userData?.name || ''}</Text>
+            <TouchableOpacity onPress={() => navigation.navigate('ProfileOptions')}>
+              <Icon type="antdesign" name="user" size={30} />
+            </TouchableOpacity>
+          </View>
+          <MyCarousel />
+        </>
+      )}
 
       <Modal
         animationType="slide"
@@ -120,29 +121,20 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
   },
-  centerMessage: {
-    flex: 1,
-    justifyContent: 'space-evenly',
-    alignItems: 'center',
-  },
-  centerMessageText: {
-    fontSize: 26,
-    color: "black"
-  },
   header: {
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'center',
-    padding: 20
+    padding: 20,
   },
-  profileImage: {
-    width: 50,
-    height: 50,
+  centerMessageText: {
+    fontSize: 26,
+    color: 'black',
   },
   centeredView: {
     flex: 1,
-    justifyContent: "center",
-    alignItems: "center",
+    justifyContent: 'center',
+    alignItems: 'center',
     marginTop: 22,
     backgroundColor: 'rgba(0, 0, 0, 0.5)',
   },
@@ -150,18 +142,18 @@ const styles = StyleSheet.create({
     height: 300,
     width: 300,
     margin: 20,
-    backgroundColor: "white",
+    backgroundColor: 'white',
     borderRadius: 20,
     padding: 35,
-    alignItems: "center",
-    shadowColor: "#000",
+    alignItems: 'center',
+    shadowColor: '#000',
     shadowOffset: {
       width: 0,
-      height: 2
+      height: 2,
     },
     shadowOpacity: 0.25,
     shadowRadius: 4,
-    elevation: 5
+    elevation: 5,
   },
   button: {
     borderRadius: 20,
@@ -169,31 +161,31 @@ const styles = StyleSheet.create({
     elevation: 2,
     marginTop: 10,
     justifyContent: 'center',
-    alignItems: "center"
+    alignItems: 'center',
   },
   buttonSend: {
-    backgroundColor: "#2196F3",
+    backgroundColor: '#2196F3',
     height: 80,
     width: 170,
   },
   buttonLater: {
-    backgroundColor: "#f44336",
+    backgroundColor: '#f44336',
     height: 50,
     width: 170,
   },
   textStyle: {
-    color: "white",
-    fontWeight: "bold",
-    textAlign: "center",
-    fontSize: 16
+    color: 'white',
+    fontWeight: 'bold',
+    textAlign: 'center',
+    fontSize: 16,
   },
   modalText: {
     marginBottom: 15,
-    textAlign: "center",
-    fontWeight: "600",
+    textAlign: 'center',
+    fontWeight: '600',
     fontSize: 20,
-    color: 'black'
-  }
+    color: 'black',
+  },
 });
 
 export default DashboardScreen;
