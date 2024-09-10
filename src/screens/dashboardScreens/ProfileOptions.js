@@ -111,7 +111,7 @@ const ProfileOptions = ({ navigation }) => {
 
 const styles = StyleSheet.create({
   deleteButtonContainer: {
-    marginVertical: height - 400,
+    marginVertical: height/1.7,
     alignItems: "center",
     justifyContent: "center",
     alignSelf: "center",

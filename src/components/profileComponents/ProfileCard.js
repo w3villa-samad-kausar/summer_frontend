@@ -215,10 +215,11 @@ const styles = StyleSheet.create({
     width: width - 10,
     height: 60,
     backgroundColor: '#fff',
-    borderRadius: 20,
     marginVertical: 15,
     padding: 10,
-    top: height - 70
+    top: height - 70,
+    borderTopLeftRadius:20,
+    borderTopRightRadius:20,
   },
   swipeBar: {
     alignSelf: 'center',
