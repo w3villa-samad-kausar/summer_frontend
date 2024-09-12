@@ -6,6 +6,7 @@ import SubmitButton from '../authComponents/SubmitButton';
 import LoadingModal from '../universalComponents/LoadingModal';
 import { initPaymentSheet, presentPaymentSheet, StripeProvider } from '@stripe/stripe-react-native';
 import Config from 'react-native-config';
+import colors from '../../assets/colors';
 
 const { width, height } = Dimensions.get('window');
 
@@ -186,13 +187,13 @@ const styles = StyleSheet.create({
         padding: 20,
     },
     freePlan: {
-        backgroundColor: '#4CAF50',
+        backgroundColor: colors.freeTierColor,
     },
     silverPlan: {
-        backgroundColor: '#FF9800',
+        backgroundColor: colors.silverTierColor,
     },
     goldPlan: {
-        backgroundColor: '#FF5722',
+        backgroundColor: colors.goldTierColor,
     },
     text: {
         color: '#fff',
