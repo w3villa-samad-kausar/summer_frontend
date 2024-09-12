@@ -42,4 +42,32 @@ API.interceptors.response.use(
         return Promise.reject(error);
     },
 );
+
+// Custom method to handle multipart/form-data for image uploads
+API.uploadImage = async (url, data) => {
+    const formData = new FormData();
+
+    // Append the image
+    formData.append('image', {
+        uri: data.image.path,
+        type: data.image.mime,
+        name: data.image.path.split('/').pop(),
+    });
+
+    // Append the email directly to the FormData
+    formData.append('email', data.email);
+    try {
+        const response = await API.post(url, formData, {
+            headers: {
+                'Content-Type': 'multipart/form-data', // Set the correct header for form data
+            },
+        });
+
+        return response; // Return the response for further handling
+    } catch (error) {
+        console.error('Error uploading image:', error.response || error);
+        throw error;
+    }
+};
+
 export default API;

@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useCallback, useState } from 'react';
 import { Alert, Dimensions, ScrollView, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 import { useDispatch, useSelector } from 'react-redux';
 import PageHeading from '../../components/profileComponents/PageHeading';
@@ -10,6 +10,7 @@ import { successToastMessage } from '../../utility/ToastMessage';
 import { resetAuth } from '../../redux/reducers/AuthSlice';
 import { getUserData } from '../../redux/reducers/UserSlice';
 import SkeletonPlaceholder from 'react-native-skeleton-placeholder';
+import { useFocusEffect } from '@react-navigation/native';
 
 const height = Dimensions.get('window').height;
 const width = Dimensions.get('window').width;
@@ -18,14 +19,17 @@ const ProfileOptions = ({ navigation }) => {
   const dispatch = useDispatch();
   const { userData } = useSelector((state) => state.user);
   const [isLoading, setIsLoading] = useState(true); // Loading state
+  useFocusEffect(
+    useCallback(() => {
+      const fetchData = async () => {
+        setIsLoading(true); // Set loading to true while data is being fetched
+        await dispatch(getUserData());
+        setIsLoading(false); // Set loading to false when data is fetched
+      };
 
-  useEffect(() => {
-    const fetchData = async () => {
-      await dispatch(getUserData());
-      setIsLoading(false); // Set loading to false when data is fetched
-    };
-    fetchData();
-  }, [dispatch]);
+      fetchData();
+    }, []) // Dependency array (you can remove userData if not necessary)
+  );
 
   const deleteHandler = () => {
     Alert.alert(

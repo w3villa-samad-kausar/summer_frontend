@@ -3,26 +3,24 @@ import React, { useEffect, useState } from 'react'
 import { Text } from '@rneui/base';
 import SubmitButton from '../authComponents/SubmitButton';
 import ImagePicker from 'react-native-image-crop-picker';
-import { useDispatch } from 'react-redux';
-import { getUserData } from '../../redux/reducers/UserSlice';
-import axios from 'axios';
-import Config from 'react-native-config';
-import { getAuthToken } from '../../utility/AuthToken';
+import { useDispatch, useSelector } from 'react-redux';
+import { changeProfilePicture, getUserData } from '../../redux/reducers/UserSlice';
+import API from '../../helpers/api/ApiHelper';
 
 const ProfilePhoto = ({ profilePicture }) => {
   const dispatch = useDispatch();
-  const url = Config.BASE_URL;
   const [newProfilePicture, setNewProfilepicture] = useState(profilePicture);
   const [modalVisible, setModalVisible] = useState(false);
   const [pickerModalVisible, setPickerModalVisible] = useState(false);
   const [loadingImage, setLoadingImage] = useState(true); // Local loading state
   const [email, setEmail] = useState('');
 
+
   const profileFetch = async () => {
     try {
       const action = await dispatch(getUserData());
       setNewProfilepicture(action.payload[0].profile_picture_url);
-      setEmail(action.payload[0].email);  // Store the email for later use
+      setEmail(action.payload[0].email);  
       setLoadingImage(false)
     } catch (error) {
       console.error('Error fetching profile data:', error);
@@ -59,36 +57,25 @@ const ProfilePhoto = ({ profilePicture }) => {
   };
 
   const uploadImage = async (image) => {
-    const token = await getAuthToken();
+
     setLoadingImage(true); // Set loading state to true
 
-    const formData = new FormData();
-    formData.append('image', {
-      uri: image.path,
-      type: image.mime,
-      name: image.path.split('/').pop(),
-    });
-    formData.append('email', email);
-
+    const data={
+      image:image,
+      email:email
+    }
     try {
-      const response = await axios.post(`${url}/api/profile-picture-upload`, formData, {
-        headers: {
-          'Content-Type': 'multipart/form-data',
-          'Bearer': `${token}`,
-        },
-      });
-
-      if (response?.status === 200) {
+      const action = await dispatch(changeProfilePicture(data))
+      if (action) {
         Alert.alert('Success', 'Profile picture updated successfully!');
-        setNewProfilepicture(response?.data?.url);
+        setNewProfilepicture(action?.payload.url);
       } else {
         Alert.alert('Error', 'Failed to update profile picture.');
       }
     } catch (error) {
-      console.error('Error uploading image:', error?.response);
       Alert.alert('Error', 'An error occurred while uploading the image.');
     } finally {
-      setLoadingImage(false); // Set loading state back to false
+      setLoadingImage(false);
     }
   };
 
