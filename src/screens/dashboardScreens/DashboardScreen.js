@@ -70,7 +70,10 @@ const DashboardScreen = ({ navigation }) => {
       .map(word => word.charAt(0).toUpperCase() + word.slice(1).toLowerCase())
       .join(' ');
   };
-  
+  const handleNavigation = async () => {
+    navigation.navigate('ProfileScreen');
+  };
+
 
   return (
     <View style={styles.container}>
@@ -81,13 +84,15 @@ const DashboardScreen = ({ navigation }) => {
             <SkeletonPlaceholder.Item width={50} height={50} borderRadius={50} />
           </SkeletonPlaceholder.Item>
           <SkeletonPlaceholder.Item marginTop={20}>
-            <SkeletonPlaceholder.Item width="90%" height={200} borderRadius={10} marginLeft={20}/>
+            <SkeletonPlaceholder.Item width="90%" height={200} borderRadius={10} marginLeft={20} />
           </SkeletonPlaceholder.Item>
         </SkeletonPlaceholder>
       ) : (
         <>
           <View style={styles.header}>
-            <Text style={styles.centerMessageText}>Hello, {capitalizeName(userData?.name) || ''}</Text>
+            <TouchableOpacity onPress={handleNavigation}>
+              <Text style={styles.centerMessageText}>Hello, {capitalizeName(userData?.name) || ''}</Text>
+            </TouchableOpacity>
             <TouchableOpacity onPress={() => navigation.navigate('ProfileOptions')}>
               <Icon type="antdesign" name="user" size={30} />
             </TouchableOpacity>

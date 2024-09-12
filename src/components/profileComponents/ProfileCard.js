@@ -6,9 +6,7 @@ import { Icon } from '@rneui/themed';
 import { useDispatch } from 'react-redux';
 import { getUserData } from '../../redux/reducers/UserSlice';
 import colors from '../../assets/colors';
-import RNFS from 'react-native-fs';
-import RNHTMLtoPDF from 'react-native-html-to-pdf';
-import { errorToastMessage } from '../../utility/ToastMessage';
+import { downloadProfileSummary } from '../../helpers/ProfileSummaryCreator';
 
 const width = Dimensions.get('window').width;
 const height = Dimensions.get('window').height;
@@ -22,6 +20,8 @@ const ProfileCard = () => {
   const [address, setAddress] = useState('');
   const [plan, setPlan] = useState('');
   const [profilePicture, setProfilePicture] = useState(false);
+
+  
 
   const toggleModal = () => {
     setModalVisible(!isModalVisible);
@@ -40,55 +40,9 @@ const ProfileCard = () => {
 
   useEffect(() => {
     fetchUserData();
+  }, []);
 
-    const backHandler = BackHandler.addEventListener(
-      "hardwareBackPress",
-      () => {
-        if (isModalVisible) {
-          toggleModal();
-          return true; // Prevent default back action
-        }
-        return false; // Allow default back action
-      }
-    );
-
-    return () => backHandler.remove();
-  }, [isModalVisible]);
-
-  const createProfileSummary = (profileData) => {
-    return `
-      <html>
-      <head>
-        <style>
-          body { font-family: Arial, sans-serif; padding: 20px; }
-          .header { text-align: center; margin-bottom: 20px; }
-          .profile-picture { text-align: center; margin-bottom: 20px; }
-          .profile-picture img { border-radius: 50%; width: 150px; height: 150px; }
-          .profile-info { margin-top: 20px; }
-          .profile-info p { margin: 10px 0; }
-          .profile-info p strong { display: inline-block; width: 150px; }
-        </style>
-      </head>
-      <body>
-        <div class="header">
-          <h1>Profile Summary</h1>
-        </div>
-        <div class="profile-picture">
-          <img src="${profileData.profilePicture}" alt="Profile Picture" />
-        </div>
-        <div class="profile-info">
-          <p><strong>Name:</strong> ${profileData.name}</p>
-          <p><strong>Email:</strong> ${profileData.email}</p>
-          <p><strong>Mobile Number:</strong> ${profileData.mobile}</p>
-          <p><strong>Address:</strong> ${profileData.address}</p>
-          <p><strong>Subscription Plan:</strong> ${profileData.plan}</p>
-        </div>
-      </body>
-      </html>
-    `;
-  };
-
-  const downloadProfileSummary = async () => {
+  const downloadHandler=()=>{
     const profileData = {
       profilePicture: profilePicture,
       name: name,
@@ -97,31 +51,9 @@ const ProfileCard = () => {
       address: address,
       plan: plan
     }
-    try {
-      const htmlContent = createProfileSummary(profileData);
-      const fileName = `Profile_Summary_${profileData.name}`;
-      const filePath = `${RNFS.DownloadDirectoryPath}/${fileName}`;
-      const options = {
-        html: htmlContent,
-        fileName: fileName,
-        directory: 'Downloads',
-        path: filePath
-      };
-
-      const pdfFile = await RNHTMLtoPDF.convert(options);
-      if (pdfFile) {
-        Alert.alert(
-          'Profile Summary Downloaded',
-        )
-      }
-
-    } catch (error) {
-      console.error('Error generating profile summary PDF:', error);
-      errorToastMessage('Error generating profile summary PDF')
-    }
-  };
-
-
+    downloadProfileSummary(profileData)
+  }
+  
   return (
     <View style={{ flex: 1 }}>
       <TouchableOpacity onPress={toggleModal}>
@@ -206,7 +138,7 @@ const ProfileCard = () => {
                   />
                 </View>
                 <View style={styles.buttonContainer}>
-                  <TouchableOpacity style={styles.donwloadButton} onPress={downloadProfileSummary}>
+                  <TouchableOpacity style={styles.donwloadButton} onPress={downloadHandler}>
                     <Text style={styles.donwloadButtonText}>Download profile</Text>
                   </TouchableOpacity>
                 </View>
