@@ -64,6 +64,13 @@ const DashboardScreen = ({ navigation }) => {
     }
     setModalVisible(false);
   };
+  const capitalizeName = (name) => {
+    return name
+      .split(' ')
+      .map(word => word.charAt(0).toUpperCase() + word.slice(1).toLowerCase())
+      .join(' ');
+  };
+  
 
   return (
     <View style={styles.container}>
@@ -80,7 +87,7 @@ const DashboardScreen = ({ navigation }) => {
       ) : (
         <>
           <View style={styles.header}>
-            <Text style={styles.centerMessageText}>Hello, {userData?.name || ''}</Text>
+            <Text style={styles.centerMessageText}>Hello, {capitalizeName(userData?.name) || ''}</Text>
             <TouchableOpacity onPress={() => navigation.navigate('ProfileOptions')}>
               <Icon type="antdesign" name="user" size={30} />
             </TouchableOpacity>
