@@ -136,15 +136,16 @@ const ProfilePhoto = ({ profilePicture }) => {
       </Modal>
 
       <TouchableOpacity style={styles.button} onPress={() => setModalVisible(true)}>
-        {
-          loadingImage ? ( // Use local loading state here
-            <ActivityIndicator size="small" color='black' />
+        <View style={styles.imageContainer}>
+          {loadingImage ? (
+            <ActivityIndicator size="small" color='black' style={styles.loader} />
           ) : (
             <Image source={{ uri: newProfilePicture }} style={styles.imageStyling} />
-          )
-        }
+          )}
+        </View>
         <Text style={styles.buttonText}>View Profile Picture</Text>
       </TouchableOpacity>
+
     </>
   )
 }
@@ -152,6 +153,23 @@ const ProfilePhoto = ({ profilePicture }) => {
 export default ProfilePhoto;
 
 const styles = StyleSheet.create({
+  imageContainer: {
+    width: 80, // Adjust to your desired size
+    height: 80, // Adjust to your desired size
+    borderRadius: 50, // Half of width/height to make it a circle
+    backgroundColor: 'lightgrey', // Background color for the circle
+    justifyContent: 'center',
+    alignItems: 'center',
+    position: 'relative',
+  },
+  loader: {
+    position: 'absolute',
+  },
+  imageStyling: {
+    width: '100%',
+    height: '100%',
+    borderRadius: 50, // Same as imageContainer
+  },
   button: {
     alignItems: 'center',
     backgroundColor: '#f0f0f0',

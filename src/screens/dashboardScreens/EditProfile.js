@@ -107,6 +107,8 @@ const EditProfile = ({ navigation }) => {
     // Show skeleton loader while fetching user data
     return (
       <ScrollView>
+        <PageHeading
+          pageName='Edit Profile' />
         <SkeletonPlaceholder>
           <View style={{ flexDirection: 'row', alignItems: 'center', margin: 20 }}>
             <View style={{ width: 80, height: 80, borderRadius: 50 }} />
@@ -117,15 +119,15 @@ const EditProfile = ({ navigation }) => {
           </View>
 
           <View style={{ marginTop: 60, marginLeft: 20 }}>
-            <View style={{ width: 80, height: 20, borderRadius: 4}} />
-            <View style={{ width: width - 40, height: 40, borderRadius: 4,marginTop: 10 }} />
+            <View style={{ width: 80, height: 20, borderRadius: 4 }} />
+            <View style={{ width: width - 40, height: 40, borderRadius: 4, marginTop: 10 }} />
             <View style={{ width: 80, height: 20, borderRadius: 4, marginTop: 10 }} />
             <View style={{ width: width - 40, height: 40, borderRadius: 4, marginTop: 10 }} />
             <View style={{ width: 80, height: 20, borderRadius: 4, marginTop: 10 }} />
             <View style={{ width: width - 40, height: 40, borderRadius: 4, marginTop: 10 }} />
             <View style={{ width: 80, height: 20, borderRadius: 4, marginTop: 10 }} />
             <View style={{ width: width - 40, height: 80, borderRadius: 4, marginTop: 10 }} />
-            <View style={{ width: width - 200, height: 40, borderRadius: 50, marginTop: 20, alignSelf:"center" }} />
+            <View style={{ width: width - 200, height: 40, borderRadius: 50, marginTop: 20, alignSelf: "center" }} />
           </View>
 
         </SkeletonPlaceholder>

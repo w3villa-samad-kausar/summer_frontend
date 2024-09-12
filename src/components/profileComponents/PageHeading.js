@@ -1,7 +1,5 @@
-import { Image, StyleSheet, Text, TouchableOpacity, View } from 'react-native'
+import { StyleSheet, Text, TouchableOpacity, View } from 'react-native'
 import React from 'react'
-import CustomView from '../CustomView'
-import ImageUrl from '../../constants/ImageUrl'
 import { Icon } from '@rneui/themed'
 
 const PageHeading = ({ pageName,onPressHandler }) => {
