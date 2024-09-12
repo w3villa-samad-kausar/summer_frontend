@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
-import { Dimensions, ScrollView, StyleSheet, Text, TextInput, View, BackHandler, Button, TouchableOpacity, Alert } from 'react-native';
+import { Dimensions, StyleSheet, Text, TextInput, View, BackHandler, TouchableOpacity, Alert, TouchableWithoutFeedback } from 'react-native';
+import { ScrollView } from 'react-native-gesture-handler';
 import Modal from "react-native-modal";
 import { Icon } from '@rneui/themed';
 import { useDispatch } from 'react-redux';
@@ -8,6 +9,7 @@ import colors from '../../assets/colors';
 import RNFS from 'react-native-fs';
 import RNHTMLtoPDF from 'react-native-html-to-pdf';
 import { errorToastMessage } from '../../utility/ToastMessage';
+
 const width = Dimensions.get('window').width;
 const height = Dimensions.get('window').height;
 
@@ -107,17 +109,12 @@ const ProfileCard = () => {
       };
 
       const pdfFile = await RNHTMLtoPDF.convert(options);
-      console.log(pdfFile)
-      if (pdfFile){
+      if (pdfFile) {
         Alert.alert(
           'Profile Summary Downloaded',
         )
       }
-      // FileViewer.open(pdfFile.filePath)
-      //   .then(() => {
-      //     console.log('Profile summary downloaded successfully!');
-      //   })
-      //   .catch(err => console.log('Error opening PDF:', err));
+
     } catch (error) {
       console.error('Error generating profile summary PDF:', error);
       errorToastMessage('Error generating profile summary PDF')
@@ -141,73 +138,87 @@ const ProfileCard = () => {
         isVisible={isModalVisible}
         swipeDirection={['down']}
         onSwipeComplete={toggleModal}
-        onBackdropPress={toggleModal} // Close the modal on background touch
+        onBackdropPress={toggleModal}
         style={styles.modal}
+        propagateSwipe={true}  // Ensure swipe gestures are propagated
       >
-        <View style={styles.modalContent}>
-          <TouchableOpacity onPress={toggleModal}>
-            <View style={styles.swipeBar} />
-          </TouchableOpacity>
-          <ScrollView contentContainerStyle={styles.scrollViewContent}>
-            <View style={styles.fieldBox}>
-              <Text style={styles.label}>Name</Text>
-              <TextInput
-                style={styles.input}
-                value={name}
-                editable={false}
-              />
+
+        {/* <TouchableWithoutFeedback> */}
+
+          <ScrollView style={styles.modalContent}>
+
+            <TouchableOpacity onPress={toggleModal}>
+              <View style={styles.swipeBar} />
+            </TouchableOpacity>
+
+            <View style={{ flex: 1 }}>
+
+              <View
+                // contentContainerStyle={{ flexGrow: 1 }}
+                // scrollEnabled={true}
+                // keyboardShouldPersistTaps="handled"
+                // keyboardDismissMode="on-drag"
+              >
+
+                <View style={styles.fieldBox}>
+                  <Text style={styles.label}>Name</Text>
+                  <TextInput
+                    style={styles.input}
+                    value={name}
+                    editable={false}
+                  />
+                </View>
+
+                <View style={styles.fieldBox}>
+                  <Text style={styles.label}>Email</Text>
+                  <TextInput
+                    style={styles.input}
+                    value={email}
+                    editable={false}
+                  />
+                </View>
+
+                <View style={styles.fieldBox}>
+                  <Text style={styles.label}>Mobile Number</Text>
+                  <TextInput
+                    style={styles.input}
+                    value={mobile}
+                    editable={false}
+                  />
+                </View>
+
+                <View style={styles.fieldBox}>
+                  <Text style={styles.label}>Plan</Text>
+                  <TextInput
+                    style={styles.input}
+                    value={plan}
+                    editable={false}
+                  />
+                </View>
+
+                <View style={styles.fieldBox}>
+                  <Text style={styles.label}>Address</Text>
+                  <TextInput
+                    style={[styles.input, styles.addressInput]}
+                    value={address}
+                    editable={false}
+                    multiline
+                  />
+                </View>
+                <View style={styles.buttonContainer}>
+                  <TouchableOpacity style={styles.donwloadButton} onPress={downloadProfileSummary}>
+                    <Text style={styles.donwloadButtonText}>Download profile</Text>
+                  </TouchableOpacity>
+                </View>
             </View>
-
-            <View style={styles.fieldBox}>
-              <Text style={styles.label}>Email</Text>
-              <TextInput
-                style={styles.input}
-                value={email}
-                editable={false}
-              />
-            </View>
-
-            <View style={styles.fieldBox}>
-              <Text style={styles.label}>Mobile Number</Text>
-              <TextInput
-                style={styles.input}
-                value={mobile}
-                editable={false}
-              />
-            </View>
-
-            <View style={styles.fieldBox}>
-              <Text style={styles.label}>Plan</Text>
-              <TextInput
-                style={styles.input}
-                value={plan}
-                editable={false}
-              />
-            </View>
-
-            <View style={styles.fieldBox}>
-              <Text style={styles.label}>Address</Text>
-              <TextInput
-                style={[styles.input, styles.addressInput]}
-                value={address}
-                editable={false}
-                multiline
-              />
-            </View>
-            <View style={styles.buttonContainer}>
-
-              <TouchableOpacity style={styles.donwloadButton} onPress={downloadProfileSummary}>
-                <Text style={styles.donwloadButtonText}>Download profile</Text>
-              </TouchableOpacity>
-            </View>
-
-
-          </ScrollView>
-        </View>
+          </View>
+              </ScrollView>
+        {/* </TouchableWithoutFeedback> */}
       </Modal>
     </View>
-  );
-};
+  )
+}
+
 
 const styles = StyleSheet.create({
   caretUp: {
@@ -218,8 +229,8 @@ const styles = StyleSheet.create({
     marginVertical: 15,
     padding: 10,
     top: height - 70,
-    borderTopLeftRadius:20,
-    borderTopRightRadius:20,
+    borderTopLeftRadius: 20,
+    borderTopRightRadius: 20,
   },
   swipeBar: {
     alignSelf: 'center',
@@ -239,9 +250,11 @@ const styles = StyleSheet.create({
     borderTopLeftRadius: 20,
     borderTopRightRadius: 20,
     height: '65%',
+    flex: 0.6,  // Flex added to make sure the modal content occupies the full height
   },
   scrollViewContent: {
     paddingBottom: 20,
+    flexGrow: 1, // This ensures the ScrollView content can grow to the full height
   },
   fieldBox: {
     marginBottom: 15,
@@ -263,7 +276,7 @@ const styles = StyleSheet.create({
   },
   buttonContainer: {
     justifyContent: "center",
-    alignItems: "center"
+    alignItems: "center",
   },
   donwloadButton: {
     width: width - 300,

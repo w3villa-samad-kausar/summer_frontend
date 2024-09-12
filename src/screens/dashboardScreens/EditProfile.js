@@ -13,6 +13,7 @@ import MapView from '../../components/profileComponents/MapComponent';
 import { useDispatch, useSelector } from 'react-redux';
 import { getUserData } from '../../redux/reducers/UserSlice';
 import LoadingModal from '../../components/universalComponents/LoadingModal';
+import SkeletonPlaceholder from 'react-native-skeleton-placeholder';
 
 const validationSchema = Yup.object().shape({
   name: Yup.string().required('Name is required'),
@@ -27,7 +28,7 @@ const validationSchema = Yup.object().shape({
 
 const EditProfile = ({ navigation }) => {
   const dispatch = useDispatch();
-  const { userData } = useSelector((state) => state.user); // Accessing the user data directly from Redux store
+  const { userData } = useSelector((state) => state.user);
   const [initialValues, setInitialValues] = useState({
     name: '',
     email: '',
@@ -39,9 +40,11 @@ const EditProfile = ({ navigation }) => {
   const [addressSuggestions, setAddressSuggestions] = useState([]);
   const [showSuggestions, setShowSuggestions] = useState(false);
   const [selectedLocation, setSelectedLocation] = useState({ latitude: null, longitude: null });
-  const [loading,setLoading]=useState(false)
+  const [loading, setLoading] = useState(false);
+  const [isFetching, setIsFetching] = useState(true); // Track if data is being fetched
 
   const profileFetch = useCallback(async () => {
+    setIsFetching(true); // Start fetching
     const action = await dispatch(getUserData());
     const fetchedUserData = action.payload[0];
     setInitialValues({
@@ -52,10 +55,11 @@ const EditProfile = ({ navigation }) => {
       profilePicture: fetchedUserData.profile_picture_url,
       tierName: fetchedUserData.plan,
     });
+    setIsFetching(false); // Data fetched
   }, [dispatch]);
 
   useEffect(() => {
-    profileFetch(); // Call only once when component mounts
+    profileFetch();
   }, [profileFetch]);
 
   const handleAddressChange = async (text, setFieldValue) => {
@@ -81,7 +85,7 @@ const EditProfile = ({ navigation }) => {
   };
 
   const updateHandler = async (values) => {
-    setLoading(true)
+    setLoading(true);
     const data = {
       name: values.name,
       email: values.email,
@@ -90,15 +94,44 @@ const EditProfile = ({ navigation }) => {
     };
     try {
       const response = await API.post('/api/update', data);
-      setLoading(false)
+      setLoading(false);
       await profileFetch();
       successToastMessage(response?.msg);
-    
     } catch (error) {
-      console.log(error)
+      setLoading(false);
       errorToastMessage(error);
     }
   };
+
+  if (isFetching) {
+    // Show skeleton loader while fetching user data
+    return (
+      <ScrollView>
+        <SkeletonPlaceholder>
+          <View style={{ flexDirection: 'row', alignItems: 'center', margin: 20 }}>
+            <View style={{ width: 80, height: 80, borderRadius: 50 }} />
+            <View style={{ marginLeft: 20 }}>
+              <View style={{ width: 120, height: 20, borderRadius: 4 }} />
+              <View style={{ width: 80, height: 20, borderRadius: 4, marginTop: 10 }} />
+            </View>
+          </View>
+
+          <View style={{ marginTop: 60, marginLeft: 20 }}>
+            <View style={{ width: 80, height: 20, borderRadius: 4}} />
+            <View style={{ width: width - 40, height: 40, borderRadius: 4,marginTop: 10 }} />
+            <View style={{ width: 80, height: 20, borderRadius: 4, marginTop: 10 }} />
+            <View style={{ width: width - 40, height: 40, borderRadius: 4, marginTop: 10 }} />
+            <View style={{ width: 80, height: 20, borderRadius: 4, marginTop: 10 }} />
+            <View style={{ width: width - 40, height: 40, borderRadius: 4, marginTop: 10 }} />
+            <View style={{ width: 80, height: 20, borderRadius: 4, marginTop: 10 }} />
+            <View style={{ width: width - 40, height: 80, borderRadius: 4, marginTop: 10 }} />
+            <View style={{ width: width - 200, height: 40, borderRadius: 50, marginTop: 20, alignSelf:"center" }} />
+          </View>
+
+        </SkeletonPlaceholder>
+      </ScrollView>
+    );
+  }
 
   return (
     <ScrollView>
@@ -187,7 +220,7 @@ const EditProfile = ({ navigation }) => {
             )}
 
             <SubmitButton label="Update" onPress={handleSubmit} />
-            <LoadingModal isVisible={loading}/>
+            <LoadingModal isVisible={loading} />
           </>
         )}
       </Formik>
@@ -205,6 +238,21 @@ const styles = StyleSheet.create({
     padding: 15,
     fontSize: 15,
     color: '#000',
+  },
+  deleteButtonContainer: {
+    marginVertical: height / 1.7,
+    alignItems: 'center',
+    justifyContent: 'center',
+    alignSelf: 'center',
+  },
+  deleteButton: {
+    width: width / 2,
+    height: 40,
+    backgroundColor: 'red',
+    justifyContent: 'center',
+    alignItems: 'center',
+    borderRadius: 10,
+    elevation: 5,
   },
 });
 

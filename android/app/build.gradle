@@ -62,7 +62,7 @@ project.ext.envConfigFiles = [
 ]
 apply from: project(':react-native-config').projectDir.getPath() + "/dotenv.gradle"
 
-def enableProguardInReleaseBuilds = false
+def enableProguardInReleaseBuilds = true
 
 /**
  * The preferred build flavor of JavaScriptCore (JSC)

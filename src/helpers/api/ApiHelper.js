@@ -1,7 +1,8 @@
 import axios from 'axios';
 import Config from 'react-native-config';
 import { getAuthToken } from '../../utility/AuthToken';
-
+import { resetAuth } from '../../redux/reducers/AuthSlice';
+import { store } from '../../redux/store';
 // Create an Axios instance
 const API = axios.create({
     baseURL: Config.BASE_URL,
@@ -33,7 +34,11 @@ API.interceptors.response.use(
         // You can modify the response data here, e.g., handling pagination
         return response.data;
     },
-    error => {
+    async error => {
+        if (error.response.status === 400) {
+            // Token is invalid or expired, remove it from redux
+            store.dispatch(resetAuth()); // reset the auth
+        }
         return Promise.reject(error);
     },
 );

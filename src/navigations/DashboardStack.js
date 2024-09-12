@@ -1,8 +1,4 @@
 import React from 'react'
-import DashboardScreen from '../screens/dashboardScreens/DashboardScreen'
-import ProfileOptions from '../screens/dashboardScreens/ProfileOptions'
-import EditProfile from '../screens/dashboardScreens/EditProfile'
-import UserProfileScreen from '../screens/dashboardScreens/UserProfileScreen'
 import { createNativeStackNavigator } from '@react-navigation/native-stack'
 import { useSelector } from 'react-redux'
 import DiscoveryDashboard from './DiscoveryDashboard'

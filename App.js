@@ -8,10 +8,12 @@ import Toast from 'react-native-toast-message'
 import { PersistGate } from 'redux-persist/integration/react';
 import { notificationListener } from './src/utility/fcmToken'
 import NotificationController from './src/helpers/NotificationController.android'
+import SplashScreen from 'react-native-splash-screen';
 
 const App = () => {
 
   useEffect(() => { 
+    SplashScreen.hide();
     NotificationController()
     notificationListener();
   }, [])
