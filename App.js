@@ -9,6 +9,7 @@ import { PersistGate } from 'redux-persist/integration/react';
 import { notificationListener } from './src/utility/fcmToken'
 import NotificationController from './src/helpers/NotificationController.android'
 import SplashScreen from 'react-native-splash-screen';
+import TestScreen from './src/screens/TestScreen'
 
 const App = () => {
 
@@ -32,6 +33,11 @@ const App = () => {
       <Toast />
     </GestureHandlerRootView>
   )
+  // return(
+  //   <GestureHandlerRootView style={{ flex: 1 }}>
+  //     <TestScreen />
+  //   </GestureHandlerRootView>
+  // )
 }
 
 export default App

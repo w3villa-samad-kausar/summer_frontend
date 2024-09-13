@@ -18,7 +18,13 @@ export const signIn = createAsyncThunk('auth/signIn', async (data) => {
         }
         return response
     } catch (error) {
-        errorToastMessage(error?.response?.data?.msg)
+        if (error?.response?.data?.msg){
+            errorToastMessage(error?.response?.data?.msg)
+        }
+        else{
+            errorToastMessage("Please sign in again")
+        }
+  
     }
 })
 

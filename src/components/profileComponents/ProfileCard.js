@@ -1,12 +1,12 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef, useMemo } from 'react';
 import { Dimensions, StyleSheet, Text, TextInput, View, BackHandler, TouchableOpacity, Alert, TouchableWithoutFeedback } from 'react-native';
 import { ScrollView } from 'react-native-gesture-handler';
-import Modal from "react-native-modal";
 import { Icon } from '@rneui/themed';
 import { useDispatch } from 'react-redux';
 import { getUserData } from '../../redux/reducers/UserSlice';
 import colors from '../../assets/colors';
 import { downloadProfileSummary } from '../../helpers/ProfileSummaryCreator';
+import BottomSheet from '@gorhom/bottom-sheet';
 
 const width = Dimensions.get('window').width;
 const height = Dimensions.get('window').height;
@@ -21,7 +21,7 @@ const ProfileCard = () => {
   const [plan, setPlan] = useState('');
   const [profilePicture, setProfilePicture] = useState(false);
 
-  
+
 
   const toggleModal = () => {
     setModalVisible(!isModalVisible);
@@ -42,7 +42,7 @@ const ProfileCard = () => {
     fetchUserData();
   }, []);
 
-  const downloadHandler=()=>{
+  const downloadHandler = () => {
     const profileData = {
       profilePicture: profilePicture,
       name: name,
@@ -53,7 +53,14 @@ const ProfileCard = () => {
     }
     downloadProfileSummary(profileData)
   }
-  
+
+  // Ref for the bottom sheet
+  const bottomSheetRef = useRef(null);
+
+  // Snap points for bottom sheet
+  const snapPoints = useMemo(() => ['25%', '50%', '80%'], []);
+
+
   return (
     <View style={{ flex: 1 }}>
       <TouchableOpacity onPress={toggleModal}>
@@ -66,91 +73,78 @@ const ProfileCard = () => {
         </View>
       </TouchableOpacity>
 
-      <Modal
-        isVisible={isModalVisible}
-        swipeDirection={['down']}
-        onSwipeComplete={toggleModal}
-        onBackdropPress={toggleModal}
+
+      <BottomSheet
+        ref={bottomSheetRef}
+        index={isModalVisible ? 0 : -1} // Open or close based on visibility
+        snapPoints={snapPoints}
+        onChange={(index) => {
+          if (index === -1) {
+            toggleModal(); // Close the modal when bottom sheet is swiped down
+          }
+        }}
+        enablePanDownToClose // Allows the user to swipe down to close the bottom sheet
         style={styles.modal}
-        propagateSwipe={true}  // Ensure swipe gestures are propagated
       >
+        <ScrollView contentContainerStyle={styles.modalContent} keyboardShouldPersistTaps="handled">
+          <View style={{ flex: 1 }}>
+            <View style={styles.fieldBox}>
+              <Text style={styles.label}>Name</Text>
+              <TextInput
+                style={styles.input}
+                value={name}
+                editable={false}
+              />
+            </View>
 
-        {/* <TouchableWithoutFeedback> */}
+            <View style={styles.fieldBox}>
+              <Text style={styles.label}>Email</Text>
+              <TextInput
+                style={styles.input}
+                value={email}
+                editable={false}
+              />
+            </View>
 
-          <ScrollView style={styles.modalContent}>
+            <View style={styles.fieldBox}>
+              <Text style={styles.label}>Mobile Number</Text>
+              <TextInput
+                style={styles.input}
+                value={mobile}
+                editable={false}
+              />
+            </View>
 
-            <TouchableOpacity onPress={toggleModal}>
-              <View style={styles.swipeBar} />
-            </TouchableOpacity>
+            <View style={styles.fieldBox}>
+              <Text style={styles.label}>Plan</Text>
+              <TextInput
+                style={styles.input}
+                value={plan}
+                editable={false}
+              />
+            </View>
 
-            <View style={{ flex: 1 }}>
+            <View style={styles.fieldBox}>
+              <Text style={styles.label}>Address</Text>
+              <TextInput
+                style={[styles.input, styles.addressInput]}
+                value={address}
+                editable={false}
+                multiline
+              />
+            </View>
 
-              <View
-                // contentContainerStyle={{ flexGrow: 1 }}
-                // scrollEnabled={true}
-                // keyboardShouldPersistTaps="handled"
-                // keyboardDismissMode="on-drag"
-              >
-
-                <View style={styles.fieldBox}>
-                  <Text style={styles.label}>Name</Text>
-                  <TextInput
-                    style={styles.input}
-                    value={name}
-                    editable={false}
-                  />
-                </View>
-
-                <View style={styles.fieldBox}>
-                  <Text style={styles.label}>Email</Text>
-                  <TextInput
-                    style={styles.input}
-                    value={email}
-                    editable={false}
-                  />
-                </View>
-
-                <View style={styles.fieldBox}>
-                  <Text style={styles.label}>Mobile Number</Text>
-                  <TextInput
-                    style={styles.input}
-                    value={mobile}
-                    editable={false}
-                  />
-                </View>
-
-                <View style={styles.fieldBox}>
-                  <Text style={styles.label}>Plan</Text>
-                  <TextInput
-                    style={styles.input}
-                    value={plan}
-                    editable={false}
-                  />
-                </View>
-
-                <View style={styles.fieldBox}>
-                  <Text style={styles.label}>Address</Text>
-                  <TextInput
-                    style={[styles.input, styles.addressInput]}
-                    value={address}
-                    editable={false}
-                    multiline
-                  />
-                </View>
-                <View style={styles.buttonContainer}>
-                  <TouchableOpacity style={styles.donwloadButton} onPress={downloadHandler}>
-                    <Text style={styles.donwloadButtonText}>Download profile</Text>
-                  </TouchableOpacity>
-                </View>
+            <View style={styles.buttonContainer}>
+              <TouchableOpacity style={styles.donwloadButton} onPress={downloadHandler}>
+                <Text style={styles.donwloadButtonText}>Download profile</Text>
+              </TouchableOpacity>
             </View>
           </View>
-              </ScrollView>
-        {/* </TouchableWithoutFeedback> */}
-      </Modal>
+        </ScrollView>
+      </BottomSheet>
     </View>
-  )
-}
-
+  );
+};
 
 const styles = StyleSheet.create({
   caretUp: {
@@ -164,14 +158,6 @@ const styles = StyleSheet.create({
     borderTopLeftRadius: 20,
     borderTopRightRadius: 20,
   },
-  swipeBar: {
-    alignSelf: 'center',
-    width: 60,
-    height: 5,
-    backgroundColor: '#ccc',
-    borderRadius: 2,
-    marginVertical: 5,
-  },
   modal: {
     justifyContent: 'flex-end',
     margin: 0,
@@ -181,12 +167,7 @@ const styles = StyleSheet.create({
     padding: 15,
     borderTopLeftRadius: 20,
     borderTopRightRadius: 20,
-    height: '65%',
-    flex: 0.6,  // Flex added to make sure the modal content occupies the full height
-  },
-  scrollViewContent: {
-    paddingBottom: 20,
-    flexGrow: 1, // This ensures the ScrollView content can grow to the full height
+    flexGrow: 1, // Ensure ScrollView can grow to fill the available space
   },
   fieldBox: {
     marginBottom: 15,
@@ -209,20 +190,19 @@ const styles = StyleSheet.create({
   buttonContainer: {
     justifyContent: "center",
     alignItems: "center",
+    marginTop: 20,
   },
   donwloadButton: {
-    width: width - 300,
+    width: width - 60, // Adjusted width to fit within the bottom sheet
     height: 50,
     backgroundColor: colors.buttonColor,
     justifyContent: 'center',
     alignItems: 'center',
     borderRadius: 10,
-
   },
   donwloadButtonText: {
-    fontSize: 12,
-    color: colors.secondaryBackground,
-
+    fontSize: 16,
+    color: '#fff', // Replace with your color
   }
 });
 
