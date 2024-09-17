@@ -1,5 +1,6 @@
+import { URL, URLSearchParams } from 'react-native-url-polyfill';
 import React, { useEffect, useState } from 'react';
-import { View, Text, StyleSheet, TouchableOpacity, Modal } from 'react-native';
+import { View, Text, StyleSheet, TouchableOpacity, Modal, Linking } from 'react-native';
 import { useDispatch } from 'react-redux';
 import { Icon } from '@rneui/themed';
 import SkeletonPlaceholder from 'react-native-skeleton-placeholder';
@@ -14,14 +15,14 @@ const DashboardScreen = ({ navigation }) => {
   const [userData, setUserData] = useState(null);
   const [nextAction, setNextAction] = useState(null);
   const [modalVisible, setModalVisible] = useState(false);
-  const [isLoading, setIsLoading] = useState(true); // Add loading state
+  const [isLoading, setIsLoading] = useState(true);
 
   const profileFetch = async () => {
     try {
       const action = await dispatch(getUserData());
       setUserData(action.payload[0]);
       setNextAction(action.payload[0].next_action);
-      setIsLoading(false); // Stop loading when data is fetched
+      setIsLoading(false);
     } catch (error) {
       console.error('Error fetching user data:', error);
     }
@@ -49,7 +50,37 @@ const DashboardScreen = ({ navigation }) => {
     if (nextAction === 'Email Verification') {
       setModalVisible(true);
     }
-  }, [nextAction]);
+
+    // Handle deep links in useEffect
+    const handleDeepLink = (event) => {
+      const url = event.url; // event.url is already a string
+      if (url.includes('verify-email')) {
+        const urlObject = new URL(url); // Create a URL object
+        const urlParams = new URLSearchParams(urlObject.search); // Use .search to get query parameters
+        const token = urlParams.get('token');
+        const email = urlParams.get('email');
+    
+        // Navigate to the EmailVerifiedScreen with token and email
+        navigation.navigate('EmailVerifiedScreen', { token, email });
+      }
+    };
+    
+
+    // Add the listener for incoming links
+    const linkingSubscription = Linking.addListener('url', handleDeepLink);
+
+    // Check if the app was opened from a link when initially launched
+    Linking.getInitialURL().then((url) => {
+      if (url) {
+        handleDeepLink({ url });
+      }
+    });
+
+    // Cleanup the event listener on unmount
+    return () => {
+      linkingSubscription.remove();
+    };
+  }, [nextAction, navigation]);
 
   const handleSendVerification = async () => {
     const data = { email: userData.email };
@@ -64,16 +95,17 @@ const DashboardScreen = ({ navigation }) => {
     }
     setModalVisible(false);
   };
+
   const capitalizeName = (name) => {
     return name
       .split(' ')
       .map(word => word.charAt(0).toUpperCase() + word.slice(1).toLowerCase())
       .join(' ');
   };
+
   const handleNavigation = async () => {
     navigation.navigate('ProfileScreen');
   };
-
 
   return (
     <View style={styles.container}>

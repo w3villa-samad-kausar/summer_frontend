@@ -4,6 +4,7 @@ import DashboardScreen from '../screens/dashboardScreens/DashboardScreen'
 import ProfileOptions from '../screens/dashboardScreens/ProfileOptions'
 import EditProfile from '../screens/dashboardScreens/EditProfile'
 import UserProfileScreen from '../screens/dashboardScreens/UserProfileScreen'
+import EmailVerifiedScreen from '../screens/authScreens/EmailVerifiedScreen'
 
 const DiscoveryDashboard = () => {
     const Stack = createNativeStackNavigator()
@@ -24,6 +25,10 @@ const DiscoveryDashboard = () => {
             <Stack.Screen
                 name='ProfileScreen'
                 component={UserProfileScreen}
+                options={{ headerShown: false }} />
+            <Stack.Screen
+                name="EmailVerifiedScreen"
+                component={EmailVerifiedScreen}
                 options={{ headerShown: false }} />
         </Stack.Navigator>
     )

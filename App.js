@@ -10,14 +10,13 @@ import { notificationListener } from './src/utility/fcmToken'
 import NotificationController from './src/helpers/NotificationController.android'
 import SplashScreen from 'react-native-splash-screen';
 import TestScreen from './src/screens/TestScreen'
-
 const App = () => {
 
   useEffect(() => { 
-    SplashScreen.hide();
-    NotificationController()
-    notificationListener();
-  }, [])
+      SplashScreen.hide();
+      NotificationController();
+      notificationListener();
+    }, []);
 
 
   return (
