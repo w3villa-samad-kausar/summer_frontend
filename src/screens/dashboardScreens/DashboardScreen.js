@@ -57,11 +57,10 @@ const DashboardScreen = ({ navigation }) => {
       if (url.includes('verify-email')) {
         const urlObject = new URL(url); // Create a URL object
         const urlParams = new URLSearchParams(urlObject.search); // Use .search to get query parameters
-        const token = urlParams.get('token');
         const email = urlParams.get('email');
     
         // Navigate to the EmailVerifiedScreen with token and email
-        navigation.navigate('EmailVerifiedScreen', { token, email });
+        navigation.navigate('EmailVerifiedScreen', { email });
       }
     };
     
